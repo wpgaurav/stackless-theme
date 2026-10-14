@@ -248,8 +248,13 @@ p.no-comments {
 }
 
 /* Store notice (demo store bar). */
+/* WooCommerce prints the notice in the footer and pins it to the top of the page, over the sticky
+   header. Keep it as a bar at the bottom of the viewport instead. */
 .woocommerce-store-notice,
 p.demo_store {
+	position: fixed;
+	top: auto;
+	bottom: 0;
 	padding: .65rem var(--st-gutter);
 	background: var(--st-gray-900);
 	color: #fff;

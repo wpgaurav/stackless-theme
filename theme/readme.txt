@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,10 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed: blocks with a border color no longer turn their text light gray.
+* Fixed: the WooCommerce store notice sits at the bottom of the screen instead of covering the header.
 
 = 1.0.0 =
 * Initial release: classic templates with Block Editor support, Tabler-based design tokens and icons, full styling for WooCommerce (classic templates and Cart/Checkout blocks) and every Stackless for WooCommerce module.
