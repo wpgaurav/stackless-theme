@@ -140,7 +140,8 @@ $manifest['theme'] = sd_upsert('page', 'theme', 'The Stackless theme', $themePag
 
 /* ------------------------------------------------------------------ Tour page */
 $tour = get_page_by_path('tour');
-if ($tour) {
+// Once demo-home.php has rebuilt the front page, it owns the Tour content.
+if ($tour && strpos($tour->post_content, 'id="tour-features"') === false) {
     $content = $tour->post_content;
     $content = preg_replace('/running <a href="https:\/\/gauravtiwari\.org\/product\/stackless-for-woocommerce\/">Stackless for WooCommerce<\/a> [0-9.]+ on WooCommerce with the [A-Za-z ]+ theme\./', 'running <a href="https://gauravtiwari.org/product/stackless-for-woocommerce/">Stackless for WooCommerce</a> 1.0.7 on WooCommerce with the free <a href="' . esc_url($url('theme/')) . '">Stackless theme</a>.', $content, 1);
     if (strpos($content, 'id="tour-theme"') === false) {
@@ -192,7 +193,7 @@ $cat = static function (string $slug): string {
     return is_wp_error($link) ? home_url('/shop/') : $link;
 };
 $manifest['menu:primary'] = sd_menu('Stackless Primary', 'primary', [
-    'tour' => ['Tour', $page('tour')],
+    'tour' => ['Feature tour', home_url('/#tour-features')],
     'shop' => ['Shop', (int) wc_get_page_id('shop')],
     'goods' => ['Studio goods', $cat('studio-goods'), 'shop'],
     'plugins' => ['Themes and plugins', $cat('themes-plugins'), 'shop'],
