@@ -7,7 +7,7 @@
 
 defined('ABSPATH') || exit;
 
-define('STACKLESS_THEME_VERSION', '1.0.2');
+define('STACKLESS_THEME_VERSION', '1.1.0');
 define('STACKLESS_THEME_DIR', get_template_directory());
 define('STACKLESS_THEME_URI', get_template_directory_uri());
 

@@ -24,7 +24,7 @@ def main():
     style=(source/'style.css').read_text();version=header(style,'Version')
     assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',slug)
     assert re.fullmatch(r'\d+(?:\.\d+){1,3}',version)
-    assert 'Update URI:' not in style and not (source/'inc/gt-theme-updater.php').exists(), 'Canonical theme must remain updater-free'
+    assert 'Update URI:' not in style and not (source/'inc/gt-theme-updater.php').exists() and not (source/'inc/gt-license.php').exists(), 'Canonical theme must remain updater-free'
     output=root/'build';output.mkdir(exist_ok=True)
     channels=['wordpress-org','direct'] if args.channel=='all' else [args.channel]
     manifest={}
@@ -33,18 +33,17 @@ def main():
             staged=Path(temp)/slug
             shutil.copytree(source,staged,ignore=shutil.ignore_patterns('.DS_Store','.git','node_modules','*.map','__pycache__'))
             if channel=='direct':
-                updater=(root/'distribution/gt-theme-updater.php').read_text().replace('__GT_THEME_TEXT_DOMAIN__',slug)
                 (staged/'inc').mkdir(exist_ok=True)
-                (staged/'inc/gt-theme-updater.php').write_text(updater)
-                (staged/'style.css').write_text(style.replace('Version: '+version, 'Version: '+version+'\nUpdate URI: https://gauravtiwari.org/product/'+slug+'/'))
+                shutil.copyfile(root/'distribution/gt-license.php',staged/'inc/gt-license.php')
+                (staged/'style.css').write_text(style.replace('Version: '+version, 'Version: '+version+'\nUpdate URI: https://gauravtiwari.org/product/'+slug+'/#license'))
                 functions=(staged/'functions.php').read_text()
                 assert not functions.rstrip().endswith('?>')
-                functions += "\n// Free updates for the direct-download distribution.\nrequire_once __DIR__ . '/inc/gt-theme-updater.php';\n\\Gatilab\\ThemeUpdates\\Client::boot();\n"
+                functions += "\n// License-gated updates for the direct-download distribution.\nrequire_once __DIR__ . '/inc/gt-license.php';\nStackless_Theme_License::boot();\n"
                 (staged/'functions.php').write_text(functions)
                 readme=(staged/'readme.txt').read_text()
-                readme += '\n== Updates in this download ==\n\nThis direct-download build checks https://gauravtiwari.org/wp-json/gt-theme-updates/v1/themes/'+slug+' for free theme updates. No account, email, or license key is required. The updater sends the theme slug and WordPress version; it does not send your site URL or account details. Automatic installation follows your WordPress auto-update preference.\n\nInstall this build once to receive its updater. A separate WordPress.org build omits the updater and uses the directory update channel.\n'
+                readme += '\n== Updates in this download ==\n\nThis direct-download build receives theme updates with a free license key. Get the key with the free checkout at https://gauravtiwari.org/product/'+slug+'/, then add it under Appearance > Stackless License. The key is lifetime and works on unlimited websites. Without a key the theme works fully; only updates are paused.\n\nLicense checks send the license key, theme version and website address to gauravtiwari.org. Automatic installation follows your WordPress auto-update preference. A separate WordPress.org build omits the license client and uses the directory update channel.\n'
                 (staged/'readme.txt').write_text(readme)
-            target=output/(slug+'-'+version+'.zip') if channel=='wordpress-org' else output/'direct'/(slug+'-'+version+'-updater.zip')
+            target=output/(slug+'-'+version+'.zip') if channel=='wordpress-org' else output/'direct'/(slug+'-'+version+'-licensed.zip')
             target.parent.mkdir(exist_ok=True)
             with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
                 for path in sorted(staged.rglob('*')):
@@ -59,11 +58,12 @@ def main():
                     assert slug+'/'+required in names
                 assert slug+'/templates/index.html' in names or slug+'/index.php' in names
                 assert header(archive.read(slug+'/style.css').decode(),'Version')==version
-                has_updater=slug+'/inc/gt-theme-updater.php' in names
+                has_updater=slug+'/inc/gt-license.php' in names
+                assert slug+'/inc/gt-theme-updater.php' not in names
                 assert has_updater==(channel=='direct')
                 if channel=='wordpress-org':
                     assert b'Update URI:' not in archive.read(slug+'/style.css')
-                    assert b'Gatilab\\ThemeUpdates' not in archive.read(slug+'/functions.php')
+                    assert b'Stackless_Theme_License' not in archive.read(slug+'/functions.php')
             manifest[channel]={'path':str(target),'filename':target.name,'theme':slug,'version':version,'size':target.stat().st_size,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'files':len(names),'requires':header(style,'Requires at least'),'requires_php':header(style,'Requires PHP'),'tested':header(style,'Tested up to')}
             print(json.dumps(manifest[channel]),flush=True)
     (output/('manifest-'+args.channel+'.json')).write_text(json.dumps(manifest,indent=2))

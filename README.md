@@ -23,8 +23,8 @@ CSS is plain, unbuilt CSS with `--st-*` custom properties on `:root`. WooCommerc
 
 ## Scripts
 
-- `./build.sh` builds the clean ZIP in `build/`; `./build.sh --channel all` also builds the direct-download ZIP with the free updater in `build/direct/` (see `distribution/README.md`).
+- `./build.sh` builds the clean ZIP in `build/`; `./build.sh --channel all` also builds the direct-download ZIP with the license client in `build/direct/` (see `distribution/README.md`).
 - `scripts/deploy-staging.sh [--activate]` syncs `theme/` to a staging site (reads `STACKLESS_THEME_STAGING_*` from the environment or `~/.env`).
 - `scripts/staging-content.php` seeds review content (style guide, journal posts, menus, footer widgets); run it with `wp eval-file`.
 
-Releases go through the free-theme pipeline in `gt-theme-updates`: `python3 ~/Development/gt-theme-updates/tools/release.py stackless-theme --publish --changelog "..."`.
+Releases go through FluentCart licensing on product 1183774, not the anonymous `gt-theme-updates` pipeline (see `distribution/README.md`).
