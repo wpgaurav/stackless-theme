@@ -1,24 +1,45 @@
 <?php
 /**
- * "More from the journal": up to three recent posts from the same category.
+ * "More from the journal": related posts below a single post. Same-category posts
+ * come first, topped up with recent posts. The count is set in Customize > Stackless.
  *
  * @package Stackless_Theme
  */
 
 defined('ABSPATH') || exit;
 
+$stackless_theme_count = function_exists('stackless_theme_related_count') ? stackless_theme_related_count('posts') : 6;
+if ($stackless_theme_count < 1) {
+	return;
+}
+
+$stackless_theme_args = [
+	'post_type' => 'post',
+	'posts_per_page' => $stackless_theme_count,
+	'post__not_in' => [get_the_ID()],
+	'ignore_sticky_posts' => true,
+	'no_found_rows' => true,
+	'fields' => 'ids',
+];
+$stackless_theme_ids = get_posts($stackless_theme_args + ['category__in' => wp_get_post_categories(get_the_ID())]);
+if (count($stackless_theme_ids) < $stackless_theme_count) {
+	$stackless_theme_ids = array_merge($stackless_theme_ids, get_posts(array_merge($stackless_theme_args, [
+		'posts_per_page' => $stackless_theme_count - count($stackless_theme_ids),
+		'post__not_in' => array_merge([get_the_ID()], $stackless_theme_ids),
+	])));
+}
+if (!$stackless_theme_ids) {
+	return;
+}
+
 $stackless_theme_related = new WP_Query([
 	'post_type' => 'post',
-	'posts_per_page' => 3,
-	'post__not_in' => [get_the_ID()],
-	'category__in' => wp_get_post_categories(get_the_ID()),
+	'post__in' => $stackless_theme_ids,
+	'orderby' => 'post__in',
+	'posts_per_page' => count($stackless_theme_ids),
 	'ignore_sticky_posts' => true,
 	'no_found_rows' => true,
 ]);
-
-if (!$stackless_theme_related->have_posts()) {
-	return;
-}
 ?>
 <section class="related-posts container" aria-labelledby="related-posts-title">
 	<h2 id="related-posts-title" class="related-posts__title"><?php esc_html_e('More from the journal', 'stackless-theme'); ?></h2>

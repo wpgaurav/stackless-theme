@@ -7,13 +7,14 @@
 
 defined('ABSPATH') || exit;
 
-define('STACKLESS_THEME_VERSION', '1.2.3');
+define('STACKLESS_THEME_VERSION', '1.3.0');
 define('STACKLESS_THEME_DIR', get_template_directory());
 define('STACKLESS_THEME_URI', get_template_directory_uri());
 
 require STACKLESS_THEME_DIR . '/inc/icons.php';
 require STACKLESS_THEME_DIR . '/inc/setup.php';
 require STACKLESS_THEME_DIR . '/inc/template-tags.php';
+require STACKLESS_THEME_DIR . '/inc/customizer.php';
 
 if (class_exists('WooCommerce')) {
     require STACKLESS_THEME_DIR . '/inc/woocommerce.php';

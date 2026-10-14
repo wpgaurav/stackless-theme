@@ -1345,8 +1345,20 @@ body.stackless-theme .st-currency--footer .stackless-currency-selector__select {
 
 .related-posts__grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1.5rem;
+}
+
+@media (max-width: 899.98px) {
+	.related-posts__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 539.98px) {
+	.related-posts__grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 .related-post__link {

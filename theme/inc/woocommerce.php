@@ -65,9 +65,18 @@ function stackless_theme_breadcrumb_defaults(array $args): array
 add_filter('woocommerce_output_related_products_args', 'stackless_theme_related_products');
 function stackless_theme_related_products(array $args): array
 {
-    $args['posts_per_page'] = 3;
+    $args['posts_per_page'] = function_exists('stackless_theme_related_count') ? stackless_theme_related_count('products') : 6;
     $args['columns'] = 3;
     return $args;
+}
+
+/** A related-products count of 0 removes the section. */
+add_action('woocommerce_after_single_product_summary', 'stackless_theme_maybe_hide_related', 1);
+function stackless_theme_maybe_hide_related(): void
+{
+    if (function_exists('stackless_theme_related_count') && stackless_theme_related_count('products') === 0) {
+        remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
+    }
 }
 
 add_filter('woocommerce_upsell_display_args', 'stackless_theme_upsells');

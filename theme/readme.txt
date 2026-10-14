@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,10 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.3.0 =
+* New: theme options under Appearance > Customize > Stackless to set how many related posts and related products show (0 to 12; 0 hides the section).
+* Changed: 6 related posts and 6 related products show by default, in two rows of three. Related posts come from the same category first and are topped up with recent posts.
 
 = 1.2.3 =
 * Fix: My Account pages show the navigation beside the account content again. WooCommerce's clearfix pseudo-elements had become grid items, which pushed the menu into the content column and squeezed the content underneath.
