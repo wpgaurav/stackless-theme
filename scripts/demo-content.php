@@ -129,7 +129,7 @@ foreach ($cards as [$t, $x, $h, $l]) {
     $grid .= $try($t, $x, $h, $l);
 }
 $grid .= '</div><!-- /wp:group -->';
-$themePage = '<!-- wp:paragraph {"fontSize":"large"} --><p class="has-large-font-size">This store runs the free <a href="https://gauravtiwari.org/product/stackless-theme/">Stackless WordPress theme</a> with <a href="https://gauravtiwari.org/product/stackless-for-woocommerce/">Stackless for WooCommerce</a> 1.0.7. The theme is a minimal classic theme built on Tabler\'s design foundation, and it styles every screen the plugin adds.</p><!-- /wp:paragraph -->'
+$themePage = '<!-- wp:paragraph {"fontSize":"large"} --><p class="has-large-font-size">This store runs the free <a href="https://gauravtiwari.org/product/stackless-theme/">Stackless WordPress theme</a> with <a href="https://gauravtiwari.org/product/stackless-for-woocommerce/">Stackless for WooCommerce</a> ' . esc_html(defined('STACKLESS_VERSION') ? STACKLESS_VERSION : '') . '. The theme is a minimal classic theme built on Tabler\'s design foundation, and it styles every screen the plugin adds.</p><!-- /wp:paragraph -->'
     . '<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://gauravtiwari.org/product/stackless-theme/">Get the theme free</a></div><!-- /wp:button --><!-- wp:button {"className":"is-style-outline"} --><div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="https://github.com/wpgaurav/stackless-theme">Source on GitHub</a></div><!-- /wp:button --></div><!-- /wp:buttons -->'
     . '<!-- wp:heading --><h2 class="wp-block-heading">Things to try</h2><!-- /wp:heading -->'
     . $grid
@@ -143,7 +143,7 @@ $tour = get_page_by_path('tour');
 // Once demo-home.php has rebuilt the front page, it owns the Tour content.
 if ($tour && strpos($tour->post_content, 'id="tour-features"') === false) {
     $content = $tour->post_content;
-    $content = preg_replace('/running <a href="https:\/\/gauravtiwari\.org\/product\/stackless-for-woocommerce\/">Stackless for WooCommerce<\/a> [0-9.]+ on WooCommerce with the [A-Za-z ]+ theme\./', 'running <a href="https://gauravtiwari.org/product/stackless-for-woocommerce/">Stackless for WooCommerce</a> 1.0.7 on WooCommerce with the free <a href="' . esc_url($url('theme/')) . '">Stackless theme</a>.', $content, 1);
+    $content = preg_replace('/running <a href="https:\/\/gauravtiwari\.org\/product\/stackless-for-woocommerce\/">Stackless for WooCommerce<\/a> [0-9.]+ on WooCommerce with the [A-Za-z ]+ theme\./', 'running <a href="https://gauravtiwari.org/product/stackless-for-woocommerce/">Stackless for WooCommerce</a> ' . esc_html(defined('STACKLESS_VERSION') ? STACKLESS_VERSION : '') . ' on WooCommerce with the free <a href="' . esc_url($url('theme/')) . '">Stackless theme</a>.', $content, 1);
     if (strpos($content, 'id="tour-theme"') === false) {
         $section = '<!-- wp:heading {"anchor":"tour-theme"} --><h2 class="wp-block-heading" id="tour-theme">The theme</h2><!-- /wp:heading -->'
             . '<!-- wp:list --><ul class="wp-block-list">'

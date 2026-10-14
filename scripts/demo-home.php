@@ -153,7 +153,7 @@ $fact = static function (string $number, string $label): string {
 /* ------------------------------------------------------------------ Sections */
 $hero = '<!-- wp:group {"align":"wide","style":{"border":{"radius":"16px"},"spacing":{"padding":{"top":"4rem","bottom":"4rem","left":"2rem","right":"2rem"}}},"backgroundColor":"primary-light","layout":{"type":"constrained","contentSize":"760px"}} -->'
     . '<div class="wp-block-group alignwide has-primary-light-background-color has-background" style="border-radius:16px;padding-top:4rem;padding-right:2rem;padding-bottom:4rem;padding-left:2rem">'
-    . $para('<strong>Live demo store</strong> · Stackless for WooCommerce 1.0.7', '{"align":"center","fontSize":"small","style":{"spacing":{"margin":{"bottom":"0.5rem"}}}}', 'has-text-align-center has-small-font-size" style="margin-bottom:0.5rem')
+    . $para('<strong>Live demo store</strong> · Stackless for WooCommerce ' . esc_html(defined('STACKLESS_VERSION') ? STACKLESS_VERSION : ''), '{"align":"center","fontSize":"small","style":{"spacing":{"margin":{"bottom":"0.5rem"}}}}', 'has-text-align-center has-small-font-size" style="margin-bottom:0.5rem')
     . '<!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xx-large","style":{"spacing":{"margin":{"top":"0"}}}} --><h1 class="wp-block-heading has-text-align-center has-xx-large-font-size" style="margin-top:0">One plugin runs this whole store</h1><!-- /wp:heading -->'
     . $para('Subscriptions, multi-currency checkout, licenses, quotes and wishlists, all inside WooCommerce, in one fictional shop.', '{"align":"center","fontSize":"large"}', 'has-text-align-center has-large-font-size')
     . $buttons([
