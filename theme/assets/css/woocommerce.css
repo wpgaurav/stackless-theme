@@ -1443,6 +1443,12 @@ p.demo_store a {
 	}
 }
 
+/* WooCommerce's clearfix pseudo-elements would become grid items and push the navigation into the second column. */
+.woocommerce-account .woocommerce::before,
+.woocommerce-account .woocommerce::after {
+	content: none;
+}
+
 .woocommerce-account .woocommerce > .woocommerce-notices-wrapper {
 	grid-column: 1 / -1;
 }
