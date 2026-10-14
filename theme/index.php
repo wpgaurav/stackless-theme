@@ -30,6 +30,12 @@ get_header();
 		</header>
 	<?php endif; ?>
 
+	<?php $stackless_theme_sidebar = function_exists('stackless_theme_has_blog_sidebar') && stackless_theme_has_blog_sidebar(); ?>
+	<?php if ($stackless_theme_sidebar) : ?>
+		<div class="blog-layout">
+		<div class="blog-layout__main">
+	<?php endif; ?>
+
 	<?php if (have_posts()) : ?>
 		<div class="post-list">
 			<?php
@@ -42,6 +48,12 @@ get_header();
 		<?php stackless_theme_pagination(); ?>
 	<?php else : ?>
 		<?php get_template_part('template-parts/content', 'none'); ?>
+	<?php endif; ?>
+
+	<?php if ($stackless_theme_sidebar) : ?>
+		</div>
+		<?php get_sidebar('blog'); ?>
+		</div>
 	<?php endif; ?>
 </main>
 <?php

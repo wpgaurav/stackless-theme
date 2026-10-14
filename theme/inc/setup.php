@@ -51,6 +51,15 @@ function stackless_theme_widgets(): void
         'before_title' => '<h2 class="widget-title">',
         'after_title' => '</h2>',
     ]);
+    register_sidebar([
+        'name' => __('Blog', 'stackless-theme'),
+        'id' => 'blog',
+        'description' => __('Beside the post list on the blog, post archives and search results. Leave empty to show search, recent posts and categories.', 'stackless-theme'),
+        'before_widget' => '<section id="%1$s" class="widget %2$s">',
+        'after_widget' => '</section>',
+        'before_title' => '<h2 class="widget-title">',
+        'after_title' => '</h2>',
+    ]);
     if (class_exists('WooCommerce')) {
         register_sidebar([
             'name' => __('Shop', 'stackless-theme'),
@@ -62,6 +71,18 @@ function stackless_theme_widgets(): void
             'after_title' => '</h2>',
         ]);
     }
+}
+
+/**
+ * Whether the blog sidebar shows: on the posts page, post archives and search results,
+ * never on WooCommerce screens. Filter `stackless_theme_blog_sidebar` to turn it off.
+ */
+function stackless_theme_has_blog_sidebar(): bool
+{
+    $show = (is_home() || is_search() || is_category() || is_tag() || is_author() || is_date()
+        || (is_post_type_archive('post') || (is_tax() && is_object_in_taxonomy('post', get_queried_object()->taxonomy ?? '')))
+    ) && !(function_exists('is_woocommerce') && is_woocommerce());
+    return (bool) apply_filters('stackless_theme_blog_sidebar', $show);
 }
 
 /** Asset version from the file's modification time, so edits bust browser and CDN caches. */
