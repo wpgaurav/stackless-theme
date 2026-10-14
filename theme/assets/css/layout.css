@@ -1009,6 +1009,73 @@ a.page-numbers:hover {
 	color: var(--st-primary);
 }
 
+/* ------------------------------------------------------------------ Currency switcher (Stackless) */
+body.stackless-theme .st-currency {
+	position: relative;
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0;
+}
+
+body.stackless-theme .st-currency .stackless-currency-selector__form {
+	flex-wrap: nowrap;
+	gap: 0;
+}
+
+body.stackless-theme .st-currency .stackless-currency-selector__select {
+	width: auto;
+	min-width: 0;
+	min-height: 2.25rem;
+	margin: 0;
+	padding: 0 1.6rem 0 .6rem;
+	border: 0;
+	border-radius: var(--st-radius);
+	background-color: transparent;
+	background-position: right .45rem center;
+	background-size: 10px 8px;
+	box-shadow: none;
+	color: var(--st-gray-600);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+body.stackless-theme .st-currency .stackless-currency-selector__select:hover {
+	background-color: var(--st-surface-muted);
+	color: var(--st-heading);
+}
+
+body.stackless-theme .st-currency .stackless-currency-selector__select:focus-visible {
+	outline: 0;
+	box-shadow: var(--st-ring);
+}
+
+/* Progress text stays available to screen readers without shifting the header or footer. */
+body.stackless-theme .st-currency .stackless-currency-selector__status {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+body.stackless-theme .st-currency--header {
+	margin-right: .25rem;
+}
+
+/* Small phones keep the header to its four buttons; the footer switcher covers them. */
+@media (max-width: 599.98px) {
+	body.stackless-theme .st-currency--header {
+		display: none;
+	}
+}
+
+body.stackless-theme .st-currency--footer .stackless-currency-selector__select {
+	color: var(--st-muted);
+}
+
 /* ------------------------------------------------------------------ Footer */
 .site-footer {
 	flex: none;

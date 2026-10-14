@@ -19,6 +19,7 @@ defined('ABSPATH') || exit;
 			<p class="site-info">
 				&copy; <?php echo esc_html(wp_date('Y')); ?> <a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_html(get_bloginfo('name')); ?></a>
 			</p>
+			<?php stackless_theme_currency_switcher('footer'); ?>
 			<?php if (has_nav_menu('footer')) : ?>
 				<nav class="footer-nav" aria-label="<?php esc_attr_e('Footer', 'stackless-theme'); ?>">
 					<?php wp_nav_menu(['theme_location' => 'footer', 'container' => false, 'depth' => 1]); ?>

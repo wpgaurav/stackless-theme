@@ -36,6 +36,7 @@ defined('ABSPATH') || exit;
 		</nav>
 
 		<div class="site-header__actions">
+			<?php stackless_theme_currency_switcher('header'); ?>
 			<button type="button" class="header-action" aria-controls="site-search" aria-expanded="false" data-st-toggle="search">
 				<?php stackless_theme_the_icon('search', 22); ?>
 				<span class="screen-reader-text"><?php esc_html_e('Search', 'stackless-theme'); ?></span>

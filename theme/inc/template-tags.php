@@ -123,3 +123,22 @@ function stackless_theme_reading_time(): string
     /* translators: %d: minutes */
     return sprintf(_n('%d min read', '%d min read', $minutes, 'stackless-theme'), $minutes);
 }
+
+/**
+ * Compact currency switcher from Stackless for WooCommerce's Storefront Currency Selector.
+ * Renders nothing unless that module is on and at least two currencies are enabled.
+ * Filter `stackless_theme_currency_switcher` (bool, $location) to hide it per location.
+ */
+function stackless_theme_currency_switcher(string $location): void
+{
+    if (!shortcode_exists('stackless_currency_selector') || !apply_filters('stackless_theme_currency_switcher', true, $location)) {
+        return;
+    }
+    $format = $location === 'footer' ? 'code_symbol' : 'code';
+    echo do_shortcode(sprintf(
+        '[stackless_currency_selector show_label="no" label="%s" format="%s" class="st-currency st-currency--%s"]',
+        esc_attr__('Currency', 'stackless-theme'),
+        $format,
+        sanitize_html_class($location)
+    ));
+}
