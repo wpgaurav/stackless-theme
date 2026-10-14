@@ -134,9 +134,10 @@ function stackless_theme_currency_switcher(string $location): void
     if (!shortcode_exists('stackless_currency_selector') || !apply_filters('stackless_theme_currency_switcher', true, $location)) {
         return;
     }
-    $format = $location === 'footer' ? 'code_symbol' : 'code';
+    $format = $location === 'header' ? 'code' : 'code_symbol';
     echo do_shortcode(sprintf(
-        '[stackless_currency_selector show_label="no" label="%s" format="%s" class="st-currency st-currency--%s"]',
+        '[stackless_currency_selector show_label="%s" label="%s" format="%s" class="st-currency st-currency--%s"]',
+        $location === 'menu' ? 'yes' : 'no',
         esc_attr__('Currency', 'stackless-theme'),
         $format,
         sanitize_html_class($location)

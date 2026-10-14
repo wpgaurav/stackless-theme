@@ -32,6 +32,7 @@ defined('ABSPATH') || exit;
 				'depth' => 2,
 				'fallback_cb' => 'stackless_theme_menu_fallback',
 			]);
+			stackless_theme_currency_switcher('menu');
 			?>
 		</nav>
 

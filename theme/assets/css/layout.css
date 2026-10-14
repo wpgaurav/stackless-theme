@@ -1065,10 +1065,37 @@ body.stackless-theme .st-currency--header {
 	margin-right: .25rem;
 }
 
-/* Small phones keep the header to its four buttons; the footer switcher covers them. */
+/* The menu copy only shows in the phone drawer, where the header copy is hidden. */
+body.stackless-theme .st-currency--menu {
+	display: none;
+}
+
+/* Small phones keep the header to its four buttons; the menu and footer switchers cover them. */
 @media (max-width: 599.98px) {
 	body.stackless-theme .st-currency--header {
 		display: none;
+	}
+
+	body.stackless-theme .st-currency--menu {
+		display: flex;
+		margin-top: .25rem;
+		padding: .45rem 0 0 .5rem;
+		border-top: 1px solid var(--st-gray-100);
+	}
+
+	body.stackless-theme .st-currency--menu .stackless-currency-selector__form {
+		flex: 1;
+		justify-content: space-between;
+	}
+
+	body.stackless-theme .st-currency--menu .stackless-currency-selector__label {
+		color: var(--st-heading);
+		font-size: 1rem;
+		font-weight: 400;
+	}
+
+	body.stackless-theme .st-currency--menu .stackless-currency-selector__select {
+		font-size: 1rem;
 	}
 }
 
