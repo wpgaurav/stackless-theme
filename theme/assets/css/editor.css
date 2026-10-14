@@ -1,0 +1,27 @@
+/* Stackless theme: editor-only adjustments. WordPress scopes this file to the editor canvas. */
+
+body {
+	background: var(--st-surface);
+	font-size: 1.0625rem;
+	line-height: 1.7;
+}
+
+.editor-post-title__input,
+.wp-block-post-title {
+	margin-bottom: 1.5rem;
+	color: var(--st-heading);
+	font-size: clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem);
+	font-weight: 600;
+	letter-spacing: -.02em;
+	line-height: 1.25;
+}
+
+.wp-block-button__link {
+	text-decoration: none;
+}
+
+/* Keep floated images inside the content column. */
+.wp-block[data-align="left"] > *,
+.wp-block[data-align="right"] > * {
+	max-width: 50%;
+}
