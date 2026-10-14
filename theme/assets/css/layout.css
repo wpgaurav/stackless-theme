@@ -1460,3 +1460,27 @@ html.search-open {
 		display: none;
 	}
 }
+
+/* Small phones: logo plus four header actions must fit in 375px. */
+@media (max-width: 479.98px) {
+	.site-header__inner {
+		gap: .5rem;
+	}
+
+	.site-title {
+		font-size: 1rem;
+	}
+
+	.custom-logo {
+		max-height: 1.75rem;
+	}
+
+	.site-header__actions {
+		gap: 0;
+	}
+
+	.header-action {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+}
