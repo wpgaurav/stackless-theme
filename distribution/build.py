@@ -25,6 +25,8 @@ def main():
     assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',slug)
     assert re.fullmatch(r'\d+(?:\.\d+){1,3}',version)
     assert 'Update URI:' not in style and not (source/'inc/gt-theme-updater.php').exists() and not (source/'inc/gt-license.php').exists(), 'Canonical theme must remain updater-free'
+    import subprocess
+    subprocess.run([str(root/'scripts/minify.sh'),'--check'],check=True)  # minified assets must match their sources
     output=root/'build';output.mkdir(exist_ok=True)
     channels=['wordpress-org','direct'] if args.channel=='all' else [args.channel]
     manifest={}

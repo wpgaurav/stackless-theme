@@ -31,7 +31,7 @@ function stackless_theme_setup(): void
     add_theme_support('link-color');
     add_theme_support('border');
     add_theme_support('appearance-tools');
-    add_editor_style(['assets/css/base.css', 'assets/css/editor.css']);
+    add_editor_style([stackless_theme_asset('assets/css/base.css'), stackless_theme_asset('assets/css/editor.css')]);
 
     register_nav_menus([
         'primary' => __('Primary menu', 'stackless-theme'),
@@ -71,8 +71,19 @@ function stackless_theme_asset_version(string $path): string
     return is_readable($file) ? STACKLESS_THEME_VERSION . '.' . filemtime($file) : STACKLESS_THEME_VERSION;
 }
 
+/** The minified copy of an asset beside its source, unless SCRIPT_DEBUG is on or no copy exists. */
+function stackless_theme_asset(string $path): string
+{
+    if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
+        return $path;
+    }
+    $min = preg_replace('/\.(css|js)$/', '.min.$1', $path);
+    return is_readable(STACKLESS_THEME_DIR . '/' . $min) ? $min : $path;
+}
+
 function stackless_theme_style(string $handle, string $path, array $deps = []): void
 {
+    $path = stackless_theme_asset($path);
     wp_enqueue_style($handle, STACKLESS_THEME_URI . '/' . $path, $deps, stackless_theme_asset_version($path));
 }
 
@@ -94,7 +105,7 @@ function stackless_theme_assets(): void
         stackless_theme_style('stackless-theme-stackless', 'assets/css/stackless.css', ['stackless-theme-layout']);
     }
 
-    $js = 'assets/js/theme.js';
+    $js = stackless_theme_asset('assets/js/theme.js');
     wp_enqueue_script('stackless-theme', STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
     wp_localize_script('stackless-theme', 'stacklessTheme', [
         'productsApi' => class_exists('WooCommerce') ? esc_url_raw(rest_url('wc/store/v1/products')) : '',

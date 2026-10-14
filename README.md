@@ -23,6 +23,8 @@ CSS is plain, unbuilt CSS with `--st-*` custom properties on `:root`. WooCommerc
 
 ## Scripts
 
+- `scripts/minify.sh` writes a `.min.css`/`.min.js` beside every asset (esbuild 0.25.10 via npx). Run it after editing CSS or JS and commit both files; the build refuses stale minified files. The theme loads the minified copies unless `SCRIPT_DEBUG` is on.
+
 - `./build.sh` builds the clean ZIP in `build/`; `./build.sh --channel all` also builds the direct-download ZIP with the license client in `build/direct/` (see `distribution/README.md`).
 - `scripts/deploy-staging.sh [--activate]` syncs `theme/` to a staging site (reads `STACKLESS_THEME_STAGING_*` from the environment or `~/.env`).
 - `scripts/staging-content.php` seeds review content (style guide, journal posts, menus, footer widgets); run it with `wp eval-file`.
