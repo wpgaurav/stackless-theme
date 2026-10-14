@@ -1623,6 +1623,13 @@ body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerc
 	padding-top: .5rem;
 }
 
+/* WooCommerce zeroes these insets for its borderless summary; inside the card they line up with the title. */
+body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerce-cart-order-summary-block .wc-block-components-panel,
+body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerce-cart-order-summary-block .wc-block-components-totals-coupon,
+body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerce-cart-order-summary-block .wc-block-components-totals-item {
+	padding-inline: 16px;
+}
+
 body.stackless-theme .wc-block-components-title.wc-block-components-title,
 body.stackless-theme .wc-block-cart__totals-title {
 	color: var(--st-heading);
