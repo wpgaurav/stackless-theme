@@ -361,8 +361,61 @@ body.stackless-theme .stackless-trust svg {
 	color: var(--st-success);
 }
 
+/* Checkout consents on the receipt and account order view: one card, a row per consent. */
+body.stackless-theme .stackless-order-consents dl {
+	display: block;
+	margin: 0;
+	overflow: hidden;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+}
+
 body.stackless-theme .stackless-order-consents dl > div {
-	border-color: var(--st-border);
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: .25rem 2rem;
+	padding: .875rem 1.25rem;
+	border: 0;
+	border-top: 1px solid var(--st-border);
+}
+
+body.stackless-theme .stackless-order-consents dl > div:first-child {
+	border-top: 0;
+}
+
+body.stackless-theme .stackless-order-consents dt {
+	margin: 0;
+	color: var(--st-heading);
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+body.stackless-theme .stackless-order-consents dd {
+	margin: 0;
+	color: var(--st-heading);
+	font-weight: 500;
+	line-height: 1.5;
+	text-align: right;
+	white-space: nowrap;
+}
+
+body.stackless-theme .stackless-order-consents dd small {
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	font-weight: 400;
+}
+
+@media (max-width: 599.98px) {
+	body.stackless-theme .stackless-order-consents dl > div {
+		grid-template-columns: 1fr;
+	}
+
+	body.stackless-theme .stackless-order-consents dd {
+		text-align: left;
+		white-space: normal;
+	}
+
 }
 
 /* ------------------------------------------------------------------ Product extras */

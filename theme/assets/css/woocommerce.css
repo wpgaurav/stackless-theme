@@ -1379,12 +1379,15 @@ p.demo_store a {
 }
 
 /* Order received and order details. */
+/* The overview strip: equal cells split by hairlines that never touch the text. Wrapped rows keep
+   their dividers because each cell draws its own top and left line inside the clipped card. */
 .woocommerce ul.order_details {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem 0;
+	gap: 0;
 	margin: 0 0 2rem;
-	padding: 1.25rem;
+	padding: 0;
+	overflow: hidden;
 	border: 1px solid var(--st-border);
 	border-radius: var(--st-radius-lg);
 	background: var(--st-surface);
@@ -1396,38 +1399,149 @@ p.demo_store a {
 }
 
 .woocommerce ul.order_details li {
-	margin: 0;
-	padding: 0 1.5rem 0 0;
-	border-right: 1px solid var(--st-border);
+	flex: 1 1 auto;
+	float: none;
+	margin: -1px 0 0 -1px;
+	padding: 1rem 1.25rem;
+	border: 0;
+	border-top: 1px solid var(--st-border);
+	border-left: 1px solid var(--st-border);
 	color: var(--st-muted);
 	font-size: var(--st-text-xs);
+	line-height: 1.4;
 	letter-spacing: .04em;
 	text-transform: uppercase;
 }
 
 .woocommerce ul.order_details li:last-of-type {
-	border: 0;
+	border-right: 0;
 }
 
 .woocommerce ul.order_details li strong {
-	margin-top: .25rem;
+	display: block;
+	margin-top: .3rem;
 	color: var(--st-heading);
 	font-size: .9375rem;
+	font-weight: 600;
 	letter-spacing: 0;
+	line-height: 1.4;
 	text-transform: none;
 }
 
 .woocommerce-order-received .woocommerce-thankyou-order-received {
+	margin-bottom: 1.5rem;
 	font-size: 1.125rem;
 	font-weight: 500;
 }
 
+/* Receipt sections get even spacing and one heading size. */
+.woocommerce-order > section {
+	margin: 2.5rem 0 0;
+}
+
+.woocommerce-order > section > h2,
+.woocommerce-order .woocommerce-column__title,
+.woocommerce-order .woocommerce-order-details__title {
+	margin: 0 0 1rem;
+	font-size: 1.375rem;
+}
+
+.woocommerce-order .wc-bacs-bank-details-account-name {
+	margin: 0 0 .75rem;
+	font-size: 1rem;
+}
+
+/* Order details table: one hairline per row and amounts aligned right. */
+.woocommerce table.shop_table th,
+.woocommerce table.shop_table td {
+	border-bottom: 0;
+}
+
+.woocommerce table.order_details thead th:last-child,
+.woocommerce table.order_details tbody td:last-child,
+.woocommerce table.order_details tfoot td {
+	text-align: right;
+}
+
+/* WooCommerce core draws tfoot lines in currentColor, so label and value cells disagreed. */
+.woocommerce table.shop_table tfoot th,
+.woocommerce table.shop_table tfoot td,
+.woocommerce table.order_details tfoot tr:first-child > * {
+	border-top: 1px solid var(--st-border);
+}
+
+.woocommerce table.order_details tfoot th {
+	color: var(--st-muted);
+	font-weight: 400;
+}
+
+.woocommerce table.order_details tfoot td {
+	color: var(--st-heading);
+	font-weight: 500;
+}
+
+.woocommerce table.order_details .product-quantity {
+	color: var(--st-muted);
+	font-weight: 400;
+}
+
 .woocommerce .woocommerce-customer-details address {
+	margin: 0;
 	padding: 1rem 1.25rem;
 	border: 1px solid var(--st-border);
 	border-radius: var(--st-radius-lg);
 	background: var(--st-surface);
+	font-style: normal;
 	line-height: 1.6;
+}
+
+/* Checkout-block "Additional information": the same card and row rhythm as the table above. */
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+}
+
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dt,
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dd {
+	margin: 0;
+	padding: .875rem 1.25rem;
+	border: 0;
+	border-top: 1px solid var(--st-border);
+	background: none;
+	line-height: 1.5;
+}
+
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dt:first-of-type,
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dt:first-of-type + dd {
+	border-top: 0;
+}
+
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dt {
+	color: var(--st-heading);
+	font-weight: 500;
+}
+
+body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dd {
+	color: var(--st-gray-600);
+	text-align: right;
+}
+
+@media (max-width: 599.98px) {
+	body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list {
+		grid-template-columns: 1fr;
+	}
+
+	body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-block-components-additional-fields-list dd {
+		padding-top: 0;
+		border-top: 0;
+		text-align: left;
+	}
 }
 
 /* ------------------------------------------------------------------ My Account */
