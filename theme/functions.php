@@ -19,3 +19,7 @@ require STACKLESS_THEME_DIR . '/inc/customizer.php';
 if (class_exists('WooCommerce')) {
     require STACKLESS_THEME_DIR . '/inc/woocommerce.php';
 }
+
+if (class_exists('Easy_Digital_Downloads')) {
+    require STACKLESS_THEME_DIR . '/inc/edd.php';
+}

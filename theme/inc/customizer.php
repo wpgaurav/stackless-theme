@@ -10,7 +10,7 @@ defined('ABSPATH') || exit;
 const STACKLESS_THEME_RELATED_DEFAULT = 6;
 const STACKLESS_THEME_RELATED_MAX = 12;
 
-/** How many related items to show for 'posts' or 'products'. 0 hides the section. */
+/** How many related items to show for 'posts', 'products' or 'downloads'. 0 hides the section. */
 function stackless_theme_related_count(string $type): int
 {
     $count = (int) get_theme_mod('stackless_related_' . $type, STACKLESS_THEME_RELATED_DEFAULT);
@@ -40,6 +40,12 @@ function stackless_theme_customize_register(WP_Customize_Manager $wp_customize):
         $controls['products'] = [
             'label' => __('Related products', 'stackless-theme'),
             'description' => __('Products shown below a single product. Set 0 to hide them.', 'stackless-theme'),
+        ];
+    }
+    if (class_exists('Easy_Digital_Downloads')) {
+        $controls['downloads'] = [
+            'label' => __('Related downloads', 'stackless-theme'),
+            'description' => __('Downloads shown below a single download, from the same category first. Set 0 to hide them.', 'stackless-theme'),
         ];
     }
 

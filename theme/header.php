@@ -42,8 +42,9 @@ defined('ABSPATH') || exit;
 				<?php stackless_theme_the_icon('search', 22); ?>
 				<span class="screen-reader-text"><?php esc_html_e('Search', 'stackless-theme'); ?></span>
 			</button>
-			<?php if (function_exists('wc_get_page_permalink') && wc_get_page_id('myaccount') > 0) : ?>
-				<a class="header-action" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>">
+			<?php $stackless_theme_account = stackless_theme_account_url(); ?>
+			<?php if ($stackless_theme_account) : ?>
+				<a class="header-action" href="<?php echo esc_url($stackless_theme_account); ?>">
 					<?php stackless_theme_the_icon('user', 22); ?>
 					<span class="screen-reader-text"><?php is_user_logged_in() ? esc_html_e('My account', 'stackless-theme') : esc_html_e('Sign in', 'stackless-theme'); ?></span>
 				</a>

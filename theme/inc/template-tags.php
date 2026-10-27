@@ -34,6 +34,8 @@ function stackless_theme_menu_fallback(): void
             }
         }
     }
+    /** Store pages (checkout, account and the like) that never belong in the fallback menu. */
+    $exclude = array_map('intval', (array) apply_filters('stackless_theme_menu_fallback_exclude', $exclude));
     $pages = get_pages(['parent' => 0, 'exclude' => $exclude, 'number' => 4, 'sort_column' => 'menu_order,post_title']);
     echo '<ul id="primary-menu" class="menu">';
     if (function_exists('wc_get_page_permalink') && wc_get_page_id('shop') > 0) {
@@ -96,11 +98,14 @@ function stackless_theme_pagination(): void
     ]);
 }
 
-/** Header cart link; the count is refreshed by WooCommerce cart fragments. */
+/**
+ * Header cart link; the count is refreshed by WooCommerce cart fragments. Without WooCommerce,
+ * `stackless_theme_cart_link` lets another store (Easy Digital Downloads) supply the link.
+ */
 function stackless_theme_cart_link(): string
 {
     if (!function_exists('WC') || !WC()->cart || !function_exists('wc_get_cart_url')) {
-        return '';
+        return (string) apply_filters('stackless_theme_cart_link', '');
     }
     $count = (int) WC()->cart->get_cart_contents_count();
     /* translators: %d: number of items in the cart */
@@ -113,6 +118,15 @@ function stackless_theme_cart_link(): string
         $count ? '' : ' is-empty',
         $count
     );
+}
+
+/** Header account link: WooCommerce's My Account page, else whatever `stackless_theme_account_url` returns. */
+function stackless_theme_account_url(): string
+{
+    if (function_exists('wc_get_page_permalink') && wc_get_page_id('myaccount') > 0) {
+        return (string) wc_get_page_permalink('myaccount');
+    }
+    return (string) apply_filters('stackless_theme_account_url', '');
 }
 
 /** "4 min read", from the post's word count at about 220 words a minute. */
