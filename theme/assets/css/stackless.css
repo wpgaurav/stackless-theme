@@ -271,7 +271,7 @@ body.stackless-theme .stackless-license__meta dt {
 }
 
 body.stackless-theme .woocommerce :is(.stackless-copy, .stackless-license__deactivate .button, .stackless-subscription-section table .button) {
-	min-height: 2rem;
+	min-height: 2.5rem;
 	padding: .3rem .75rem;
 	font-size: var(--st-text-sm);
 }
@@ -462,7 +462,7 @@ body.stackless-theme .stackless-currency-selector__label {
 
 body.stackless-theme .stackless-currency-selector__select {
 	width: auto;
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	border-color: var(--st-border-strong);
 	border-radius: var(--st-radius);
 }

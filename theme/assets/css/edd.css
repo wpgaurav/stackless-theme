@@ -8,8 +8,8 @@
  */
 
 body.stackless-theme {
-	--st-edd-radius: var(--st-radius-sm);
-	--st-edd-radius-xs: 2px;
+	--st-edd-radius: var(--st-radius);
+	--st-edd-radius-xs: var(--st-radius-sm);
 	--st-edd-card-pad: 1.25rem;
 	--edd-blocks-light-grey: var(--st-border);
 }
@@ -792,7 +792,7 @@ body.stackless-theme :is(.wp-block-edd-downloads .navigation, #edd_download_pagi
 
 body.stackless-theme :is(.wp-block-edd-downloads, #edd_download_pagination, .edd_pagination) .page-numbers {
 	min-width: 2.25rem;
-	height: 2.25rem;
+	height: 2.5rem;
 	padding: 0 .6rem;
 	border: 1px solid transparent;
 	border-radius: var(--st-edd-radius);
@@ -1153,8 +1153,8 @@ body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_ca
 
 body.stackless-theme .edd-blocks-form__cart :is(.edd-blocks-cart__action-remove, .edd_discount_remove) {
 	display: inline-block;
-	width: 2rem;
-	height: 2rem;
+	width: 2.5rem;
+	height: 2.5rem;
 	margin: 0;
 	border-radius: var(--st-edd-radius);
 	background-size: 1rem;
@@ -1196,7 +1196,7 @@ body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__discount {
 }
 
 body.stackless-theme .edd-blocks-form__cart #edd_show_discount .edd_discount_link {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding-inline: .875rem;
 	font-size: var(--st-text-sm);
 }
@@ -1307,7 +1307,7 @@ body.stackless-theme .edd-blocks__checkout-forms .edd-button-secondary:disabled 
 }
 
 body.stackless-theme .edd-blocks__checkout-forms .edd-button-secondary {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding: 0 .875rem;
 	font-size: var(--st-text-sm);
 }
@@ -2619,7 +2619,7 @@ body.stackless-theme:not(.stackless-cb) .stackless-recurring-totals-wrap:not(:em
 /* ------------------------------------------------------------------ Stackless for EDD: account content */
 /* Row actions in account tables are small secondary buttons; a payable invoice keeps its primary button. */
 body.stackless-theme .stackless-account__content table :is(.button:not(.edd-submit), a.button.view) {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding: 0 .875rem;
 	border: 1px solid var(--st-border-strong);
 	border-radius: var(--st-edd-radius);
@@ -2636,7 +2636,7 @@ body.stackless-theme .stackless-account__content table :is(.button:not(.edd-subm
 }
 
 body.stackless-theme .stackless-account__content table .edd-submit {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding: 0 .875rem;
 	font-size: var(--st-text-sm);
 }
@@ -2737,7 +2737,7 @@ body.stackless-theme .stackless-license__code {
 }
 
 body.stackless-theme .stackless-license .stackless-copy {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding: 0 .875rem;
 	border: 1px solid var(--st-border-strong);
 	background: var(--st-surface);

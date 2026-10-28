@@ -195,7 +195,7 @@
 		"elements": {
 			"button": {
 				"border": {
-					"radius": "6px",
+					"radius": "4px",
 					"width": "1px",
 					"style": "solid",
 					"color": "var(--wp--preset--color--primary)"

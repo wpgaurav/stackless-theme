@@ -731,8 +731,8 @@ body {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 2.25rem;
-	height: 2.25rem;
+	min-width: 2.5rem;
+	height: 2.5rem;
 	padding: 0 .6rem;
 	border: 1px solid transparent;
 	border-radius: var(--st-radius);
@@ -841,7 +841,7 @@ a.page-numbers:hover {
 	width: 4.5rem;
 	height: 4.5rem;
 	margin-bottom: 1.25rem;
-	border-radius: 50%;
+	border-radius: var(--st-radius);
 	background: var(--st-surface-muted);
 	color: var(--st-gray-400);
 }
@@ -1026,7 +1026,7 @@ body.stackless-theme .st-currency .stackless-currency-selector__form {
 body.stackless-theme .st-currency .stackless-currency-selector__select {
 	width: auto;
 	min-width: 0;
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	margin: 0;
 	padding: 0 1.6rem 0 .6rem;
 	border: 0;
@@ -1473,7 +1473,7 @@ html.search-open {
 	height: 2.75rem;
 	padding: 0;
 	border: 1px solid var(--st-border);
-	border-radius: 50%;
+	border-radius: var(--st-radius);
 	background: var(--st-surface);
 	color: var(--st-heading);
 	cursor: pointer;
@@ -1695,7 +1695,7 @@ html.search-open {
 	margin: 0;
 	padding: .625rem 1rem;
 	border: 1px solid color-mix(in srgb, var(--st-primary) 30%, var(--st-surface));
-	border-radius: var(--st-radius-sm);
+	border-radius: var(--st-radius);
 	background: var(--st-primary-light);
 	color: var(--st-primary-text);
 	font-size: .9375rem;
@@ -1753,21 +1753,21 @@ html.search-open {
 
 .st-store-search__field input {
 	padding-left: 2.35rem;
-	border-radius: var(--st-radius-sm);
+	border-radius: var(--st-radius);
 }
 
 .st-store-search .st-store-sort {
 	flex: 0 1 13rem;
 	width: auto;
 	min-width: 0;
-	border-radius: var(--st-radius-sm);
+	border-radius: var(--st-radius);
 }
 
 .st-store-search__submit {
 	min-height: var(--st-control-h);
 	padding: 0 1rem;
 	border: 1px solid var(--st-border-strong);
-	border-radius: var(--st-radius-sm);
+	border-radius: var(--st-radius);
 	background: var(--st-surface);
 	color: var(--st-heading);
 	font-weight: 500;
@@ -1804,7 +1804,7 @@ html.search-open {
 }
 
 .st-store-chips .chip {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	padding: .3rem .8rem;
 	border-radius: var(--st-radius-sm);
 }
@@ -1855,7 +1855,7 @@ html.search-open {
 .st-store-currency-wrap select {
 	width: auto;
 	min-width: 8rem;
-	border-radius: var(--st-radius-sm);
+	border-radius: var(--st-radius);
 }
 
 @media (max-width: 599.98px) {

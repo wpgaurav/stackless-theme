@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,11 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.4.1 =
+* Changed: one look across WooCommerce, Easy Digital Downloads and the rest of the theme. Corners are 4px on controls and cards and 2px on badges, chips and tags.
+* Changed: WooCommerce notices are tinted boxes with a thin border in their color (blue for information, green for success, red for errors) instead of a white box with a colored stripe.
+* Changed: small buttons and links that act as controls (notice and account table buttons, pagination, the cart's remove button, the currency switcher) are at least 40px tall, so they are easier to tap.
 
 = 1.4.0 =
 * New: Easy Digital Downloads support. Download grids and archives, single downloads with a sticky summary, the checkout (shortcode and block), receipts, order and download history, profile, login and register forms, and the Stackless for EDD account page all match the WooCommerce design. The EDD styles load only on EDD pages.

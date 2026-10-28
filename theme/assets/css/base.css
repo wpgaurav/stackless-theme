@@ -1,6 +1,6 @@
 /*
  * Stackless theme: base layer.
- * Design tokens follow Tabler (tabler.io, MIT): neutral grays, #066fd1 primary, 6px radius,
+ * Design tokens follow Tabler (tabler.io, MIT): neutral grays, #066fd1 primary, 4px radius,
  * hairline borders and soft shadows. Loaded on the site and, scoped by WordPress, in the editor.
  */
 
@@ -50,11 +50,12 @@
 	--st-text-xs: .75rem;
 	--st-leading: 1.6;
 
-	--st-radius-sm: 4px;
-	--st-radius: 6px;
-	--st-radius-lg: 8px;
-	--st-radius-xl: 12px;
-	--st-radius-pill: 100rem;
+	/* Corners stay at 4px or less: 4px for controls and cards, 2px for small pieces (badges, chips, tags). */
+	--st-radius-sm: 2px;
+	--st-radius: 4px;
+	--st-radius-lg: 4px;
+	--st-radius-xl: 4px;
+	--st-radius-pill: 2px;
 
 	--st-shadow-sm: 0 1px 2px 0 rgba(23, 23, 23, .06);
 	--st-shadow: 0 2px 4px -1px rgba(23, 23, 23, .06), 0 4px 6px -1px rgba(23, 23, 23, .08);
@@ -839,7 +840,7 @@ input[type="reset"]:hover,
 }
 
 .wp-block-image.is-style-rounded img {
-	border-radius: var(--st-radius-pill);
+	border-radius: 100rem;
 }
 
 .wp-block-quote {

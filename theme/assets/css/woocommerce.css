@@ -177,12 +177,11 @@ p.no-comments {
 	gap: .5rem 1rem;
 	margin: 0 0 1.5rem;
 	padding: .875rem 1rem .875rem 2.85rem;
-	border: 1px solid var(--st-border);
-	border-left: 3px solid var(--st-info);
+	border: 1px solid color-mix(in srgb, var(--st-info) 35%, var(--st-surface));
 	border-radius: var(--st-radius);
-	background: var(--st-surface);
-	box-shadow: var(--st-shadow-sm);
-	color: var(--st-text);
+	background: var(--st-info-light);
+	box-shadow: none;
+	color: var(--st-info-text);
 	font-size: .9375rem;
 	line-height: 1.5;
 }
@@ -204,7 +203,9 @@ p.no-comments {
 }
 
 .woocommerce-message {
-	border-left-color: var(--st-success);
+	border-color: color-mix(in srgb, var(--st-success) 35%, var(--st-surface));
+	background: var(--st-success-light);
+	color: var(--st-success-text);
 }
 
 .woocommerce-message::before {
@@ -218,7 +219,9 @@ p.no-comments {
 .woocommerce-error {
 	flex-direction: column;
 	align-items: flex-start;
-	border-left-color: var(--st-danger);
+	border-color: color-mix(in srgb, var(--st-danger) 35%, var(--st-surface));
+	background: var(--st-danger-light);
+	color: var(--st-danger-text);
 }
 
 .woocommerce-error::before {
@@ -236,7 +239,7 @@ p.no-comments {
 .woocommerce-message .button {
 	order: 2;
 	margin-left: auto;
-	min-height: 2rem;
+	min-height: 2.5rem;
 	padding: .3rem .8rem;
 	font-size: var(--st-text-sm);
 }
@@ -1181,7 +1184,7 @@ p.demo_store a {
 }
 
 .select2-search--dropdown .select2-search__field {
-	min-height: 2.25rem;
+	min-height: 2.5rem;
 	border: 1px solid var(--st-border-strong) !important;
 	border-radius: var(--st-radius);
 }
@@ -1269,9 +1272,9 @@ p.demo_store a {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 1.75rem;
-	height: 1.75rem;
-	border-radius: 50%;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: var(--st-radius);
 	color: var(--st-gray-500) !important;
 	font-size: 1.25rem;
 	font-weight: 400;
@@ -1647,7 +1650,7 @@ body.stackless-theme .wc-block-order-confirmation-additional-fields-wrapper .wc-
 
 .woocommerce-account .woocommerce-orders-table .button,
 .woocommerce-account .woocommerce-MyAccount-content table .button {
-	min-height: 2rem;
+	min-height: 2.5rem;
 	margin: .15rem .25rem .15rem 0;
 	padding: .3rem .75rem;
 	font-size: var(--st-text-sm);
