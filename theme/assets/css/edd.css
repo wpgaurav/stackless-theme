@@ -596,12 +596,12 @@ body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns, .edd_downlo
 	margin-block: 0 2rem;
 }
 
-body.stackless-theme :is(.edd-blocks__columns-1, .edd_download_columns_1) { --st-columns: 1; }
-body.stackless-theme :is(.edd-blocks__columns-2, .edd_download_columns_2) { --st-columns: 2; }
-body.stackless-theme :is(.edd-blocks__columns-3, .edd_download_columns_3) { --st-columns: 3; }
-body.stackless-theme :is(.edd-blocks__columns-4, .edd_download_columns_4) { --st-columns: 4; }
-body.stackless-theme :is(.edd-blocks__columns-5, .edd_download_columns_5) { --st-columns: 5; }
-body.stackless-theme :is(.edd-blocks__columns-6, .edd_download_columns_6) { --st-columns: 6; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-1, .edd_downloads_list.edd_download_columns_1) { --st-columns: 1; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-2, .edd_downloads_list.edd_download_columns_2) { --st-columns: 2; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-3, .edd_downloads_list.edd_download_columns_3) { --st-columns: 3; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-4, .edd_downloads_list.edd_download_columns_4) { --st-columns: 4; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-5, .edd_downloads_list.edd_download_columns_5) { --st-columns: 5; }
+body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns-6, .edd_downloads_list.edd_download_columns_6) { --st-columns: 6; }
 
 @media (max-width: 959.98px) {
 	body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns, .edd_downloads_list, .st-downloads):not(.edd-blocks__columns-1):not(.edd_download_columns_1) {
@@ -613,6 +613,39 @@ body.stackless-theme :is(.edd-blocks__columns-6, .edd_download_columns_6) { --st
 	body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns, .edd_downloads_list, .st-downloads):not(.edd-blocks__columns-1):not(.edd_download_columns_1) {
 		--st-columns: 1;
 	}
+
+	/* Short rows of four or more (store page shelves) keep two to a row, like a shelf. */
+	body.stackless-theme :is(.edd-blocks__downloads.edd-blocks__columns, .edd_downloads_list):is(.edd-blocks__columns-4, .edd-blocks__columns-5, .edd-blocks__columns-6, .edd_download_columns_4, .edd_download_columns_5, .edd_download_columns_6):not(.edd-blocks__columns-1):not(.edd_download_columns_1) {
+		--st-columns: 2;
+		gap: 1.5rem 1rem;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-header {
+		display: none;
+	}
+}
+
+/* Store page shelf headings: the title and its "All ..." link share a line. */
+.entry .entry-content > .st-store-section-head {
+	align-items: baseline;
+	margin-block: 2.5rem .75rem;
+}
+
+.entry .entry-content > .st-store-section-head :is(h2, p) {
+	margin: 0;
+}
+
+.entry .entry-content > .st-store-section-head h2 {
+	font-size: 1.375rem;
+}
+
+.entry .entry-content > .st-store-section-head p {
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+}
+
+.entry .entry-content > .st-store-section-head p a {
+	text-decoration: none;
 }
 
 body.stackless-theme .edd_downloads_list::after {
@@ -779,24 +812,6 @@ body.stackless-theme :is(.wp-block-edd-downloads, #edd_download_pagination, .edd
 /* Grids and category grids use the wide container inside page content. */
 .entry .entry-content > :is(.wp-block-edd-downloads, .edd_downloads_list, .wp-block-edd-terms) {
 	max-width: var(--st-wide);
-}
-
-/* Archive: category chips above the grid. */
-.st-download-filter {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .5rem;
-	margin: -.5rem 0 2rem;
-}
-
-.st-download-filter .chip.is-current {
-	border-color: var(--st-primary);
-	background: var(--st-primary-light);
-	color: var(--st-primary-text);
-}
-
-.st-download-filter .chip {
-	border-radius: var(--st-radius-sm);
 }
 
 /* ------------------------------------------------------------------ Category grid (Terms block) */
@@ -2455,6 +2470,523 @@ body.stackless-theme .stackless-store-notices {
 
 body.stackless-theme .stackless-store-notice {
 	margin-bottom: .5rem;
+}
+
+/* ------------------------------------------------------------------ Stackless for EDD: Checkout Builder */
+/* The layout's panel is the card, so the cart inside it drops its own card and keeps the row hairlines.
+   Corners follow the theme, whatever radius the layout asks for. */
+body.stackless-theme.stackless-cb {
+	--stackless-cb-radius: var(--st-radius-sm);
+	--stackless-cb-line: var(--st-border);
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart #edd_checkout_cart,
+body.stackless-theme .stackless-cb-wrap table#edd_checkout_cart {
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart :is(.edd-blocks-cart__row, .edd_cart_footer_row) {
+	padding-inline: 0;
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart .edd-blocks-cart__row-header,
+body.stackless-theme .stackless-cb-wrap table#edd_checkout_cart thead th {
+	border-bottom: 1px solid var(--stackless-cb-line);
+	background: transparent;
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart .edd-blocks-cart__items {
+	border-bottom-color: var(--stackless-cb-line);
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart .edd-blocks-cart__row-item + .edd-blocks-cart__row-item {
+	border-top-color: var(--stackless-cb-line);
+}
+
+body.stackless-theme .stackless-cb-wrap .edd-blocks-form__cart .edd-blocks-cart__row-footer:last-child {
+	padding-bottom: 0;
+}
+
+body.stackless-theme .stackless-cb-wrap .stackless-cb-back {
+	font-size: .9375rem;
+}
+
+body.stackless-theme .stackless-cb-wrap .stackless-cb-intro {
+	margin-bottom: 1.5rem;
+}
+
+body.stackless-theme .stackless-cb-wrap .stackless-cb-intro-title {
+	font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+	letter-spacing: -.02em;
+}
+
+/* The form column already sits on white: its sections drop the card shadow and keep the hairline. */
+body.stackless-theme .stackless-cb-wrap .wp-block-edd-checkout #edd_purchase_form .edd-blocks-form,
+body.stackless-theme .stackless-cb-wrap #edd_checkout_form_wrap fieldset {
+	box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ Stackless for EDD: subscriptions at checkout */
+/* "$9.00 / month" stays on one line; any detail (trial, fee, length) sits under it, right-aligned. */
+body.stackless-theme :is(.edd_cart_item_price, .edd-blocks-cart__row-item) .stackless-subscription-price {
+	white-space: nowrap;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_price {
+	flex-wrap: wrap;
+	column-gap: .5rem;
+	row-gap: .15rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_item_price .stackless-subscription-item-details {
+	order: 3;
+	flex-basis: 100%;
+	margin: 0;
+	padding-right: 2.5rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 400;
+	text-align: right;
+	white-space: normal;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_item_price .stackless-subscription-item-details .stackless-subscription-price {
+	white-space: normal;
+}
+
+body.stackless-theme .stackless-recurring-totals {
+	padding: 0;
+	font-size: .9375rem;
+}
+
+body.stackless-theme .stackless-recurring-totals__heading {
+	margin: 0 0 .5rem;
+	color: var(--st-heading);
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+body.stackless-theme .stackless-recurring-group {
+	padding: .75rem 0;
+	border-top: 1px solid var(--st-border);
+}
+
+body.stackless-theme .stackless-recurring-group:first-of-type {
+	border-top: 0;
+	padding-top: 0;
+}
+
+body.stackless-theme .stackless-recurring-group__title {
+	color: var(--st-heading);
+	font-weight: 600;
+}
+
+body.stackless-theme .stackless-recurring-group__items {
+	margin-bottom: .35rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	opacity: 1;
+}
+
+body.stackless-theme .stackless-recurring-row {
+	padding: .2rem 0;
+	color: var(--st-gray-600);
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme .stackless-recurring-row > span:last-child {
+	color: var(--st-heading);
+	text-align: right;
+}
+
+body.stackless-theme .stackless-recurring-row--total {
+	color: var(--st-heading);
+}
+
+/* Outside a builder layout the recurring totals are a card under the cart. */
+body.stackless-theme:not(.stackless-cb) .stackless-recurring-totals-wrap:not(:empty) {
+	margin-top: 1rem;
+	padding: 1rem var(--st-edd-card-pad);
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-sm);
+}
+
+/* ------------------------------------------------------------------ Stackless for EDD: account content */
+/* Row actions in account tables are small secondary buttons; a payable invoice keeps its primary button. */
+body.stackless-theme .stackless-account__content table :is(.button:not(.edd-submit), a.button.view) {
+	min-height: 2.25rem;
+	padding: 0 .875rem;
+	border: 1px solid var(--st-border-strong);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	color: var(--st-heading);
+	font-size: var(--st-text-sm);
+	white-space: nowrap;
+}
+
+body.stackless-theme .stackless-account__content table :is(.button:not(.edd-submit), a.button.view):hover {
+	border-color: var(--st-gray-400);
+	background: var(--st-surface-muted);
+	color: var(--st-heading);
+}
+
+body.stackless-theme .stackless-account__content table .edd-submit {
+	min-height: 2.25rem;
+	padding: 0 .875rem;
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme .stackless-account__content table :is(td, th):last-child:has(> :is(.button, a.button, form)) {
+	text-align: right;
+}
+
+body.stackless-theme .stackless-account__content > h2,
+body.stackless-theme .stackless-account__content .stackless-subscription-section > h3 {
+	margin: 0 0 .875rem;
+}
+
+body.stackless-theme .stackless-subscription-section {
+	margin: 2rem 0 0;
+}
+
+/* Subscription actions: Renew and auto-renew are buttons; cancelling reads as a quiet link. */
+body.stackless-theme .stackless-subscription-actions {
+	gap: .5rem 1rem;
+	margin: 1.25rem 0 0;
+}
+
+body.stackless-theme .stackless-subscription-actions :is(.stackless-action-cancel, .stackless-action-cancel_now) {
+	min-height: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	text-decoration: underline;
+	text-underline-offset: .2em;
+}
+
+body.stackless-theme .stackless-subscription-actions :is(.stackless-action-cancel, .stackless-action-cancel_now):hover {
+	background: none;
+	color: var(--st-danger);
+}
+
+/* Change plan and payment method choices: one option card each, like the payment methods at checkout. */
+body.stackless-theme :is(.stackless-switch-options, .stackless-token-options) label {
+	position: relative;
+	display: block;
+	margin: 0 0 .5rem;
+	padding: .75rem 1rem .75rem 2.75rem;
+	border: 1px solid var(--st-border-strong);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	color: var(--st-heading);
+	font-size: .9375rem;
+	font-weight: 500;
+	line-height: 1.45;
+	cursor: pointer;
+}
+
+body.stackless-theme :is(.stackless-switch-options, .stackless-token-options) label:has(input:checked) {
+	border-color: var(--st-primary);
+	background: var(--st-primary-light);
+	box-shadow: inset 0 0 0 1px var(--st-primary);
+}
+
+body.stackless-theme :is(.stackless-switch-options, .stackless-token-options) label > input {
+	position: absolute;
+	top: .9rem;
+	left: 1rem;
+	margin: 0;
+}
+
+body.stackless-theme .stackless-switch-options .stackless-switch-note {
+	display: block;
+	margin: .25rem 0 0;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 400;
+}
+
+body.stackless-theme .stackless-switch-options > p:first-child {
+	margin-bottom: .75rem;
+}
+
+/* Licenses: the key wraps inside its card, copying is secondary, deactivating is a quiet row action. */
+body.stackless-theme .stackless-license {
+	min-width: 0;
+	padding: var(--st-edd-card-pad);
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-sm);
+}
+
+body.stackless-theme .stackless-license__code {
+	min-width: 0;
+	max-width: 100%;
+	overflow-wrap: anywhere;
+	word-break: break-all;
+}
+
+body.stackless-theme .stackless-license .stackless-copy {
+	min-height: 2.25rem;
+	padding: 0 .875rem;
+	border: 1px solid var(--st-border-strong);
+	background: var(--st-surface);
+	color: var(--st-heading);
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme .stackless-license .stackless-copy:hover {
+	border-color: var(--st-gray-400);
+	background: var(--st-surface-muted);
+	color: var(--st-heading);
+}
+
+body.stackless-theme .stackless-license__meta {
+	gap: .75rem 2rem;
+}
+
+body.stackless-theme .stackless-license__meta dt {
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	font-weight: 600;
+	opacity: 1;
+}
+
+body.stackless-theme .stackless-license__meta dd {
+	color: var(--st-heading);
+	font-weight: 500;
+}
+
+body.stackless-theme .stackless-license__sites {
+	margin: 0;
+	box-shadow: none;
+}
+
+body.stackless-theme .stackless-account__content table .stackless-license__deactivate button.button {
+	min-height: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--st-muted);
+	font-weight: 500;
+	text-decoration: underline;
+	text-underline-offset: .2em;
+}
+
+body.stackless-theme .stackless-account__content table .stackless-license__deactivate button.button:hover {
+	background: none;
+	color: var(--st-danger);
+}
+
+/* Tables with labelled cells stack on phones: one card per row, each value beside its label. */
+@media (max-width: 599.98px) {
+	body.stackless-theme table.edd-table:has(td[data-title]) {
+		display: block;
+		overflow: hidden;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) thead {
+		display: none;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) :is(tbody, tfoot) {
+		display: block;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) tr {
+		display: block;
+		padding: .75rem 1rem;
+		border-top: 1px solid var(--st-border);
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) tbody tr:first-child {
+		border-top: 0;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) tr > :is(td, th) {
+		display: block;
+		padding: .25rem 0;
+		overflow: hidden;
+		border: 0;
+		line-height: 1.45;
+		text-align: right !important; /* the desktop table rule carries an ID */
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) td[data-title]::before {
+		content: attr(data-title);
+		float: left;
+		margin-right: 1rem;
+		color: var(--st-muted);
+		font-size: var(--st-text-sm);
+		font-weight: 400;
+		text-align: left;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) td:not([data-title]) {
+		padding-top: .5rem;
+		text-align: left !important;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) td:not([data-title]):empty {
+		display: none;
+	}
+
+	body.stackless-theme table.edd-table:has(td[data-title]) td > :is(small, br) {
+		display: none;
+	}
+}
+
+/* ------------------------------------------------------------------ Stackless for EDD: product pages and grids */
+body.stackless-theme :is(.st-download-card__action, .edd-blocks__download-footer, .edd_download_buy_button) .stackless-wishlist-form {
+	margin: .5rem 0 0;
+	text-align: left;
+}
+
+body.stackless-theme .stackless-wishlist-form--loop {
+	text-align: left;
+}
+
+body.stackless-theme .stackless-wishlist-toggle {
+	gap: .35rem;
+	color: var(--st-gray-600);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	text-decoration: none;
+}
+
+body.stackless-theme .stackless-wishlist-toggle:is(:hover, :focus-visible, .is-saved) {
+	color: var(--st-danger);
+	text-decoration: none;
+}
+
+body.stackless-theme .st-download__purchase .stackless-wishlist-form {
+	flex-basis: 100%;
+	margin: .25rem 0 0;
+}
+
+body.stackless-theme .st-download__purchase .stackless-quote-button {
+	margin: .75rem 0 0;
+}
+
+body.stackless-theme .st-download__purchase > .stackless-quote-toggle {
+	margin-top: .75rem;
+	border: 0;
+	background: none;
+}
+
+/* Name your price: the field and suggested amounts share the control height and corner. */
+body.stackless-theme .stackless-pwyl__input {
+	max-width: 14rem;
+	height: var(--st-control-h);
+	border-color: var(--st-border-strong);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+}
+
+body.stackless-theme .stackless-pwyl__input input {
+	height: 100%;
+	min-height: 0;
+	border: 0;
+	box-shadow: none;
+}
+
+body.stackless-theme .stackless-pwyl__input:focus-within {
+	border-color: var(--st-primary);
+	outline: 0;
+	box-shadow: var(--st-ring);
+}
+
+/* ------------------------------------------------------------------ Stackless for EDD: on-page checkout */
+body.stackless-theme .stackless-opc {
+	--stackless-opc-accent: var(--st-primary);
+	--stackless-opc-line: var(--st-border-strong);
+}
+
+body.stackless-theme .stackless-opc__plan {
+	padding: .875rem 1rem;
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+}
+
+body.stackless-theme .stackless-opc__plan:has(input:checked) {
+	background: var(--st-primary-light);
+}
+
+body.stackless-theme .stackless-opc__badge {
+	border-radius: var(--st-edd-radius-xs);
+}
+
+body.stackless-theme .stackless-opc__title {
+	font-size: 1.375rem;
+}
+
+/* Store pages run wide for grids and checkouts; their running text keeps the reading width, left-aligned with them. */
+.is-edd-page.is-store-page .entry .entry-content > :is(p, ul, ol, h2, h3, h4) {
+	max-width: var(--st-content);
+	margin-left: max(0px, calc((100% - var(--st-wide)) / 2));
+	margin-right: auto;
+}
+
+.is-edd-page.is-store-page .entry .entry-content > :is(p, ul, ol, h2, h3, h4).alignwide,
+.is-edd-page.is-store-page .entry .entry-content > :is(p, ul, ol, h2, h3, h4).has-text-align-center {
+	max-width: var(--st-wide);
+	margin-inline: auto;
+}
+
+/* Order bump lines carry an "Offer" note under the title, lined up with the quantity. */
+body.stackless-theme .edd-blocks-form__cart .edd_cart_item_name .stackless-bump-note {
+	padding-left: 3.875rem;
+	color: var(--st-success-text);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ Checkout cart rows on phones */
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_price {
+	flex: 0 1 auto;
+	max-width: 55%;
+}
+
+@media (max-width: 479.98px) {
+	body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item {
+		flex-wrap: wrap;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_name {
+		flex: 1 1 100%;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_price {
+		flex: 1 1 100%;
+		max-width: none;
+		min-height: 0;
+		padding-left: 3.875rem;
+		justify-content: space-between;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd_cart_item_name .edd_cart_actions {
+		padding-left: 3.875rem;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd_cart_item_price .stackless-subscription-item-details {
+		padding-right: 0;
+		text-align: left;
+	}
+
+	body.stackless-theme .edd-blocks-form__cart .edd_cart_item_price > .edd_cart_actions {
+		margin-left: auto;
+	}
 }
 
 /* ------------------------------------------------------------------ Odds and ends */

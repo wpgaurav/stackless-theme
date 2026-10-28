@@ -128,15 +128,16 @@ function stackless_theme_assets(): void
 
     $js = stackless_theme_asset('assets/js/theme.js');
     wp_enqueue_script('stackless-theme', STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
-    wp_localize_script('stackless-theme', 'stacklessTheme', [
+    wp_localize_script('stackless-theme', 'stacklessTheme', apply_filters('stackless_theme_search_config', [
         'productsApi' => class_exists('WooCommerce') ? esc_url_raw(rest_url('wc/store/v1/products')) : '',
+        'postType' => 'product',
         'searchUrl' => esc_url_raw(home_url('/')),
         'i18n' => [
             'noResults' => __('No products match "%s". Try a shorter or different word.', 'stackless-theme'),
             'results' => __('Products for "%s"', 'stackless-theme'),
             'searching' => __('Searching…', 'stackless-theme'),
         ],
-    ]);
+    ]));
 
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');

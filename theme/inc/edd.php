@@ -43,7 +43,8 @@ function stackless_theme_edd_content_has_store($post = null): bool
             return true;
         }
     }
-    return false;
+    // Stackless for EDD blocks and shortcodes (on-page checkout, wishlist, quotes, currency selector...).
+    return strpos($post->post_content, '<!-- wp:stackless-edd/') !== false || strpos($post->post_content, '[stackless_edd_') !== false;
 }
 
 /** The Stackless for EDD account page, or 0. */
@@ -60,6 +61,7 @@ function stackless_theme_is_edd_surface(): bool
         return $is;
     }
     $is = is_singular('download') || is_post_type_archive('download') || is_tax(['download_category', 'download_tag'])
+        || (is_search() && get_query_var('post_type') === 'download')
         || (function_exists('edd_is_checkout') && edd_is_checkout())
         || (function_exists('edd_is_success_page') && edd_is_success_page())
         || (function_exists('edd_is_failed_transaction_page') && edd_is_failed_transaction_page())
@@ -115,13 +117,27 @@ function stackless_theme_edd_body_class(array $classes): array
     $wide = (int) get_queried_object_id() === stackless_theme_edd_account_page_id() && stackless_theme_edd_account_page_id() > 0;
     if (!$wide && $post instanceof WP_Post) {
         $wide = has_block('edd/downloads', $post) || has_block('edd/terms', $post) || has_shortcode($post->post_content, 'downloads')
-            || has_shortcode($post->post_content, 'stackless_edd_account');
+            || has_shortcode($post->post_content, 'stackless_edd_account') || has_block('stackless-edd/on-page-checkout', $post)
+            || has_shortcode($post->post_content, 'stackless_edd_on_page_checkout');
         $layout = stackless_theme_edd_checkout_layout();
         if ($layout !== '' && $layout !== 'full') {
             $wide = true;
         }
     }
     if ($wide && !in_array('is-store-page', $classes, true)) {
+        $classes[] = 'is-store-page';
+    }
+    return $classes;
+}
+
+/**
+ * Stackless for EDD's Checkout Builder sets its body classes late (template_redirect). Its two-column
+ * layouts need the wide container; Focused keeps the reading width.
+ */
+add_filter('body_class', 'stackless_theme_edd_checkout_builder_class', 20);
+function stackless_theme_edd_checkout_builder_class(array $classes): array
+{
+    if (in_array('stackless-cb', $classes, true) && !in_array('stackless-cb-layout-focused', $classes, true) && !in_array('is-store-page', $classes, true)) {
         $classes[] = 'is-store-page';
     }
     return $classes;
@@ -267,6 +283,7 @@ function stackless_theme_edd_single_hooks(): void
 {
     if (is_singular('download') && locate_template('single-download.php')) {
         remove_action('edd_after_download_content', 'edd_append_purchase_link');
+        $GLOBALS['stackless_theme_edd_summary_callbacks'] = stackless_theme_edd_take_summary_callbacks();
     }
 }
 
@@ -276,13 +293,16 @@ function stackless_theme_edd_price_html(int $download_id): string
     if (!function_exists('edd_price')) {
         return '';
     }
-    if (function_exists('edd_is_free_download') && edd_is_free_download($download_id)) {
-        return '<span class="edd_price">' . esc_html__('Free', 'stackless-theme') . '</span>';
-    }
     if (edd_has_variable_prices($download_id)) {
         return '<span class="edd_price edd_price_range">' . wp_kses_post(edd_price_range($download_id)) . '</span>';
     }
-    return (string) edd_price($download_id, false);
+    $html = (string) edd_price($download_id, false);
+    // EDD prints $0.00 for a free download unless a plugin (Stackless's Free Price Text) labels it.
+    if (function_exists('edd_is_free_download') && edd_is_free_download($download_id) && (float) edd_get_download_price($download_id) <= 0 && strpos($html, 'stackless-free-price') === false
+        && wp_strip_all_tags($html) === wp_strip_all_tags((string) edd_currency_filter(edd_format_amount(0)))) {
+        $html = '<span class="edd_price" id="edd_price_' . absint($download_id) . '">' . esc_html__('Free', 'easy-digital-downloads') . '</span>';
+    }
+    return $html;
 }
 
 /** The purchase form for a download, unless its "hide purchase link" option is on. */
@@ -292,6 +312,188 @@ function stackless_theme_edd_purchase_form(int $download_id, array $args = []): 
         return '';
     }
     return (string) edd_get_purchase_link(['download_id' => $download_id] + $args);
+}
+
+/** True when a purchase form asks for more than a click: price options, a price to name or add-on fields. */
+function stackless_theme_edd_form_needs_page(string $form): bool
+{
+    return (bool) preg_match('/edd_price_options|stackless-pwyl|stackless-addons|stackless-addon\b/', $form);
+}
+
+/**
+ * Moves hooked product-page actions from under the description into the summary column, where the
+ * purchase form is: Stackless's "Request a quote" button. Filter `stackless_theme_edd_summary_callbacks`
+ * to add others (class::method or function names).
+ */
+function stackless_theme_edd_summary_callbacks(): array
+{
+    return (array) apply_filters('stackless_theme_edd_summary_callbacks', ['StacklessEDD\\Modules\\RequestQuotes\\Form::productButton']);
+}
+
+function stackless_theme_edd_take_summary_callbacks(): array
+{
+    global $wp_filter;
+    $taken = [];
+    $wanted = stackless_theme_edd_summary_callbacks();
+    if (empty($wp_filter['edd_after_download_content'])) {
+        return $taken;
+    }
+    foreach ($wp_filter['edd_after_download_content']->callbacks as $priority => $callbacks) {
+        foreach ($callbacks as $callback) {
+            $fn = $callback['function'];
+            $name = is_array($fn) && is_object($fn[0]) ? get_class($fn[0]) . '::' . $fn[1] : (is_array($fn) ? implode('::', $fn) : (is_string($fn) ? $fn : ''));
+            if ($name !== '' && in_array($name, $wanted, true)) {
+                remove_action('edd_after_download_content', $fn, $priority);
+                $taken[] = $fn;
+            }
+        }
+    }
+    return $taken;
+}
+
+/**
+ * Inside download grids (the Downloads block and [downloads]), a purchase form with price options or
+ * fields becomes a "Choose an option" link to the product page, as WooCommerce does for variable
+ * products. The wishlist button stays. Filter `stackless_theme_edd_grid_options_link` to keep the forms.
+ */
+$GLOBALS['stackless_theme_edd_in_grid'] = 0;
+add_filter('render_block_data', static function ($block) {
+    if (($block['blockName'] ?? '') === 'edd/downloads') {
+        $GLOBALS['stackless_theme_edd_in_grid']++;
+    }
+    return $block;
+});
+add_filter('render_block_edd/downloads', static function ($content) {
+    $GLOBALS['stackless_theme_edd_in_grid'] = max(0, $GLOBALS['stackless_theme_edd_in_grid'] - 1);
+    return $content;
+});
+add_filter('pre_do_shortcode_tag', static function ($out, $tag) {
+    if ($tag === 'downloads') {
+        $GLOBALS['stackless_theme_edd_in_grid']++;
+    }
+    return $out;
+}, 10, 2);
+add_filter('do_shortcode_tag', static function ($out, $tag) {
+    if ($tag === 'downloads') {
+        $GLOBALS['stackless_theme_edd_in_grid'] = max(0, $GLOBALS['stackless_theme_edd_in_grid'] - 1);
+    }
+    return $out;
+}, 10, 2);
+
+add_filter('edd_purchase_download_form', 'stackless_theme_edd_grid_purchase_form', 200, 2);
+function stackless_theme_edd_grid_purchase_form($form, $args = [])
+{
+    if (empty($GLOBALS['stackless_theme_edd_in_grid']) || !is_string($form) || !stackless_theme_edd_form_needs_page($form)
+        || !apply_filters('stackless_theme_edd_grid_options_link', true)) {
+        return $form;
+    }
+    $id = isset($args['download_id']) ? absint($args['download_id']) : 0;
+    if ($id < 1) {
+        return $form;
+    }
+    $wishlist = preg_match('#<form[^>]*stackless-wishlist-form.*?</form>#s', $form, $m) ? $m[0] : '';
+    return '<a class="button st-download-card__choose" href="' . esc_url(get_permalink($id)) . '">' . esc_html__('Choose an option', 'stackless-theme')
+        . '<span class="screen-reader-text">: ' . esc_html(get_the_title($id)) . '</span></a>' . $wishlist;
+}
+
+/* ------------------------------------------------------------------ Header search: live download results */
+
+/**
+ * GET /wp-json/stackless-theme/v1/downloads?search=font returns up to eight published downloads in
+ * the shape the header search already reads from WooCommerce's Store API: name, permalink, images,
+ * price_html, plus the first category. Public read of public data, so no nonce.
+ */
+add_action('rest_api_init', 'stackless_theme_edd_search_route');
+function stackless_theme_edd_search_route(): void
+{
+    register_rest_route('stackless-theme/v1', '/downloads', [
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'search' => ['type' => 'string', 'required' => true, 'sanitize_callback' => 'sanitize_text_field'],
+            'per_page' => ['type' => 'integer', 'default' => 8, 'minimum' => 1, 'maximum' => 12],
+        ],
+        'callback' => 'stackless_theme_edd_search_downloads',
+    ]);
+}
+
+function stackless_theme_edd_search_downloads(WP_REST_Request $request): WP_REST_Response
+{
+    $term = trim((string) $request->get_param('search'));
+    if (mb_strlen($term) < 2) {
+        return new WP_REST_Response([], 200);
+    }
+    $ids = get_posts([
+        'post_type' => 'download',
+        'post_status' => 'publish',
+        's' => $term,
+        'posts_per_page' => (int) $request->get_param('per_page'),
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'suppress_filters' => false,
+    ]);
+    $out = [];
+    foreach ($ids as $id) {
+        $out[] = stackless_theme_edd_search_item((int) $id);
+    }
+    $response = new WP_REST_Response($out, 200);
+    $response->header('Cache-Control', 'public, max-age=300');
+    return $response;
+}
+
+/** One download for the search overlay. */
+function stackless_theme_edd_search_item(int $id): array
+{
+    $thumb = get_the_post_thumbnail_url($id, 'thumbnail');
+    $terms = get_the_terms($id, 'download_category');
+    return [
+        'id' => $id,
+        'name' => esc_html(get_the_title($id)),
+        'permalink' => (string) get_permalink($id),
+        'images' => $thumb ? [['thumbnail' => $thumb, 'src' => $thumb]] : [],
+        'price_html' => stackless_theme_edd_price_html($id),
+        'category' => is_array($terms) && $terms ? $terms[0]->name : '',
+    ];
+}
+
+/** Popular categories and best sellers for the empty search overlay. */
+function stackless_theme_edd_search_discover(): array
+{
+    $terms = function_exists('stackless_theme_store_terms') ? stackless_theme_store_terms('edd') : get_terms(['taxonomy' => 'download_category', 'hide_empty' => true, 'parent' => 0]);
+    if (!is_wp_error($terms) && $terms) {
+        usort($terms, static function ($a, $b) {
+            return (int) $b->count <=> (int) $a->count;
+        });
+        $terms = array_slice($terms, 0, 6);
+    }
+    $popular = get_posts([
+        'post_type' => 'download',
+        'post_status' => 'publish',
+        'posts_per_page' => 4,
+        'meta_key' => '_edd_download_sales', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+        'orderby' => 'meta_value_num',
+        'order' => 'DESC',
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+    return [
+        'terms' => is_wp_error($terms) ? [] : (array) $terms,
+        'popular' => array_map('stackless_theme_edd_search_item', array_map('intval', $popular)),
+    ];
+}
+
+/** The header search reads downloads when EDD is the store (WooCommerce keeps the Store API). */
+add_filter('stackless_theme_search_config', 'stackless_theme_edd_search_config');
+function stackless_theme_edd_search_config(array $config): array
+{
+    if (!empty($config['productsApi'])) {
+        return $config;
+    }
+    $config['productsApi'] = esc_url_raw(rest_url('stackless-theme/v1/downloads'));
+    $config['postType'] = 'download';
+    $config['i18n']['noResults'] = __('No downloads match "%s". Try a shorter or different word.', 'stackless-theme');
+    $config['i18n']['results'] = __('Downloads for "%s"', 'stackless-theme');
+    return $config;
 }
 
 /** Related downloads for the single download page: same category first, then tag, then newest. */

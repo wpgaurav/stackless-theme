@@ -15,11 +15,18 @@ $stackless_theme_terms = $stackless_theme_products
 $stackless_theme_popular = $stackless_theme_products
 	? wc_get_products(['status' => 'publish', 'visibility' => 'catalog', 'limit' => 4, 'orderby' => 'popularity', 'order' => 'DESC'])
 	: [];
+// Easy Digital Downloads (without WooCommerce): download categories and best-selling downloads.
+$stackless_theme_downloads = !$stackless_theme_products && function_exists('stackless_theme_edd_search_discover');
+if ($stackless_theme_downloads) {
+	$stackless_theme_discover = stackless_theme_edd_search_discover();
+	$stackless_theme_terms = $stackless_theme_discover['terms'];
+}
+$stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads;
 ?>
 <div id="site-search" class="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-overlay-title" hidden data-st-search>
 	<div class="search-overlay__inner container">
 		<div class="search-overlay__top">
-			<p id="search-overlay-title" class="search-overlay__title"><?php $stackless_theme_products ? esc_html_e('Search the store', 'stackless-theme') : esc_html_e('Search', 'stackless-theme'); ?></p>
+			<p id="search-overlay-title" class="search-overlay__title"><?php $stackless_theme_store ? esc_html_e('Search the store', 'stackless-theme') : esc_html_e('Search', 'stackless-theme'); ?></p>
 			<button type="button" class="search-overlay__close" data-st-close>
 				<?php stackless_theme_the_icon('x', 22); ?>
 				<span class="screen-reader-text"><?php esc_html_e('Close search', 'stackless-theme'); ?></span>
@@ -27,18 +34,20 @@ $stackless_theme_popular = $stackless_theme_products
 		</div>
 
 		<form role="search" method="get" class="header-search" action="<?php echo esc_url(home_url('/')); ?>">
-			<label class="screen-reader-text" for="header-search-field"><?php $stackless_theme_products ? esc_html_e('Search products', 'stackless-theme') : esc_html_e('Search', 'stackless-theme'); ?></label>
+			<label class="screen-reader-text" for="header-search-field"><?php $stackless_theme_products ? esc_html_e('Search products', 'stackless-theme') : ($stackless_theme_downloads ? esc_html_e('Search downloads', 'stackless-theme') : esc_html_e('Search', 'stackless-theme')); ?></label>
 			<span class="header-search__icon"><?php stackless_theme_the_icon('search', 24); ?></span>
-			<input type="search" id="header-search-field" class="header-search__field" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="<?php echo esc_attr($stackless_theme_products ? __('What are you looking for?', 'stackless-theme') : __('Search…', 'stackless-theme')); ?>" autocomplete="off" aria-controls="search-overlay-results">
+			<input type="search" id="header-search-field" class="header-search__field" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="<?php echo esc_attr($stackless_theme_store ? __('What are you looking for?', 'stackless-theme') : __('Search…', 'stackless-theme')); ?>" autocomplete="off" aria-controls="search-overlay-results">
 			<?php if ($stackless_theme_products) : ?>
 				<input type="hidden" name="post_type" value="product">
+			<?php elseif ($stackless_theme_downloads) : ?>
+				<input type="hidden" name="post_type" value="download">
 			<?php endif; ?>
 			<button type="submit" class="header-search__submit"><?php esc_html_e('Search', 'stackless-theme'); ?></button>
 		</form>
 
 		<section id="search-overlay-results" class="search-results" aria-live="polite" hidden>
 			<div class="search-results__head">
-				<h2 class="search-overlay__heading" data-st-results-title><?php esc_html_e('Products', 'stackless-theme'); ?></h2>
+				<h2 class="search-overlay__heading" data-st-results-title><?php $stackless_theme_downloads ? esc_html_e('Downloads', 'stackless-theme') : esc_html_e('Products', 'stackless-theme'); ?></h2>
 				<a class="search-results__all" href="#" data-st-results-all><?php esc_html_e('View all results', 'stackless-theme'); ?> <?php stackless_theme_the_icon('arrow-right', 16); ?></a>
 			</div>
 			<ul class="search-results__list" data-st-results-list></ul>
@@ -67,6 +76,28 @@ $stackless_theme_popular = $stackless_theme_products
 									<span class="search-result__text">
 										<span class="search-result__name"><?php echo esc_html($stackless_theme_product->get_name()); ?></span>
 										<span class="search-result__price"><?php echo function_exists('stackless_theme_price_without_links') ? stackless_theme_price_without_links($stackless_theme_product->get_price_html()) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-filtered in the helper. ?></span>
+									</span>
+								</a>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</section>
+			<?php endif; ?>
+
+			<?php if ($stackless_theme_downloads && !empty($stackless_theme_discover['popular'])) : ?>
+				<section class="search-overlay__section">
+					<h2 class="search-overlay__heading"><?php esc_html_e('Best sellers', 'stackless-theme'); ?></h2>
+					<ul class="search-results__list search-results__list--grid">
+						<?php foreach ($stackless_theme_discover['popular'] as $stackless_theme_download) : ?>
+							<li>
+								<a class="search-result" href="<?php echo esc_url($stackless_theme_download['permalink']); ?>">
+									<span class="search-result__image"><?php if (!empty($stackless_theme_download['images'][0]['thumbnail'])) : ?><img src="<?php echo esc_url($stackless_theme_download['images'][0]['thumbnail']); ?>" alt="" loading="lazy"><?php endif; ?></span>
+									<span class="search-result__text">
+										<span class="search-result__name"><?php echo $stackless_theme_download['name']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped when built. ?></span>
+										<?php if ($stackless_theme_download['category'] !== '') : ?>
+											<span class="search-result__meta"><?php echo esc_html($stackless_theme_download['category']); ?></span>
+										<?php endif; ?>
+										<span class="search-result__price"><?php echo wp_kses_post(preg_replace('#</?a\b[^>]*>#', '', $stackless_theme_download['price_html'])); ?></span>
 									</span>
 								</a>
 							</li>

@@ -46,6 +46,11 @@ get_header();
 				<?php endif; ?>
 				<div class="st-download__purchase">
 					<?php echo stackless_theme_edd_purchase_form($stackless_theme_id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- EDD escapes its purchase form. ?>
+					<?php
+					foreach ((array) ($GLOBALS['stackless_theme_edd_summary_callbacks'] ?? []) as $stackless_theme_callback) {
+						call_user_func($stackless_theme_callback, $stackless_theme_id);
+					}
+					?>
 				</div>
 				<?php
 				$stackless_theme_cats = get_the_term_list($stackless_theme_id, 'download_category', '', ', ');

@@ -1678,3 +1678,221 @@ html.search-open {
 		height: 2.5rem;
 	}
 }
+
+/* ------------------------------------------------------------------ Store toolbar (EDD store page and archives; WooCommerce when switched on) */
+.st-store-bar {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+	margin: 0 0 2rem;
+}
+
+.st-store-promo {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .35rem .6rem;
+	margin: 0;
+	padding: .625rem 1rem;
+	border: 1px solid color-mix(in srgb, var(--st-primary) 30%, var(--st-surface));
+	border-radius: var(--st-radius-sm);
+	background: var(--st-primary-light);
+	color: var(--st-primary-text);
+	font-size: .9375rem;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.st-store-promo .st-icon {
+	color: var(--st-primary);
+}
+
+.st-store-promo__code code {
+	padding: .1rem .45rem;
+	border: 1px dashed color-mix(in srgb, var(--st-primary) 55%, var(--st-surface));
+	border-radius: 2px;
+	background: var(--st-surface);
+	color: var(--st-primary-text);
+	font-size: .875rem;
+	font-weight: 600;
+	letter-spacing: .04em;
+}
+
+.st-store-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: .75rem 1rem;
+}
+
+.st-store-search {
+	display: flex;
+	flex: 1 1 26rem;
+	flex-wrap: wrap;
+	gap: .5rem;
+	min-width: 0;
+	max-width: 40rem;
+	margin: 0;
+}
+
+.st-store-search__field {
+	position: relative;
+	flex: 1 1 14rem;
+	min-width: 0;
+}
+
+.st-store-search__field .st-icon {
+	position: absolute;
+	top: 50%;
+	left: .75rem;
+	color: var(--st-gray-400);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+.st-store-search__field input {
+	padding-left: 2.35rem;
+	border-radius: var(--st-radius-sm);
+}
+
+.st-store-search .st-store-sort {
+	flex: 0 1 13rem;
+	width: auto;
+	min-width: 0;
+	border-radius: var(--st-radius-sm);
+}
+
+.st-store-search__submit {
+	min-height: var(--st-control-h);
+	padding: 0 1rem;
+	border: 1px solid var(--st-border-strong);
+	border-radius: var(--st-radius-sm);
+	background: var(--st-surface);
+	color: var(--st-heading);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.st-store-search__submit:hover {
+	background: var(--st-surface-muted);
+}
+
+/* With JavaScript, sorting submits on change and Enter submits the search. */
+.js .st-store-search__submit {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap;
+}
+
+.st-store-nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: .75rem 1.5rem;
+}
+
+.st-store-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .4rem;
+	min-width: 0;
+}
+
+.st-store-chips .chip {
+	min-height: 2.25rem;
+	padding: .3rem .8rem;
+	border-radius: var(--st-radius-sm);
+}
+
+.st-store-chips .chip.is-current {
+	border-color: var(--st-primary);
+	background: var(--st-primary-light);
+	color: var(--st-primary-text);
+}
+
+.st-store-links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .5rem 1.25rem;
+	margin-left: auto;
+}
+
+.st-store-link {
+	display: inline-flex;
+	align-items: center;
+	gap: .35rem;
+	color: var(--st-gray-600);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.st-store-link .st-icon {
+	color: var(--st-gray-400);
+}
+
+.st-store-link:hover {
+	color: var(--st-primary);
+}
+
+.st-store-link:hover .st-icon {
+	color: currentColor;
+}
+
+/* The currency switcher matches the other controls. */
+.st-store-currency-wrap .stackless-currency-selector,
+.st-store-currency-wrap form {
+	margin: 0;
+}
+
+.st-store-currency-wrap select {
+	width: auto;
+	min-width: 8rem;
+	border-radius: var(--st-radius-sm);
+}
+
+@media (max-width: 599.98px) {
+	.st-store-search .st-store-sort {
+		flex: 1 1 100%;
+	}
+
+	/* Phones: the chips scroll sideways in one row instead of stacking four rows deep. */
+	.st-store-chips {
+		flex-wrap: nowrap;
+		width: calc(100% + var(--st-gutter));
+		margin-right: calc(var(--st-gutter) * -1);
+		padding-bottom: .25rem;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.st-store-chips::-webkit-scrollbar {
+		display: none;
+	}
+
+	.st-store-chips .chip {
+		flex: none;
+	}
+
+	.st-store-links {
+		margin-left: 0;
+	}
+
+	.st-store-currency-wrap,
+	.st-store-currency-wrap select {
+		width: 100%;
+	}
+}
+
+.search-result__meta {
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	line-height: 1.4;
+}

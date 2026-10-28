@@ -29,7 +29,16 @@ $stackless_theme_variable = function_exists('edd_has_variable_prices') && edd_ha
 				<?php esc_html_e('Choose an option', 'stackless-theme'); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
 			</a>
 		<?php else : ?>
-			<?php echo stackless_theme_edd_purchase_form($stackless_theme_id, ['price' => false]); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- EDD escapes its purchase form. ?>
+			<?php
+			$stackless_theme_form = stackless_theme_edd_purchase_form($stackless_theme_id, ['price' => false]);
+			if (stackless_theme_edd_form_needs_page($stackless_theme_form)) :
+				?>
+				<a class="button st-download-card__choose" href="<?php the_permalink(); ?>">
+					<?php esc_html_e('Choose options', 'stackless-theme'); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
+				</a>
+			<?php else : ?>
+				<?php echo $stackless_theme_form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- EDD escapes its purchase form. ?>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div>
 </article>

@@ -151,6 +151,13 @@
 		});
 
 		text.appendChild(name);
+		// Download results name their category (EDD); Store API products carry none here.
+		if (product.category) {
+			var meta = document.createElement('span');
+			meta.className = 'search-result__meta';
+			meta.textContent = new DOMParser().parseFromString(product.category, 'text/html').documentElement.textContent;
+			text.appendChild(meta);
+		}
 		text.appendChild(price);
 		link.appendChild(media);
 		link.appendChild(text);
@@ -163,7 +170,7 @@
 		results.hidden = false;
 		discover.hidden = true;
 		title.textContent = format(i18n.results, term);
-		all.href = config.searchUrl + '?s=' + encodeURIComponent(term) + '&post_type=product';
+		all.href = config.searchUrl + '?s=' + encodeURIComponent(term) + '&post_type=' + encodeURIComponent(config.postType || 'product');
 		all.hidden = !products.length;
 		if (!products.length) {
 			var empty = document.createElement('li');
@@ -204,6 +211,30 @@
 				results.classList.remove('is-loading');
 			});
 	}
+
+	// Arrow keys move between the field and the results; Escape still closes the overlay.
+	overlay.addEventListener('keydown', function (event) {
+		if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+			return;
+		}
+		var scope = results.hidden ? overlay.querySelector('[data-st-discover]') : results;
+		var links = Array.prototype.slice.call(scope ? scope.querySelectorAll('a.search-result') : []);
+		if (!links.length) {
+			return;
+		}
+		var index = links.indexOf(document.activeElement);
+		if (document.activeElement !== field && index === -1) {
+			return;
+		}
+		event.preventDefault();
+		if (event.key === 'ArrowDown') {
+			links[index === -1 ? 0 : Math.min(index + 1, links.length - 1)].focus();
+		} else if (index <= 0) {
+			field.focus();
+		} else {
+			links[index - 1].focus();
+		}
+	});
 
 	field.addEventListener('input', function () {
 		var term = field.value.trim();
