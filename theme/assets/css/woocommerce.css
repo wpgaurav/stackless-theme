@@ -1734,12 +1734,24 @@ body.stackless-theme .wc-block-components-sidebar-layout .wc-block-components-si
 	align-self: flex-start;
 }
 
-body.stackless-theme .wp-block-woocommerce-checkout-order-summary-block,
 body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerce-cart-order-summary-block {
 	border: 1px solid var(--st-border);
 	border-radius: var(--st-radius-lg);
 	background: var(--st-surface);
 	box-shadow: var(--st-shadow-sm);
+}
+
+/* The checkout summary is a card only in WooCommerce's two-column checkout. Below 920px
+   WooCommerce stacks the checkout and lays the summary out flush, with ruled title lines and
+   no side insets; a card around that shows an empty strip above the title, text against the
+   card edge and a blank band under the totals (phones, and narrow embedded checkouts). */
+@media (min-width: 920px) {
+	body.stackless-theme .wp-block-woocommerce-checkout-order-summary-block {
+		border: 1px solid var(--st-border);
+		border-radius: var(--st-radius-lg);
+		background: var(--st-surface);
+		box-shadow: var(--st-shadow-sm);
+	}
 }
 
 body.stackless-theme .wc-block-cart .wc-block-cart__sidebar .wp-block-woocommerce-cart-order-summary-block {
