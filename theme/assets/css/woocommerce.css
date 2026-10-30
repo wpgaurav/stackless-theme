@@ -265,6 +265,13 @@ p.demo_store {
 	box-shadow: none;
 }
 
+/* WooCommerce's .admin-bar p.demo_store { top: 32px } outranks the rule above for logged-in
+   users; with bottom: 0 the notice then stretched over the whole page. */
+.admin-bar .woocommerce-store-notice,
+.admin-bar p.demo_store {
+	top: auto;
+}
+
 .woocommerce-store-notice a,
 p.demo_store a {
 	color: #fff;
