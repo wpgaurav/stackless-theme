@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,10 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.4.2 =
+* Fixed: below 920px the WooCommerce checkout's order summary no longer sits in a card. WooCommerce lays it out flush there, so the card showed an empty strip above the title, text against its edge and a blank band under the totals on phones and in narrow embedded checkouts.
+* Fixed: the store notice stays a bar at the bottom of the screen for logged-in users. With the admin bar showing it stretched over the whole page.
 
 = 1.4.1 =
 * Changed: one look across WooCommerce, Easy Digital Downloads and the rest of the theme. Corners are 4px on controls and cards and 2px on badges, chips and tags.
