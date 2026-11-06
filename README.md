@@ -12,10 +12,14 @@ A minimal classic WordPress theme for WooCommerce stores running [Stackless for 
 theme/
   style.css, functions.php, theme.json, readme.txt, screenshot.png
   header.php, footer.php, index.php, singular.php, 404.php, comments.php, searchform.php
-  template-parts/      post summary, single, empty state
-  inc/                 setup, icons, template tags, WooCommerce integration
+  page-templates/      Full width (no title) and Canvas (no header or footer)
+  template-parts/      site header and footer, post summary, single, empty state
+  inc/                 setup, icons, template tags, design settings, page layouts, Page Blocks Builder regions,
+                       WooCommerce and EDD integration
+  inc/admin/           Stackless tools (settings export/import, backups) and the Marketers Delight importer
   assets/css/          base (tokens, elements, forms, blocks), layout, woocommerce, stackless, editor
-  assets/js/theme.js   mobile menu and header search toggles
+  assets/js/theme.js   mobile menu, header search and the transparent-header scroll state
+  assets/js/editor-layout.js  the editor's Layout panel
   assets/icons/        Tabler Icons used by the theme
 ```
 

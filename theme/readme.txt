@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,10 @@ Stackless is a quiet, fast classic theme. It styles every semantic HTML element,
 * Full-screen product search with live results, popular categories and best sellers.
 * Single product pages with a sticky summary column; editorial single posts with author box and related posts.
 * Footer widget area and footer menu. Optional "Shop" widget area above the product grid.
+* Design settings for colors, reading and wide widths, fonts and logo width, plus a footer line and header and footer code.
+* Full width and Canvas templates, and per-page options to hide the title, header or footer or lay the header over the first section.
+* Page Blocks Builder regions (header, hero, before and after content, sidebar, footer, 404, shop and store) and an edge-to-edge builder template.
+* Settings export and import with backups, and an importer for sites moving from Marketers Delight.
 
 == Installation ==
 
@@ -34,6 +38,20 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.5.0 =
+* New: design settings under Appearance > Customize > Stackless: Design. Primary, text, heading, background and card colors, the reading and wide widths, body and heading fonts (system stacks or your own), logo width and an optional fade between pages. Only changed values print, as a few custom properties, and the editor and theme.json palette follow them.
+* New: a footer text field with {year} and {site}, and fields for code in the head and before the closing body tag (administrators who may post unfiltered HTML only), under Stackless: Footer and code.
+* New: Full width (no title) and Canvas (no header or footer) templates for pages, posts and other public post types (not WooCommerce products or EDD downloads, which keep their store layouts). Full-width blocks, covers, background groups and raw HTML sections run edge to edge; text and other blocks keep the reading width with space around them.
+* New: a Layout panel in the editor to hide the title, the site header or the site footer, or to lay the header over the first section until the page scrolls. Over a dark cover the header switches to light text (filter stackless_theme_header_on_dark for other heroes). Products and other classic-editor screens get the same options in a side box.
+* New: Page Blocks Builder support. Blocks placed in the header or footer regions replace the theme's own (filter stackless_theme_region_mode to keep both); the hero, before content, after content, sidebar and 404 regions print in place, and two theme regions sit above the WooCommerce shop grid and the download grid. The builder template runs edge to edge and the builder preview uses the theme's type and colors.
+* New: Appearance > Stackless tools. Export the theme settings as JSON, import them on another site, and restore one of the last three backups taken before each import.
+* New: Marketers Delight importer (also under Tools > Import). It previews, then moves the logo, colors, widths, fonts, header and footer scripts, menu locations, widgets, the footer copyright, MD page templates (PBB Template, Builder, Full Blank, Premium Builder) and per-page header, footer, headline and transparent-header settings. It lists what Stackless cannot take over: MD page blocks (with a link to Page Blocks Builder's own importer), MD shortcodes and blocks in content, dropin post types and MD-only features. MD's data is never changed.
+* Improved: the WooCommerce stylesheet (46 KB) loads only on store screens, pages with WooCommerce or Stackless blocks and shortcodes, and pages with WooCommerce widgets, instead of on every page. Blocks and shortcodes it cannot see in advance still pull it in.
+* Improved: the Stackless module layer loads on store screens or when a Stackless module queues its own styles, and the EDD header-cart script only where the header cart prints.
+* Improved: related posts are cached per post and refresh when any post is published, edited or unpublished.
+* Fixed: headings inside a group or column with its own text color take that color, and full-width groups, columns and covers with a background run square to the screen edges.
+* Changed: the site header and footer markup moved to template-parts/site-header.php and template-parts/site-footer.php. Child themes that copied header.php or footer.php keep working; override the new parts to change the markup.
 
 = 1.4.2 =
 * Fixed: below 920px the WooCommerce checkout's order summary no longer sits in a card. WooCommerce lays it out flush there, so the card showed an empty strip above the title, text against its edge and a blank band under the totals on phones and in narrow embedded checkouts.

@@ -113,16 +113,10 @@ function stackless_theme_assets(): void
 {
     stackless_theme_style('stackless-theme-base', 'assets/css/base.css');
     stackless_theme_style('stackless-theme-layout', 'assets/css/layout.css', ['stackless-theme-base']);
-    if (class_exists('WooCommerce')) {
-        $deps = ['stackless-theme-layout'];
-        foreach (['woocommerce-general', 'wc-blocks-style'] as $handle) {
-            if (wp_style_is($handle, 'registered')) {
-                $deps[] = $handle;
-            }
-        }
-        stackless_theme_style('stackless-theme-woocommerce', 'assets/css/woocommerce.css', $deps);
+    if (function_exists('stackless_theme_is_woo_surface') && stackless_theme_is_woo_surface()) {
+        stackless_theme_woo_enqueue_style();
     }
-    if (defined('STACKLESS_VERSION')) {
+    if (defined('STACKLESS_VERSION') && stackless_theme_needs_stackless_layer()) {
         stackless_theme_style('stackless-theme-stackless', 'assets/css/stackless.css', ['stackless-theme-layout']);
     }
 
@@ -144,18 +138,41 @@ function stackless_theme_assets(): void
     }
 }
 
-/** Stackless module styles load late; print the theme's Stackless layer after them. */
+/** The Stackless layer is for store screens; elsewhere it loads only when a Stackless module style does. */
+function stackless_theme_needs_stackless_layer(): bool
+{
+    return (function_exists('stackless_theme_is_woo_surface') && stackless_theme_is_woo_surface())
+        || (function_exists('stackless_theme_is_edd_surface') && stackless_theme_is_edd_surface());
+}
+
+/** Stackless module styles that are queued, other than the theme's own handles. */
+function stackless_theme_stackless_module_handles(WP_Styles $styles): array
+{
+    return array_values(array_filter($styles->queue, static function ($handle): bool {
+        return strpos($handle, 'stackless-') === 0 && strpos($handle, 'stackless-theme') !== 0;
+    }));
+}
+
+/**
+ * Stackless module styles load late; print the theme's Stackless layer after them. Off store
+ * screens the layer joins only when a module has queued its own style.
+ */
 add_action('wp_print_styles', 'stackless_theme_stackless_order', 99);
 function stackless_theme_stackless_order(): void
 {
     global $wp_styles;
-    if (!$wp_styles instanceof WP_Styles || !wp_style_is('stackless-theme-stackless', 'enqueued')) {
+    if (!$wp_styles instanceof WP_Styles || !defined('STACKLESS_VERSION')) {
         return;
     }
-    foreach ($wp_styles->queue as $handle) {
-        if ($handle !== 'stackless-theme-stackless' && strpos($handle, 'stackless-') === 0 && strpos($handle, 'stackless-theme') !== 0) {
-            $wp_styles->registered['stackless-theme-stackless']->deps[] = $handle;
+    $modules = stackless_theme_stackless_module_handles($wp_styles);
+    if (!wp_style_is('stackless-theme-stackless', 'enqueued')) {
+        if (!$modules) {
+            return;
         }
+        stackless_theme_style('stackless-theme-stackless', 'assets/css/stackless.css', ['stackless-theme-layout']);
+    }
+    foreach ($modules as $handle) {
+        $wp_styles->registered['stackless-theme-stackless']->deps[] = $handle;
     }
 }
 

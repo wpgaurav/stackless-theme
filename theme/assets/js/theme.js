@@ -96,6 +96,22 @@
 		}
 	});
 
+	// A header laid over the first section turns solid once the page scrolls.
+	if (document.body && document.body.classList.contains('has-transparent-header')) {
+		var ticking = false;
+		var onScroll = function () {
+			ticking = false;
+			html.classList.toggle('is-scrolled', window.scrollY > 8);
+		};
+		window.addEventListener('scroll', function () {
+			if (!ticking) {
+				ticking = true;
+				window.requestAnimationFrame(onScroll);
+			}
+		}, { passive: true });
+		onScroll();
+	}
+
 	/* ---------------------------------------------------------------- Live product search */
 	var overlay = document.querySelector('[data-st-search]');
 	if (!overlay || !config.productsApi || !window.fetch) {

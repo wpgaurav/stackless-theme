@@ -9,6 +9,7 @@ defined('ABSPATH') || exit;
 
 get_header();
 ?>
+<?php stackless_theme_before_content(); ?>
 <main id="main" class="site-main container">
 	<?php if (is_home() && !is_front_page()) : ?>
 		<header class="page-header">
@@ -57,4 +58,5 @@ get_header();
 	<?php endif; ?>
 </main>
 <?php
+stackless_theme_after_content();
 get_footer();

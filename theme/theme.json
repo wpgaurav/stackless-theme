@@ -219,11 +219,11 @@
 				},
 				":hover": {
 					"color": {
-						"background": "#0560b5",
+						"background": "var(--st-primary-hover, #0560b5)",
 						"text": "var(--wp--preset--color--white)"
 					},
 					"border": {
-						"color": "#0560b5"
+						"color": "var(--st-primary-hover, #0560b5)"
 					}
 				},
 				":focus": {
@@ -241,7 +241,7 @@
 				},
 				":hover": {
 					"color": {
-						"text": "#0560b5"
+						"text": "var(--st-primary-hover, #0560b5)"
 					}
 				}
 			}

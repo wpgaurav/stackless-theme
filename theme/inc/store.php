@@ -248,6 +248,9 @@ function stackless_theme_edd_store_page_toolbar(string $content): string
         return $content;
     }
     ob_start();
+    if (function_exists('stackless_theme_region')) {
+        stackless_theme_region('store_top');
+    }
     stackless_theme_store_toolbar('edd');
     return (string) ob_get_clean() . $content;
 }

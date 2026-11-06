@@ -10,6 +10,7 @@ defined('ABSPATH') || exit;
 
 get_header();
 ?>
+<?php stackless_theme_before_content(); ?>
 <main id="main" class="site-main site-main--shop container">
 	<?php
 	while (have_posts()) {
@@ -101,4 +102,5 @@ get_header();
 	?>
 </main>
 <?php
+stackless_theme_after_content();
 get_footer();

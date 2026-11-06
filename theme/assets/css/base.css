@@ -154,6 +154,7 @@ h5,
 h6 {
 	margin: 1.75em 0 .6em;
 	color: var(--st-heading);
+	font-family: var(--st-font-heading, inherit);
 	font-weight: 600;
 	line-height: 1.25;
 	letter-spacing: -.01em;
@@ -956,6 +957,19 @@ input[type="reset"]:hover,
 .wp-block-cover-image {
 	border-radius: var(--st-radius-lg);
 	overflow: hidden;
+}
+
+/* Full-width sections run square to the screen edges. */
+.alignfull.wp-block-group.has-background,
+.alignfull.wp-block-columns.has-background,
+.alignfull.wp-block-cover,
+.alignfull.wp-block-cover-image {
+	border-radius: 0;
+}
+
+/* Headings inside a block with its own text color take that color. */
+.has-text-color :where(h1, h2, h3, h4, h5, h6):not(.has-text-color) {
+	color: inherit;
 }
 
 .wp-block-cover.alignfull,

@@ -8,7 +8,8 @@
 defined('ABSPATH') || exit;
 
 // The Checkout block (and Stackless Checkout Builder) brings its own heading.
-$stackless_theme_show_title = !(function_exists('is_checkout') && is_checkout() && !is_wc_endpoint_url()) && !is_front_page();
+$stackless_theme_show_title = !(function_exists('is_checkout') && is_checkout() && !is_wc_endpoint_url()) && !is_front_page()
+	&& (!is_singular() || (int) get_the_ID() !== (int) get_queried_object_id() || stackless_theme_shows('title'));
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class('entry'); ?>>
 	<?php if ($stackless_theme_show_title) : ?>

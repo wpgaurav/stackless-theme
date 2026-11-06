@@ -30,6 +30,7 @@ body {
 	z-index: 50;
 	border-bottom: 1px solid var(--st-border);
 	background: rgba(255, 255, 255, .92);
+	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
 	-webkit-backdrop-filter: saturate(180%) blur(12px);
 	backdrop-filter: saturate(180%) blur(12px);
 }
@@ -42,6 +43,57 @@ body {
 	.admin-bar .site-header {
 		top: 0;
 	}
+}
+
+/* Header over the first section (per-page option): clear until the page scrolls or a panel opens. */
+.has-transparent-header .site-header {
+	position: fixed;
+	right: 0;
+	left: 0;
+	border-bottom-color: transparent;
+	background: transparent;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+	transition: background-color var(--st-ease), border-color var(--st-ease);
+}
+
+html.is-scrolled .has-transparent-header .site-header,
+html.nav-open .has-transparent-header .site-header,
+html.search-open .has-transparent-header .site-header,
+.has-transparent-header .site-header:focus-within {
+	border-bottom-color: var(--st-border);
+	background: rgba(255, 255, 255, .92);
+	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
+	-webkit-backdrop-filter: saturate(180%) blur(12px);
+	backdrop-filter: saturate(180%) blur(12px);
+}
+
+/* On a dark first section (has-header-on-dark), the clear header uses light text until it turns solid. */
+.has-header-on-dark .site-header {
+	--st-heading: #fff;
+	--st-gray-600: rgba(255, 255, 255, .85);
+	color: #fff;
+}
+
+html.is-scrolled .has-header-on-dark .site-header,
+html.nav-open .has-header-on-dark .site-header,
+html.search-open .has-header-on-dark .site-header,
+.has-header-on-dark .site-header:focus-within {
+	--st-heading: inherit;
+	--st-gray-600: inherit;
+	color: inherit;
+}
+
+/* Phones scroll the admin bar away, so the header sits below it and scrolls with the page. */
+@media (max-width: 600px) {
+	.admin-bar.has-transparent-header .site-header {
+		position: absolute;
+		top: var(--wp-admin--admin-bar--height, 46px);
+	}
+}
+
+.has-transparent-header .site-main {
+	padding-top: 0;
 }
 
 .site-header__inner {
@@ -550,6 +602,58 @@ body {
 	gap: .5rem;
 	margin-top: 2rem;
 	font-size: var(--st-text-sm);
+}
+
+/* ------------------------------------------------------------------ Full width and Canvas templates
+   Full-width blocks, covers, background groups and raw HTML sections (Page Blocks) run edge to edge
+   with no gaps between them; text and other blocks keep the reading width and wide blocks the wide
+   width, each with the gutter inside. */
+.site-main--full {
+	padding-block: 0;
+}
+
+.entry--full {
+	padding-inline: 0;
+}
+
+.entry--full .entry-content > * {
+	max-width: none;
+	margin-inline: 0;
+}
+
+.entry--full .entry-content > :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, blockquote, pre, hr, table, form, [class*="wp-block-"]:not(.alignwide, .alignfull, .wp-block-cover, .wp-block-group.has-background)) {
+	max-width: calc(var(--st-content) + var(--st-gutter) * 2);
+	margin-inline: auto;
+	padding-inline: var(--st-gutter);
+}
+
+/* Text that opens or closes the page, or sits against a section, keeps the usual space on that side. */
+.entry--full .entry-content > :not(.alignfull, section, .wp-block-cover, .wp-block-group.has-background):is(:first-child, :where(.alignfull, section, .wp-block-cover, .wp-block-group.has-background) + *) {
+	margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.entry--full .entry-content > :not(.alignfull, section, .wp-block-cover, .wp-block-group.has-background, style, script):is(:last-child, :has(+ :where(.alignfull, section, .wp-block-cover, .wp-block-group.has-background))) {
+	margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.entry--full .entry-content > .alignwide {
+	max-width: calc(var(--st-wide) + var(--st-gutter) * 2);
+	margin-inline: auto;
+	padding-inline: var(--st-gutter);
+}
+
+.entry--full .entry-content > .alignfull {
+	margin-inline: 0;
+}
+
+.entry--full .entry-content > :where(.alignfull, section, .wp-block-cover, .wp-block-group.has-background) {
+	margin-block: 0;
+}
+
+/* Page Blocks Builder's template: its sections own the whole width and their own spacing. */
+body.page-template-page-blocks-builder .site-main {
+	max-width: none;
+	padding: 0;
 }
 
 /* Store pages (cart, checkout, account) use the wide container. */
@@ -1101,6 +1205,35 @@ body.stackless-theme .st-currency--menu {
 
 body.stackless-theme .st-currency--footer .stackless-currency-selector__select {
 	color: var(--st-muted);
+}
+
+/* ------------------------------------------------------------------ WooCommerce store notice
+   Global: WooCommerce prints it on every page, while the WooCommerce layer loads only on store screens. */
+/* WooCommerce prints the notice in the footer and pins it to the top of the page, over the sticky
+   header. Keep it as a bar at the bottom of the viewport instead. */
+.woocommerce-store-notice,
+p.demo_store {
+	position: fixed;
+	top: auto;
+	bottom: 0;
+	padding: .65rem var(--st-gutter);
+	background: var(--st-gray-900);
+	color: #fff;
+	font-size: var(--st-text-sm);
+	box-shadow: none;
+}
+
+/* WooCommerce's .admin-bar p.demo_store { top: 32px } outranks the rule above for logged-in
+   users; with bottom: 0 the notice then stretched over the whole page. */
+.admin-bar .woocommerce-store-notice,
+.admin-bar p.demo_store {
+	top: auto;
+}
+
+.woocommerce-store-notice a,
+p.demo_store a {
+	color: #fff;
+	font-weight: 500;
 }
 
 /* ------------------------------------------------------------------ Footer */

@@ -11,6 +11,7 @@ get_header();
 
 $stackless_theme_current = is_tax('download_category') ? (int) get_queried_object_id() : 0;
 ?>
+<?php stackless_theme_before_content(); ?>
 <main id="main" class="site-main site-main--shop container">
 	<header class="page-header">
 		<h1 class="page-title">
@@ -29,6 +30,7 @@ $stackless_theme_current = is_tax('download_category') ? (int) get_queried_objec
 	</header>
 
 	<?php
+	stackless_theme_region('store_top');
 	if (function_exists('stackless_theme_store_toolbar')) {
 		stackless_theme_store_toolbar('edd', $stackless_theme_current);
 	}
@@ -49,4 +51,5 @@ $stackless_theme_current = is_tax('download_category') ? (int) get_queried_objec
 	<?php endif; ?>
 </main>
 <?php
+stackless_theme_after_content();
 get_footer();

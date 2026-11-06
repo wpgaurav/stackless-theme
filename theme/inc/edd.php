@@ -197,6 +197,7 @@ function stackless_theme_edd_cart_link(string $html): string
         return $html;
     }
     $count = (int) edd_get_cart_quantity();
+    stackless_theme_edd_cart_count_script();
     /* translators: %d: number of items in the cart */
     $label = sprintf(_n('Cart, %d item', 'Cart, %d items', $count, 'stackless-theme'), $count);
     return sprintf(
@@ -226,11 +227,13 @@ function stackless_theme_edd_account_url(string $url): string
 
 /**
  * Shows the header count once EDD's AJAX sets a number (the server marks an empty cart is-empty).
- * A handle of its own keeps the theme script deferred.
+ * Queued by the header cart link, so pages without it skip the script; it prints in the footer.
  */
-add_action('wp_enqueue_scripts', 'stackless_theme_edd_cart_count_script', 30);
 function stackless_theme_edd_cart_count_script(): void
 {
+    if (wp_script_is('stackless-theme-edd-cart', 'enqueued')) {
+        return;
+    }
     wp_register_script('stackless-theme-edd-cart', false, [], STACKLESS_THEME_VERSION, ['in_footer' => true]);
     wp_enqueue_script('stackless-theme-edd-cart');
     wp_add_inline_script('stackless-theme-edd-cart', "(function(){var c=document.querySelector('.header-cart__count.edd-cart-quantity');if(!c||!window.MutationObserver){return;}new MutationObserver(function(){c.classList.toggle('is-empty',!(parseInt(c.textContent,10)>0));}).observe(c,{childList:true,characterData:true,subtree:true});})();");

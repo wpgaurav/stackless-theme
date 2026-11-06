@@ -13,21 +13,7 @@ if ($stackless_theme_count < 1) {
 	return;
 }
 
-$stackless_theme_args = [
-	'post_type' => 'post',
-	'posts_per_page' => $stackless_theme_count,
-	'post__not_in' => [get_the_ID()],
-	'ignore_sticky_posts' => true,
-	'no_found_rows' => true,
-	'fields' => 'ids',
-];
-$stackless_theme_ids = get_posts($stackless_theme_args + ['category__in' => wp_get_post_categories(get_the_ID())]);
-if (count($stackless_theme_ids) < $stackless_theme_count) {
-	$stackless_theme_ids = array_merge($stackless_theme_ids, get_posts(array_merge($stackless_theme_args, [
-		'posts_per_page' => $stackless_theme_count - count($stackless_theme_ids),
-		'post__not_in' => array_merge([get_the_ID()], $stackless_theme_ids),
-	])));
-}
+$stackless_theme_ids = stackless_theme_related_post_ids(get_the_ID(), $stackless_theme_count);
 if (!$stackless_theme_ids) {
 	return;
 }

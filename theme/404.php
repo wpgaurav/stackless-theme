@@ -10,6 +10,7 @@ defined('ABSPATH') || exit;
 get_header();
 ?>
 <main id="main" class="site-main container">
+	<?php if (!stackless_theme_region('404')) : ?>
 	<section class="empty-state">
 		<span class="empty-state__icon"><?php stackless_theme_the_icon('alert-circle', 40); ?></span>
 		<p class="empty-state__eyebrow">404</p>
@@ -18,6 +19,7 @@ get_header();
 		<?php get_search_form(); ?>
 		<p><a class="button" href="<?php echo esc_url(home_url('/')); ?>"><?php stackless_theme_the_icon('arrow-left', 18); ?> <?php esc_html_e('Back to home', 'stackless-theme'); ?></a></p>
 	</section>
+	<?php endif; ?>
 </main>
 <?php
 get_footer();

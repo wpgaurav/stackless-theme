@@ -16,6 +16,7 @@ $stackless_theme_widget_args = [
 ];
 ?>
 <aside class="blog-sidebar" aria-label="<?php esc_attr_e('Blog sidebar', 'stackless-theme'); ?>">
+	<?php stackless_theme_region('sidebar'); ?>
 	<?php if (is_active_sidebar('blog')) : ?>
 		<?php dynamic_sidebar('blog'); ?>
 	<?php else : ?>

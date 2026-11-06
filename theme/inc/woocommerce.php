@@ -34,6 +34,7 @@ remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
 add_action('woocommerce_before_main_content', 'stackless_theme_shop_open', 10);
 function stackless_theme_shop_open(): void
 {
+    stackless_theme_before_content();
     echo '<main id="main" class="site-main site-main--shop container">';
 }
 
@@ -41,6 +42,7 @@ add_action('woocommerce_after_main_content', 'stackless_theme_shop_close', 10);
 function stackless_theme_shop_close(): void
 {
     echo '</main>';
+    stackless_theme_after_content();
 }
 
 // Optional filters above the product grid.
@@ -123,4 +125,92 @@ function stackless_theme_price_without_links(string $html): string
         'small' => ['class' => true],
         'strong' => [],
     ]);
+}
+
+/** WooCommerce and Stackless shortcodes that put store markup on a page. */
+function stackless_theme_woo_shortcodes(): array
+{
+    return ['products', 'product', 'product_page', 'product_category', 'product_categories', 'add_to_cart', 'recent_products', 'featured_products', 'sale_products', 'best_selling_products', 'top_rated_products', 'product_attribute', 'related_products', 'shop_messages', 'woocommerce_cart', 'woocommerce_checkout', 'woocommerce_my_account', 'woocommerce_order_tracking'];
+}
+
+/** Whether a post's content carries WooCommerce or Stackless blocks or shortcodes. */
+function stackless_theme_woo_content_has_store($post = null): bool
+{
+    $post = get_post($post);
+    if (!$post instanceof WP_Post || $post->post_content === '') {
+        return false;
+    }
+    $content = $post->post_content;
+    if (strpos($content, '<!-- wp:woocommerce/') !== false || strpos($content, '<!-- wp:stackless') !== false || strpos($content, '[stackless') !== false) {
+        return true;
+    }
+    foreach (stackless_theme_woo_shortcodes() as $shortcode) {
+        if (has_shortcode($content, $shortcode)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * True on WooCommerce screens, pages with store blocks or shortcodes, and wherever a WooCommerce
+ * widget is active. Filter `stackless_theme_is_woo_surface` to force the layer on or off.
+ */
+function stackless_theme_is_woo_surface(): bool
+{
+    static $is = null;
+    if ($is !== null) {
+        return $is;
+    }
+    $is = (function_exists('is_woocommerce') && is_woocommerce())
+        || (function_exists('is_cart') && is_cart())
+        || (function_exists('is_checkout') && is_checkout())
+        || (function_exists('is_account_page') && is_account_page())
+        || (is_singular() && stackless_theme_woo_content_has_store());
+    if (!$is) {
+        foreach (['woocommerce_widget_cart', 'woocommerce_products', 'woocommerce_product_categories', 'woocommerce_product_search', 'woocommerce_top_rated_products', 'woocommerce_recently_viewed_products', 'woocommerce_recent_reviews', 'woocommerce_price_filter', 'woocommerce_layered_nav', 'woocommerce_layered_nav_filters', 'woocommerce_rating_filter', 'woocommerce_product_tag_cloud'] as $widget) {
+            if (is_active_widget(false, false, $widget)) {
+                $is = true;
+                break;
+            }
+        }
+    }
+    $is = (bool) apply_filters('stackless_theme_is_woo_surface', $is);
+    return $is;
+}
+
+function stackless_theme_woo_enqueue_style(): void
+{
+    if (wp_style_is('stackless-theme-woocommerce', 'enqueued') || !function_exists('stackless_theme_style')) {
+        return;
+    }
+    $deps = ['stackless-theme-layout'];
+    foreach (['woocommerce-general', 'wc-blocks-style'] as $handle) {
+        if (wp_style_is($handle, 'registered')) {
+            $deps[] = $handle;
+        }
+    }
+    stackless_theme_style('stackless-theme-woocommerce', 'assets/css/woocommerce.css', $deps);
+}
+
+/**
+ * WooCommerce blocks and shortcodes placed where the checks above cannot see (a block widget, a
+ * Page Blocks section, a template part) still get the layer; it then prints in the footer.
+ */
+add_filter('render_block', 'stackless_theme_woo_late_block_style', 10, 2);
+function stackless_theme_woo_late_block_style($content, array $block)
+{
+    if (!is_admin() && isset($block['blockName']) && strpos((string) $block['blockName'], 'woocommerce/') === 0) {
+        stackless_theme_woo_enqueue_style();
+    }
+    return $content;
+}
+
+add_filter('do_shortcode_tag', 'stackless_theme_woo_late_shortcode_style', 10, 2);
+function stackless_theme_woo_late_shortcode_style($output, string $tag)
+{
+    if (!is_admin() && in_array($tag, stackless_theme_woo_shortcodes(), true)) {
+        stackless_theme_woo_enqueue_style();
+    }
+    return $output;
 }

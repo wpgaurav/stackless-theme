@@ -157,3 +157,44 @@ function stackless_theme_currency_switcher(string $location): void
         sanitize_html_class($location)
     ));
 }
+
+/**
+ * IDs of related posts: same-category posts first, topped up with recent posts. Cached per post
+ * for a day; publishing, editing or unpublishing any post bumps the version and refreshes them all.
+ */
+function stackless_theme_related_post_ids(int $post_id, int $count): array
+{
+    $version = (string) get_option('stackless_theme_related_version', '1');
+    $key = 'stackless_related_' . $post_id;
+    $cached = get_transient($key);
+    if (is_array($cached) && ($cached['v'] ?? '') === $version && (int) ($cached['n'] ?? 0) === $count) {
+        return array_map('intval', (array) $cached['ids']);
+    }
+
+    $args = [
+        'post_type' => 'post',
+        'posts_per_page' => $count,
+        'post__not_in' => [$post_id],
+        'ignore_sticky_posts' => true,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ];
+    $ids = get_posts($args + ['category__in' => wp_get_post_categories($post_id)]);
+    if (count($ids) < $count) {
+        $ids = array_merge($ids, get_posts(array_merge($args, [
+            'posts_per_page' => $count - count($ids),
+            'post__not_in' => array_merge([$post_id], $ids),
+        ])));
+    }
+    $ids = array_map('intval', $ids);
+    set_transient($key, ['v' => $version, 'n' => $count, 'ids' => $ids], DAY_IN_SECONDS);
+    return $ids;
+}
+
+add_action('transition_post_status', 'stackless_theme_related_bump', 10, 3);
+function stackless_theme_related_bump(string $new_status, string $old_status, $post): void
+{
+    if ($post instanceof WP_Post && $post->post_type === 'post' && ($new_status === 'publish' || $old_status === 'publish')) {
+        update_option('stackless_theme_related_version', (string) time(), true);
+    }
+}
