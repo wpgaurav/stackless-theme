@@ -57,7 +57,8 @@ body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fluent-cart-add-t
 	text-transform: none;
 }
 
-body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fct-customer-login-btn, .fct-thank-you-page-view-order-button) {
+/* :where() leaves .is-hidden to FluentCart (a sold-out Buy Now) without adding specificity. */
+body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fct-customer-login-btn, .fct-thank-you-page-view-order-button):where(:not(.is-hidden)) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -76,12 +77,19 @@ body.stackless-theme:not(.fluent-cart-no-colors) :is(.fluent-cart-direct-checkou
 	color: var(--fct-btn-hover-text-color);
 }
 
+/* An outline, as on links: the fills' shadows and forced colors cannot hide it. */
 body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fluent-cart-add-to-cart-button, .fct-product-view-button, .fct_place_order_btn, .fct-review-cta-btn):focus-visible {
-	outline: 0;
-	box-shadow: var(--st-ring);
+	outline: 2px solid var(--st-primary);
+	outline-offset: 2px;
 }
 
-body.stackless-theme :is(.fct-primary-btn, .checkout-button) {
+/* The pricing table switches its outlines off with !important. */
+body.stackless-theme .fluent-cart-pricing-table-variant .fluent-cart-direct-checkout-button:focus-visible {
+	outline: 2px solid var(--st-primary) !important;
+}
+
+/* Not .checkout-button, which FluentCart adds beside it: WooCommerce uses that class too. */
+body.stackless-theme .fct-primary-btn:where(:not(.is-hidden)) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -90,24 +98,35 @@ body.stackless-theme :is(.fct-primary-btn, .checkout-button) {
 	text-decoration: none;
 }
 
-body.stackless-theme:not(.fluent-cart-no-colors) :is(.fct-primary-btn, .checkout-button) {
+body.stackless-theme:not(.fluent-cart-no-colors) .fct-primary-btn {
 	background: var(--fct-btn-bg-color);
 	box-shadow: var(--st-shadow-input);
 	color: var(--fct-btn-text-color);
 }
 
-body.stackless-theme:not(.fluent-cart-no-colors) :is(.fct-primary-btn, .checkout-button):hover {
+body.stackless-theme:not(.fluent-cart-no-colors) .fct-primary-btn:hover {
 	background: var(--fct-btn-hover-bg-color);
 	color: var(--fct-btn-hover-text-color);
 }
 
-body.stackless-theme:not(.fluent-cart-no-colors) .fct-product-card > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button) {
+body.stackless-theme:not(.fluent-cart-no-colors) :is(.fct-product-card, .fct-product-card-template) > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button) {
 	background: var(--fct-card-btn-bg-color, var(--fct-btn-bg-color));
 	box-shadow: var(--st-shadow-input);
 }
 
-body.stackless-theme:not(.fluent-cart-no-colors) .fct-product-card > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button):not(:disabled):hover {
+body.stackless-theme:not(.fluent-cart-no-colors) :is(.fct-product-card, .fct-product-card-template) > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button):not(:disabled):hover {
 	background: var(--fct-card-btn-hover-bg-color, var(--fct-btn-hover-bg-color));
+}
+
+/* Card layouts set their own fills, so these lose only the sheen. */
+body.stackless-theme:not(.fluent-cart-no-colors) .fct-product-card :is(.fct-product-view-button, .fluent-cart-add-to-cart-button, button.fct-card-swatch, button.fct-card-swatch-more, .fct-card-quick-view-button, .fluent-cart-loader),
+body.stackless-theme:not(.fluent-cart-no-colors) .fct_coupon_field button {
+	background-image: none;
+}
+
+/* The modal checkout is a page of its own, without the theme's body class. */
+body:not(.fluent-cart-no-colors) .fct-modal-checkout-form-wrapper .fct_place_order_btn_wrap button {
+	background-image: none;
 }
 
 body.stackless-theme:not(.fluent-cart-no-colors) .fct-cart-drawer-footer a:not(.view-cart-button) {
@@ -160,22 +179,21 @@ body.stackless-theme .fct-card-layout.fct-card-layout.fct-card-layout .fct-card-
 	border-radius: var(--st-radius);
 }
 
+/* The card keeps FluentCart's padding, which its image bleeds through, and does not clip focus rings. */
 body.stackless-theme .fct-products-wrapper .fct-product-card {
-	padding: 0 0 1rem;
-	overflow: hidden;
 	background: var(--fct-card-bg-color);
 }
 
-body.stackless-theme .fct-products-wrapper .fct-product-card > :not(.fct-product-card-image-wrap, .fct-product-card-image, [class*="badge"]) {
-	margin-inline: 1rem;
+/* An optional layout paints its own rounded card inside this one. */
+body.stackless-theme .fct-products-wrapper .fct-product-card:has(> .fct-card-layout) {
+	background: none;
 }
 
-body.stackless-theme .fct-products-wrapper :is(.fct-product-card-image-wrap, .fct-product-card-image) {
-	border-radius: 0;
-}
-
-body.stackless-theme .fct-products-wrapper .fct-product-card > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button) {
+/* FluentCart insets a card's text 12px; its button takes the same edge. */
+body.stackless-theme .fct-products-wrapper :is(.fct-product-card, .fct-product-card-template) > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button) {
 	width: auto;
+	margin-inline: 12px;
+	margin-bottom: 12px;
 }
 
 body.stackless-theme .fct-product-card-title {
@@ -192,6 +210,11 @@ body.stackless-theme .fct-product-card-title a:hover {
 	color: var(--st-primary);
 }
 
+/* The page gutter already insets the grid and related products. Edge-to-edge sections keep FluentCart's inset. */
+body.stackless-theme.is-fluentcart-page :is(.fct-products-wrapper, .fct-similar-product-list-container):not(.entry--full *, .alignfull *) {
+	padding-inline: 0;
+}
+
 /* FluentCart's fallback archive template has no container of its own. */
 body.stackless-theme .fct-genric-template-wrapper {
 	max-width: calc(var(--st-wide) + var(--st-gutter) * 2) !important;
@@ -200,8 +223,8 @@ body.stackless-theme .fct-genric-template-wrapper {
 }
 
 /* ------------------------------------------------------------------ Product */
-/* FluentCart prints the title in the summary and blanks the page's own. */
-body.stackless-theme.is-fluentcart-product .entry > .entry-header {
+/* FluentCart prints the title in the summary and blanks the page's own. With that switched off the title stays. */
+body.stackless-theme.is-fluentcart-product .entry > .entry-header:not(:has(.entry-title)) {
 	display: none;
 }
 
@@ -240,6 +263,18 @@ body.stackless-theme .fct-filter-chip {
 	border-radius: var(--st-radius-sm);
 }
 
+/* Controls FluentCart rounds without reading its radius properties. Its optional card layouts keep their shapes. */
+body.stackless-theme :is(.fct-cart-drawer-open-btn, .fct_coupon.is_coupon_active, .fct_coupon_field button),
+body.stackless-theme .fct-customer-dashboard-app-container .icon-button:not(.is-circle) {
+	border-radius: var(--st-radius);
+}
+
+/* FluentCart prints these from long generated selectors. */
+body.stackless-theme .fct-product-card-template :is(.fct-card-quick-view-button, .fct-card-swatches.is-label .fct-card-swatch),
+body.stackless-theme .fct-customer-dashboard-app-container .el-pagination .el-select__wrapper {
+	border-radius: var(--st-radius) !important;
+}
+
 /* ------------------------------------------------------------------ Cart and checkout */
 body.stackless-theme :is(.fluent-cart-checkout-page, .fct_checkout) {
 	padding-inline: 0;
@@ -250,7 +285,8 @@ body.stackless-theme .fct_coupon_toggle a {
 	border-radius: var(--st-radius);
 }
 
-body.stackless-theme .fct_checkout :is(input:not([type="checkbox"], [type="radio"], [type="hidden"]), select, textarea, .fct_place_order_btn) {
+/* Fields take their corners from --fct-input-radius, so FluentCart can square the joins in a group. */
+body.stackless-theme .fct_checkout .fct_place_order_btn {
 	border-radius: var(--st-radius);
 }
 

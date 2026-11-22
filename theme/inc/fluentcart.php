@@ -124,7 +124,7 @@ function stackless_theme_fluentcart_cart_link(string $html): string
     );
 }
 
-/** Shows or hides the header count as FluentCart changes the number. */
+/** Keeps the header count's visibility and the link's label in step as FluentCart changes the number. */
 function stackless_theme_fluentcart_cart_count_script(): void
 {
     if (wp_script_is('stackless-theme-fluentcart-cart', 'enqueued')) {
@@ -132,7 +132,19 @@ function stackless_theme_fluentcart_cart_count_script(): void
     }
     wp_register_script('stackless-theme-fluentcart-cart', false, [], STACKLESS_THEME_VERSION, ['in_footer' => true]);
     wp_enqueue_script('stackless-theme-fluentcart-cart');
-    wp_add_inline_script('stackless-theme-fluentcart-cart', "(function(){var c=document.querySelector('.header-cart__count[data-cart-badge-count]');if(!c||!window.MutationObserver){return;}new MutationObserver(function(){c.classList.toggle('is-empty',!(parseInt(c.textContent,10)>0));}).observe(c,{childList:true,characterData:true,subtree:true});})();");
+    // PHP picks the plural form. Gettext's plural rules repeat every 100 from 100, so counts 0-199 cover every number.
+    $forms = [];
+    $map = [];
+    for ($n = 0; $n < 200; $n++) {
+        /* translators: %d: number of items in the cart */
+        $form = _n('Cart, %d item', 'Cart, %d items', $n, 'stackless-theme');
+        if (!in_array($form, $forms, true)) {
+            $forms[] = $form;
+        }
+        $map[] = array_search($form, $forms, true);
+    }
+    $labels = wp_json_encode(['forms' => $forms, 'map' => implode('', $map)], JSON_HEX_TAG | JSON_HEX_AMP);
+    wp_add_inline_script('stackless-theme-fluentcart-cart', "(function(l){var c=document.querySelector('.header-cart__count[data-cart-badge-count]');if(!c||!window.MutationObserver){return;}function sync(){var n=parseInt(c.textContent,10)||0,f=l.forms[+l.map.charAt(n<200?n:100+n%100)];c.classList.toggle('is-empty',n<1);if(f){c.parentNode.setAttribute('aria-label',f.replace(/%(1\\$)?d/,n));}}new MutationObserver(sync).observe(c,{childList:true,characterData:true,subtree:true});})(" . $labels . ");");
 }
 
 add_filter('stackless_theme_account_url', 'stackless_theme_fluentcart_account_url', 20);
@@ -145,11 +157,11 @@ function stackless_theme_fluentcart_account_url(string $url): string
     return $page > 0 && get_post_status($page) === 'publish' ? (string) get_permalink($page) : '';
 }
 
-/** The fallback menu skips FluentCart's cart, checkout, receipt and account pages. */
+/** The fallback menu skips FluentCart's cart, checkout, receipt, order review and account pages. */
 add_filter('stackless_theme_menu_fallback_exclude', 'stackless_theme_fluentcart_menu_exclude');
 function stackless_theme_fluentcart_menu_exclude(array $exclude): array
 {
-    foreach (['cart', 'checkout', 'receipt', 'customer_profile'] as $page) {
+    foreach (['cart', 'checkout', 'receipt', 'order_review', 'customer_profile'] as $page) {
         $exclude[] = stackless_theme_fluentcart_page_id($page);
     }
     return array_values(array_filter($exclude));
