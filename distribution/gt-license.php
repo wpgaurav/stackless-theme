@@ -233,7 +233,7 @@ final class Stackless_Theme_License {
 			return;
 		}
 		printf(
-			'<div class="notice notice-info"><p>%s <a href="%s">%s</a></p></div>',
+			'<style>div.notice.stackless-theme-notice{border:1px solid #a7c4e2;border-radius:2px;background:#f0f6fc;box-shadow:none}</style><div class="notice notice-info stackless-theme-notice"><p>%s <a href="%s">%s</a></p></div>',
 			esc_html__( 'Activate your free Stackless theme license key to receive theme updates.', 'stackless-theme' ),
 			esc_url( admin_url( 'themes.php?page=' . self::PAGE ) ),
 			esc_html__( 'Add License Key', 'stackless-theme' )
@@ -277,7 +277,7 @@ final class Stackless_Theme_License {
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Stackless License', 'stackless-theme' ); ?></h1>
 			<?php if ( $notice ) : ?>
-				<div class="notice <?php echo $notice['error'] ? 'notice-error' : 'notice-success'; ?>"><p><?php echo esc_html( $notice['message'] ); ?></p></div>
+				<div class="notice <?php echo $notice['error'] ? 'notice-error' : 'notice-success'; ?>" style="border:1px solid <?php echo $notice['error'] ? '#e6a7a9' : '#9fd3a8'; ?>;border-radius:2px;background:<?php echo $notice['error'] ? '#fcf0f1' : '#edfaef'; ?>;box-shadow:none"><p><?php echo esc_html( $notice['message'] ); ?></p></div>
 			<?php endif; ?>
 			<p><?php esc_html_e( 'Your free license key turns on theme updates. It is lifetime and works on any number of websites. The theme works fully without it.', 'stackless-theme' ); ?></p>
 			<table class="form-table" role="presentation">

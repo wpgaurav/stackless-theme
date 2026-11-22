@@ -43,6 +43,7 @@ Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Pa
 * New: FluentCart support. The shop, product, cart, checkout, receipt, account and cart drawer use the theme's colors and 4px corners, and flat primary buttons replace the dark gradient ones. Colors chosen in FluentCart's settings still win.
 * New: FluentCart store pages use the wide container, so titles line up with the store, products sit in two columns and reviews share their edge.
 * New: header cart and account links for FluentCart stores.
+* Fixed: license notices in the licensed download are tinted boxes without a thick left border.
 
 = 1.5.0 =
 * New: design settings under Appearance > Customize > Stackless: Design. Primary, text, heading, background and card colors, the reading and wide widths, body and heading fonts (system stacks or your own), logo width and an optional fade between pages. Only changed values print, as a few custom properties, and the editor and theme.json palette follow them.
