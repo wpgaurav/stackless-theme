@@ -57,8 +57,9 @@ body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fluent-cart-add-t
 	text-transform: none;
 }
 
-/* :where() leaves .is-hidden to FluentCart (a sold-out Buy Now) without adding specificity. */
-body.stackless-theme :is(.fluent-cart-direct-checkout-button, .fct-customer-login-btn, .fct-thank-you-page-view-order-button):where(:not(.is-hidden)) {
+/* :where() leaves .is-hidden to FluentCart (a sold-out Buy Now) without adding specificity.
+ * Only the product's Buy Now: a standalone one keeps FluentCart's flex, which fills the reading column. */
+body.stackless-theme :is(:where(.fct-product-buttons-wrap) .fluent-cart-direct-checkout-button, .fct-customer-login-btn, .fct-thank-you-page-view-order-button):where(:not(.is-hidden)) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
