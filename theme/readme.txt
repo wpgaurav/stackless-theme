@@ -3,11 +3,11 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A minimal classic theme for WooCommerce and Easy Digital Downloads stores running Stackless.
+A minimal classic theme for WooCommerce, Easy Digital Downloads and FluentCart stores running Stackless.
 
 == Description ==
 
@@ -38,6 +38,11 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.6.0 =
+* New: FluentCart support. The shop, product, cart, checkout, receipt, account and cart drawer use the theme's colors and 4px corners, and flat primary buttons replace the dark gradient ones. Colors chosen in FluentCart's settings still win.
+* New: FluentCart store pages use the wide container, so titles line up with the store, products sit in two columns and reviews share their edge.
+* New: header cart and account links for FluentCart stores.
 
 = 1.5.0 =
 * New: design settings under Appearance > Customize > Stackless: Design. Primary, text, heading, background and card colors, the reading and wide widths, body and heading fonts (system stacks or your own), logo width and an optional fade between pages. Only changed values print, as a few custom properties, and the editor and theme.json palette follow them.

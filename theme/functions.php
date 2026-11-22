@@ -7,7 +7,7 @@
 
 defined('ABSPATH') || exit;
 
-define('STACKLESS_THEME_VERSION', '1.5.0');
+define('STACKLESS_THEME_VERSION', '1.6.0');
 define('STACKLESS_THEME_DIR', get_template_directory());
 define('STACKLESS_THEME_URI', get_template_directory_uri());
 
@@ -25,6 +25,10 @@ if (class_exists('WooCommerce')) {
 
 if (class_exists('Easy_Digital_Downloads')) {
     require STACKLESS_THEME_DIR . '/inc/edd.php';
+}
+
+if (defined('FLUENTCART_VERSION')) {
+    require STACKLESS_THEME_DIR . '/inc/fluentcart.php';
 }
 
 if (class_exists('Easy_Digital_Downloads') || class_exists('WooCommerce')) {
