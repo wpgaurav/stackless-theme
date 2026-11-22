@@ -238,9 +238,17 @@ body.stackless-theme .fct-single-product-page-row {
 	align-items: start;
 }
 
+/* No transition: reduced motion turns every change into a brief one, and FluentCart's zoom measures the box on load. */
 body.stackless-theme .fct-product-gallery-thumb {
 	max-height: none;
 	aspect-ratio: 4 / 3;
+	transition: none;
+}
+
+/* FluentCart fills its square with cover, which in this box would crop a square or portrait image. */
+body.stackless-theme .fct-product-gallery-thumb img {
+	object-fit: contain;
+	transition: none;
 }
 
 body.stackless-theme .fct-product-title :is(h1, h2, h3, h4, h5) {
