@@ -1,0 +1,262 @@
+/*
+ * Stackless theme: paragraph style variations (is-style-*).
+ * Loads in the editor, and on the front end only where a paragraph uses one.
+ */
+
+/* ------------------------------------------------------------------ Callouts */
+/* Flat tinted wells with a hairline in the state color. Each state also carries an icon, so hue is never the only cue. */
+p:is(.is-style-warning, .is-style-error, .is-style-info, .is-style-tip, .is-style-note, .is-style-notice, .is-style-minimal) {
+	--st-callout-accent: var(--st-primary);
+	--st-callout-bg: var(--st-primary-light);
+	--st-callout-ink: var(--st-primary-text);
+	margin-block: 1.5em;
+	padding: 1.5rem 2.25rem;
+	border: 1px solid color-mix(in srgb, var(--st-callout-accent) 30%, var(--st-border));
+	border-radius: var(--st-radius);
+	background: var(--st-callout-bg);
+	color: var(--st-text);
+	line-height: 1.75;
+}
+
+p.is-style-warning {
+	--st-callout-accent: var(--st-warning);
+	--st-callout-bg: var(--st-warning-light);
+	--st-callout-ink: var(--st-warning-text);
+	--st-callout-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 9v4m0 3h.01M10.36 3.59 2.26 17.13A1.91 1.91 0 0 0 3.9 20h16.2a1.91 1.91 0 0 0 1.64-2.87L13.64 3.59a1.91 1.91 0 0 0-3.28 0z'/%3E%3C/svg%3E");
+}
+
+p.is-style-error {
+	--st-callout-accent: var(--st-danger);
+	--st-callout-bg: var(--st-danger-light);
+	--st-callout-ink: var(--st-danger-text);
+	--st-callout-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0m7-2l4 4m0-4l-4 4'/%3E%3C/svg%3E");
+}
+
+p.is-style-info {
+	--st-callout-accent: var(--st-info);
+	--st-callout-bg: var(--st-info-light);
+	--st-callout-ink: var(--st-info-text);
+	--st-callout-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0m9-3h.01M11 12h1v4h1'/%3E%3C/svg%3E");
+}
+
+p.is-style-tip {
+	--st-callout-accent: var(--st-success);
+	--st-callout-bg: var(--st-success-light);
+	--st-callout-ink: var(--st-success-text);
+	--st-callout-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7l-.7.7M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0-1 3a2 2 0 0 1-4 0a3.5 3.5 0 0 0-1-3m.7 1h4.6'/%3E%3C/svg%3E");
+}
+
+/* Note is an authorial aside, not a status: it stays on the brand tint. */
+p.is-style-note {
+	--st-callout-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 20l7-7m-7 7v-6a1 1 0 0 1 1-1h6V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7'/%3E%3C/svg%3E");
+}
+
+p.is-style-minimal {
+	--st-callout-bg: var(--st-surface-muted);
+	--st-callout-ink: var(--st-primary);
+	border-color: var(--st-border);
+	color: var(--st-muted);
+}
+
+/* The icon sits inline at the start of the first line, so wrapped text flows beneath it. */
+p:is(.is-style-warning, .is-style-error, .is-style-info, .is-style-tip, .is-style-note)::before {
+	content: "";
+	display: inline-block;
+	width: 1.15em;
+	height: 1.15em;
+	margin-inline-end: .5em;
+	vertical-align: -.2em;
+	background: var(--st-callout-ink);
+	-webkit-mask: var(--st-callout-glyph) center / contain no-repeat;
+	mask: var(--st-callout-glyph) center / contain no-repeat;
+}
+
+p:is(.is-style-warning, .is-style-error, .is-style-info, .is-style-tip, .is-style-note, .is-style-notice, .is-style-minimal) a {
+	color: var(--st-callout-ink);
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, var(--st-callout-ink) 42%, transparent);
+	text-decoration-thickness: .08em;
+	text-underline-offset: .2em;
+}
+
+/* ------------------------------------------------------------------ Typography */
+p.is-style-intro {
+	margin-block-start: 1.5rem;
+	color: var(--st-muted);
+	font-size: clamp(1.125rem, 1rem + .35vw, 1.3rem);
+	line-height: 1.68;
+}
+
+p.is-style-serif {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 1.1em;
+	line-height: 1.8;
+}
+
+p.is-style-lead {
+	margin-block-end: 2.25rem;
+	padding-block-end: 1.5rem;
+	border-block-end: 1px solid var(--st-border);
+	color: var(--st-heading);
+	font-size: clamp(1.125rem, 1rem + .3vw, 1.25rem);
+	font-weight: 500;
+	line-height: 1.72;
+}
+
+/* The editor zeroes block bottom margins inside layout containers; restate the lead's trailing space there. */
+.editor-styles-wrapper .block-editor-block-list__layout > .is-style-lead {
+	margin-block-end: 2.25rem;
+}
+
+p.is-style-quote {
+	margin-block: 1.25em;
+	padding-inline-start: 1.5rem;
+	border-inline-start: 3px solid var(--st-primary);
+	color: var(--st-muted);
+	font-style: italic;
+	line-height: 1.7;
+}
+
+/* ------------------------------------------------------------------ Boxes */
+p.is-style-glass {
+	margin-block: 1.5em;
+	padding: 2.25rem 3rem;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: color-mix(in srgb, var(--st-surface) 84%, transparent);
+	-webkit-backdrop-filter: blur(8px) saturate(120%);
+	backdrop-filter: blur(8px) saturate(120%);
+	box-shadow: var(--st-shadow-sm);
+	color: var(--st-text);
+	line-height: 1.75;
+}
+
+p:is(.is-style-spotlight, .is-style-ribbon-box, .is-style-numbered-box, .is-style-key-point) {
+	--st-box-accent: var(--st-primary);
+	position: relative;
+	margin-block: 1.5em;
+	border: 1px solid color-mix(in srgb, var(--st-box-accent) 24%, var(--st-border));
+	border-radius: var(--st-radius-lg);
+	background: color-mix(in srgb, var(--st-box-accent) 5%, var(--st-surface));
+	color: var(--st-text);
+	line-height: 1.75;
+}
+
+/* Spotlight: the tint, with the hairline in the full accent color instead of a top rail. */
+p.is-style-spotlight {
+	padding: 2.25rem 3rem;
+	border-color: var(--st-box-accent);
+	box-shadow: var(--st-shadow-sm);
+}
+
+/* Ribbon: a bookmark hangs from the top edge. */
+p.is-style-ribbon-box {
+	padding: 2.25rem 5.25rem 2.25rem 3rem;
+}
+
+p.is-style-ribbon-box::before {
+	content: "";
+	position: absolute;
+	inset: 0 2.25rem auto auto;
+	width: 1.125rem;
+	height: 2rem;
+	background: var(--st-box-accent);
+	clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - .5rem), 0 100%);
+}
+
+p.is-style-numbered-box {
+	padding: 2.25rem 3rem 2.25rem 5.25rem;
+	counter-increment: st-paragraph;
+}
+
+p.is-style-numbered-box::before {
+	content: counter(st-paragraph);
+	position: absolute;
+	inset: 50% auto auto 1.5rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: var(--st-radius-pill);
+	background: var(--st-box-accent);
+	color: #fff;
+	font-size: var(--st-text-sm);
+	font-weight: 700;
+	transform: translateY(-50%);
+}
+
+p.is-style-key-point {
+	padding-block: 1.5rem;
+	padding-inline: 4.5rem 2.25rem;
+}
+
+/* The badge sits on the first line, not the box center: a long key point reads top-down. */
+p.is-style-key-point::before,
+p.is-style-key-point::after {
+	content: "";
+	position: absolute;
+	inset-block-start: calc(1.5rem - .1em);
+	inset-inline-start: 1.5rem;
+	width: 2rem;
+	height: 2rem;
+}
+
+p.is-style-key-point::before {
+	border: 1px solid color-mix(in srgb, var(--st-box-accent) 36%, var(--st-border));
+	border-radius: var(--st-radius-pill);
+	background: color-mix(in srgb, var(--st-box-accent) 14%, var(--st-surface));
+}
+
+p.is-style-key-point::after {
+	background: var(--st-box-accent);
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78a5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4'/%3E%3C/svg%3E") center / 1.125rem no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78a5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4'/%3E%3C/svg%3E") center / 1.125rem no-repeat;
+}
+
+p:is(.is-style-spotlight, .is-style-ribbon-box, .is-style-numbered-box, .is-style-key-point) a {
+	color: var(--st-primary-hover);
+	font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ Asides */
+/* A small note in the flow; on wide screens it moves into the margin beside the reading column. */
+p:is(.is-style-aside, .is-style-aside-right) {
+	padding: .75rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+@media (min-width: 1366px) {
+	p:is(.is-style-aside, .is-style-aside-right) {
+		--st-aside-width: 200px;
+		--st-aside-out: calc(-1 * (var(--st-aside-width) + 2.25rem));
+		float: left;
+		clear: left;
+		width: var(--st-aside-width);
+		margin-inline: var(--st-aside-out) 2.25rem;
+		padding: 1.5rem;
+		border-radius: var(--st-radius-sm);
+		background: var(--st-surface);
+	}
+
+	p.is-style-aside-right {
+		float: right;
+		clear: right;
+		margin-inline: 2.25rem var(--st-aside-out);
+	}
+
+	/* In the entry the reading column is centred by margins, so the margin is measured from the entry's edge. With no room, the aside floats inside the column and text wraps around it. */
+	.entry .entry-content > p:is(.is-style-aside, .is-style-aside-right) {
+		--st-aside-out: max(0px, calc((100% - var(--st-content)) / 2 - var(--st-aside-width) - 2.25rem));
+	}
+
+	.entry .entry-content > p.is-style-aside {
+		margin-inline: var(--st-aside-out) 2.25rem;
+	}
+
+	.entry .entry-content > p.is-style-aside-right {
+		margin-inline: 2.25rem var(--st-aside-out);
+	}
+}

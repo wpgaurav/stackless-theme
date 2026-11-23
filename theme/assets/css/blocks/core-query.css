@@ -1,0 +1,181 @@
+/*
+ * Stackless theme: Query Loop style variations (is-style-*): cards, magazine rows and a compact list.
+ * Loads in the editor, and on the front end only where a Query Loop uses one.
+ */
+
+/* ------------------------------------------------------------------ Shared parts */
+/* Square featured images, so a multi-column grid never goes lopsided. */
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-featured-image {
+	position: relative;
+	overflow: hidden;
+	margin: 0 0 .75rem;
+	border-radius: var(--st-radius);
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-featured-image :is(a, img) {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-featured-image img {
+	border-radius: 0;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	transition: transform .4s cubic-bezier(.32, .72, 0, 1);
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-featured-image:hover img {
+	transform: scale(1.03);
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-title {
+	margin: 0 0 .25rem;
+	color: var(--st-heading);
+	line-height: 1.25;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-title a {
+	color: inherit;
+	text-decoration: none;
+	transition: color var(--st-ease);
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-title a:hover {
+	color: var(--st-primary);
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-excerpt {
+	margin: 0 0 .75rem;
+	color: var(--st-muted);
+}
+
+/* Excerpts are clamped so card heights line up. */
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-excerpt__excerpt {
+	display: -webkit-box;
+	overflow: hidden;
+	margin: 0;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-excerpt__more-link {
+	color: var(--st-primary);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) .wp-block-post-excerpt__more-link:hover {
+	text-decoration: underline;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) :where(.wp-block-post-date, .wp-block-post-author, .wp-block-post-author-name) {
+	color: var(--st-muted);
+	font-size: .875em;
+}
+
+.wp-block-query:is(.is-style-md-cards, .is-style-md-magazine, .is-style-md-list) :is(.wp-block-post-date, .wp-block-post-author, .wp-block-post-author-name) a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ Cards */
+.wp-block-query.is-style-md-cards .wp-block-post-template > li {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-width: 0;
+	padding: 0;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+	transition: border-color var(--st-ease), transform var(--st-ease), box-shadow var(--st-ease);
+}
+
+.wp-block-query.is-style-md-cards .wp-block-post-template > li:hover {
+	border-color: color-mix(in srgb, var(--st-primary) 40%, var(--st-border));
+	box-shadow: var(--st-shadow);
+	transform: translateY(-2px);
+}
+
+.wp-block-query.is-style-md-cards .wp-block-post-featured-image {
+	margin: 0;
+	border-radius: 0;
+}
+
+.wp-block-query.is-style-md-cards .wp-block-post-template > li > :not(.wp-block-post-featured-image) {
+	padding-inline: .75rem;
+}
+
+.wp-block-query.is-style-md-cards .wp-block-post-template > li > :first-child:not(.wp-block-post-featured-image) {
+	padding-block-start: .75rem;
+}
+
+.wp-block-query.is-style-md-cards .wp-block-post-template > li > :last-child {
+	padding-block-end: .75rem;
+}
+
+/* ------------------------------------------------------------------ Magazine: image left, text right */
+.wp-block-query.is-style-md-magazine .wp-block-post-template > li {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+	align-items: start;
+	gap: 1.5rem;
+}
+
+.wp-block-query.is-style-md-magazine .wp-block-post-featured-image {
+	margin: 0;
+}
+
+@media (max-width: 640px) {
+	.wp-block-query.is-style-md-magazine .wp-block-post-template > li {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ------------------------------------------------------------------ List: compact rows */
+.wp-block-query.is-style-md-list .wp-block-post-template {
+	display: flex !important;
+	flex-direction: column;
+	gap: .75rem;
+}
+
+.wp-block-query.is-style-md-list .wp-block-post-template > li {
+	display: grid;
+	grid-template-columns: 6rem minmax(0, 1fr);
+	align-items: center;
+	gap: .75rem;
+	margin: 0;
+	padding: .75rem;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius);
+	background: var(--st-surface);
+	transition: border-color var(--st-ease), transform var(--st-ease);
+}
+
+.wp-block-query.is-style-md-list .wp-block-post-template > li:hover {
+	border-color: color-mix(in srgb, var(--st-primary) 40%, var(--st-border));
+	transform: translateX(2px);
+}
+
+.wp-block-query.is-style-md-list .wp-block-post-featured-image {
+	width: 6rem;
+	margin: 0;
+	border-radius: var(--st-radius-sm);
+}
+
+.wp-block-query.is-style-md-list .wp-block-post-excerpt {
+	margin-block-end: 0;
+}
+
+.wp-block-query.is-style-md-list .wp-block-post-excerpt__excerpt {
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+}
+
+@media (max-width: 480px) {
+	.wp-block-query.is-style-md-list .wp-block-post-template > li {
+		grid-template-columns: 1fr;
+	}
+}

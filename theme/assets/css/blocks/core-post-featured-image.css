@@ -1,0 +1,98 @@
+/*
+ * Stackless theme: featured image style variations (is-style-*).
+ * Loads in the editor, and on the front end only where a featured image uses one.
+ */
+
+/* Rounder: the theme's card radius. Corners stay at 4px or less across the theme. */
+.wp-block-post-featured-image.is-style-rounder img {
+	border-radius: var(--st-radius);
+}
+
+/* ------------------------------------------------------------------ Browser shot */
+/* A chrome bar above the image. The bar is its own grid row and the frame wraps the image only, so a caption falls outside the window. */
+.wp-block-post-featured-image.is-style-browser-shot {
+	--st-browser-chrome: 2.25rem;
+	--st-browser-dot: var(--st-gray-300);
+	position: relative;
+	display: grid;
+	grid-template-columns: 100%;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+}
+
+.wp-block-post-featured-image.is-style-browser-shot::before {
+	content: "";
+	block-size: var(--st-browser-chrome);
+	border: 1px solid var(--st-border);
+	border-block-end: 0;
+	border-radius: var(--st-radius) var(--st-radius) 0 0;
+	background: var(--st-surface-muted);
+}
+
+/* Window controls: neutral dots, out of the grid flow. */
+.wp-block-post-featured-image.is-style-browser-shot::after {
+	content: "";
+	position: absolute;
+	inset-block-start: calc(var(--st-browser-chrome) / 2);
+	inset-inline-start: 1rem;
+	inline-size: .5rem;
+	block-size: .5rem;
+	margin-block-start: -.25rem;
+	border-radius: 50%;
+	background: var(--st-browser-dot);
+	box-shadow: .875rem 0 0 var(--st-browser-dot), 1.75rem 0 0 var(--st-browser-dot);
+}
+
+.wp-block-post-featured-image.is-style-browser-shot a {
+	display: block;
+	line-height: 0;
+}
+
+.wp-block-post-featured-image.is-style-browser-shot img {
+	display: block;
+	inline-size: 100%;
+	block-size: auto;
+	border: 1px solid var(--st-border);
+	border-block-start: 0;
+	border-radius: 0 0 var(--st-radius) var(--st-radius);
+}
+
+.wp-block-post-featured-image.is-style-browser-shot figcaption {
+	margin-block-start: .75rem;
+}
+
+/* ------------------------------------------------------------------ Shadows */
+.wp-block-post-featured-image.is-style-shadow img {
+	box-shadow: var(--st-shadow-lg);
+}
+
+/* The image lifts on hover only when it is a link. */
+.wp-block-post-featured-image:is(.is-style-shadow, .is-style-shadow-round) a img {
+	transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.wp-block-post-featured-image:is(.is-style-shadow, .is-style-shadow-round) a:hover img {
+	box-shadow: 0 6px 10px -4px rgba(23, 23, 23, .08), 0 16px 24px -6px rgba(23, 23, 23, .12);
+	transform: translateY(-2px);
+}
+
+/* Shadow round: a framed screenshot with a hairline border and a detached accent ring. */
+.wp-block-post-featured-image.is-style-shadow-round img {
+	box-sizing: border-box;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface-muted);
+	box-shadow: var(--st-shadow-lg);
+	outline: 1px solid color-mix(in srgb, var(--st-primary) 30%, transparent);
+	outline-offset: 4px;
+}
+
+@media (forced-colors: active) {
+	.wp-block-post-featured-image.is-style-shadow-round img {
+		border: 1px solid canvastext;
+		box-shadow: none;
+		outline: 0;
+	}
+}

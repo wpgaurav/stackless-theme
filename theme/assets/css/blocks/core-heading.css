@@ -1,0 +1,155 @@
+/*
+ * Stackless theme: heading style variations (is-style-*).
+ * Loads in the editor, and on the front end only where a heading uses one.
+ */
+
+:is(h1, h2, h3, h4, h5, h6).is-style-serif {
+	font-family: Georgia, "Times New Roman", serif;
+	font-weight: 400;
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-accent-bar {
+	padding-inline-start: 1.5rem;
+	border-inline-start: 0;
+	box-shadow: inset 3px 0 0 var(--st-primary);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-section {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-section::before {
+	content: "§";
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: var(--st-radius);
+	background: var(--st-primary-light);
+	color: var(--st-primary);
+	font-size: 1.25em;
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-label {
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	font-weight: 700;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+}
+
+/* Numbered: h2 and h3 count themselves, and an h2 restarts the h3 count. */
+h2.is-style-numbered {
+	counter-increment: st-h2;
+	counter-reset: st-h3;
+}
+
+h2.is-style-numbered::before {
+	content: counter(st-h2);
+}
+
+h3.is-style-numbered {
+	counter-increment: st-h3;
+}
+
+h3.is-style-numbered::before {
+	content: counter(st-h3);
+}
+
+:is(h2, h3).is-style-numbered::before {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	margin-inline-end: .75rem;
+	border-radius: var(--st-radius-pill);
+	background: var(--st-primary-light);
+	color: var(--st-primary);
+	font-size: var(--st-text-base);
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-centered-heading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+	text-align: center;
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-centered-heading::before,
+:is(h1, h2, h3, h4, h5, h6).is-style-centered-heading::after {
+	content: "";
+	flex: 1;
+	max-width: 100px;
+	height: 1px;
+	background: var(--st-border);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-thick-border {
+	margin-bottom: 2.25rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 2px solid var(--st-heading);
+}
+
+/* Inverse fill. */
+:is(h1, h2, h3, h4, h5, h6).is-style-box-heading {
+	margin-bottom: 1.5rem;
+	padding: 1.5rem 2.25rem;
+	border-radius: var(--st-radius);
+	background: var(--st-text);
+	color: var(--st-bg) !important;
+}
+
+/* Ribbon, highlight and sticker hug their text. They stay blocks so the entry can place them on the reading column. */
+:is(h1, h2, h3, h4, h5, h6):is(.is-style-ribbon, .is-style-highlight, .is-style-sticker) {
+	display: block;
+	width: fit-content;
+}
+
+.entry .entry-content > :is(h1, h2, h3, h4, h5, h6):is(.is-style-ribbon, .is-style-highlight, .is-style-sticker):not(.has-text-align-center) {
+	margin-inline: max(0px, calc((100% - var(--st-content)) / 2)) auto;
+}
+
+/* Ribbon: pointed at the start, notched at the end. */
+:is(h1, h2, h3, h4, h5, h6).is-style-ribbon {
+	padding: .75rem 3rem .75rem 2.25rem;
+	background: var(--st-primary);
+	color: #fff !important;
+	font-weight: 600;
+	letter-spacing: .01em;
+	clip-path: polygon(1rem 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 1rem 100%, 0 50%);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-highlight {
+	padding: 0 .25rem;
+	border-radius: var(--st-radius-sm);
+	background: color-mix(in srgb, var(--st-primary) 16%, transparent);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-sticker {
+	padding: .75rem 2.25rem;
+	border: 1px solid color-mix(in srgb, var(--st-primary) 30%, var(--st-border));
+	border-radius: var(--st-radius-lg);
+	background: var(--st-primary-light);
+	box-shadow: 2px 2px 0 color-mix(in srgb, var(--st-primary) 30%, transparent);
+	color: var(--st-primary-text) !important;
+	font-weight: 600;
+	transform: rotate(-1deg);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-brackets::before {
+	content: "[ ";
+	color: var(--st-muted);
+}
+
+:is(h1, h2, h3, h4, h5, h6).is-style-brackets::after {
+	content: " ]";
+	color: var(--st-muted);
+}
