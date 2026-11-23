@@ -167,10 +167,15 @@ Each Stackless block renders as a part named `block_` plus the block's name with
 | Part | Block |
 |---|---|
 | `block_arrow` | `stackless/arrow` |
+| `block_book_card` | `stackless/book-card` |
 | `block_callout` | `stackless/callout` |
 | `block_content_upgrade` | `stackless/content-upgrade` |
 | `block_faq`, `block_faq_item` | `stackless/faq` and its items |
+| `block_github_card` | `stackless/github-card` |
 | `block_key_takeaway` | `stackless/key-takeaway` |
+| `block_npm_card` | `stackless/npm-card` |
+| `block_plugin_card` | `stackless/plugin-card` |
+| `block_podcast_card` | `stackless/podcast-card` |
 | `block_pull_quote` | `stackless/pull-quote` |
 | `block_query_loop` | `stackless/query-loop` |
 | `block_quote` | `stackless/quote` |
@@ -180,7 +185,9 @@ Each Stackless block renders as a part named `block_` plus the block's name with
 | `block_side_promotion`, `block_side_promotion_item` | `stackless/side-promotion` and its panels |
 | `block_spoiler` | `stackless/spoiler` |
 | `block_steps`, `block_step` | `stackless/steps` and its steps |
+| `block_theme_card` | `stackless/theme-card` |
 | `block_table_of_contents` | `stackless/table-of-contents` (the list is filled once the post has rendered, so filter that with `stackless_theme_blocks_toc_markup`) |
+| `block_youtube_card` | `stackless/youtube-card` |
 
 Block filters:
 
@@ -190,11 +197,13 @@ Block filters:
 | `stackless_theme_blocks_supports` | Change a block's supports (`$supports, $slug`). |
 | `stackless_theme_blocks_icon_map` | Map a stored icon name to a Tabler icon in `assets/icons/`. |
 | `stackless_theme_blocks_palette` | The colors offered by the blocks' color-class pickers. |
-| `stackless_theme_blocks_editor_data` | The data handed to the editor scripts (colors, icons, popups). |
+| `stackless_theme_blocks_editor_data` | The data handed to the editor scripts (colors, icons, card icons, popups). |
 | `stackless_theme_blocks_popup_trigger` | Return the attributes that make a Callout or Content Upgrade button open a popup (`'', $popup, $slug`). Empty by default: the `popup` attribute is stored and ignored. |
 | `stackless_theme_blocks_toc_defaults`, `stackless_theme_blocks_toc_markup` | The table of contents defaults, and its inner markup (`$html, $headings, $args`). |
 | `stackless_theme_blocks_query_loop_max_posts` | The most posts one Query Loop may render (50). |
 | `stackless_theme_blocks_related_image_size` | The image size for Related Content thumbnails. |
+| `stackless_theme_blocks_refresh_cards` | Whether the Plugin, Theme, GitHub and npm cards refresh their stats (`true, $type`). Return false and they print the saved values and make no outside requests. |
+| `stackless_theme_blocks_card_schema` | A card's structured data (`$data, $slug`). Return an empty array to print none. |
 | `stackless_theme_blocks_core_styles`, `stackless_theme_blocks_core_legacy_styles_enabled` | The core block style variations, and whether the older ones show in the style picker. |
 
 ### Page wrapper
