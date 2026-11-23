@@ -60,11 +60,13 @@
 	--font-base: var(--st-font);
 	--font-serif: Georgia, "Times New Roman", serif;
 	--font-quote: Georgia, "Times New Roman", serif;
+	--font-mono: var(--st-font-mono);
 	--font-weight-bold: 700;
 
 	--shadow-sm: var(--st-shadow-sm);
 	--shadow-card: var(--st-shadow);
 	--transition: var(--st-ease);
+	--motion: var(--st-ease);
 	--wide: var(--st-wide);
 	--content-width: var(--st-content);
 }
@@ -86,6 +88,16 @@
 	width: 1em;
 	height: 1em;
 }
+
+/* The card blocks' small icons: an <svg> on the page, a <span> around one in the editor. */
+[class*="wp-block-stackless-"] :is(.md-card-icon, .md-github-card-icon) {
+	display: inline-flex;
+	flex-shrink: 0;
+	vertical-align: -.125em;
+}
+
+/* A full star is drawn filled; Tabler's star is an outline. */
+[class*="wp-block-stackless-"] .md-icon-star-full > svg { fill: currentColor; }
 
 /* ------------------------------------------------------------------ Spacing */
 /* [class] is always true here. It lifts these above the theme's content-flow margins, which have
@@ -118,6 +130,7 @@
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).text-left { text-align: left; }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).text-right { text-align: right; }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).text-sec { color: var(--st-muted); }
+:is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).text-warning { color: var(--st-warning); }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.small, .small-text, .text-small) { font-size: var(--st-text-sm); }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).bold { font-weight: 700; }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).caps { letter-spacing: .06em; text-transform: uppercase; }

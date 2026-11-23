@@ -17,6 +17,7 @@ defined('ABSPATH') || exit;
 require __DIR__ . '/icons.php';
 require __DIR__ . '/helpers.php';
 require __DIR__ . '/render.php';
+require __DIR__ . '/cards.php';
 require __DIR__ . '/toc.php';
 require __DIR__ . '/query-loop.php';
 require __DIR__ . '/core-styles.php';
@@ -47,6 +48,12 @@ function stackless_theme_blocks(): array
             'description' => __('Show an icon to encourage scrolling or draw attention.', 'stackless-theme'),
             'icon' => 'arrow-down-alt2',
             'callback' => 'stackless_theme_blocks_render_arrow',
+        ],
+        'book-card' => [
+            'title' => __('Book Card', 'stackless-theme'),
+            'description' => __('Display book information. Fetch data automatically from Open Library.', 'stackless-theme'),
+            'icon' => 'book-alt',
+            'callback' => 'stackless_theme_blocks_render_book_card',
         ],
         'callout' => [
             'title' => __('Callout', 'stackless-theme'),
@@ -81,11 +88,35 @@ function stackless_theme_blocks(): array
             'style' => false,
             'editor' => false,
         ],
+        'github-card' => [
+            'title' => __('GitHub Card', 'stackless-theme'),
+            'description' => __('Display GitHub repository information. Fetch data automatically from GitHub.', 'stackless-theme'),
+            'icon' => 'editor-code',
+            'callback' => 'stackless_theme_blocks_render_github_card',
+        ],
         'key-takeaway' => [
             'title' => __('Key Takeaway', 'stackless-theme'),
             'description' => __('Highlight important points or TL;DR summaries.', 'stackless-theme'),
             'icon' => 'lightbulb',
             'callback' => 'stackless_theme_blocks_render_key_takeaway',
+        ],
+        'npm-card' => [
+            'title' => __('npm Package Card', 'stackless-theme'),
+            'description' => __('Display npm package information. Fetch data automatically from the npm registry.', 'stackless-theme'),
+            'icon' => 'editor-code',
+            'callback' => 'stackless_theme_blocks_render_npm_card',
+        ],
+        'plugin-card' => [
+            'title' => __('Plugin Card', 'stackless-theme'),
+            'description' => __('Display WordPress plugin information. Fetch data automatically from WordPress.org.', 'stackless-theme'),
+            'icon' => 'admin-plugins',
+            'callback' => 'stackless_theme_blocks_render_plugin_card',
+        ],
+        'podcast-card' => [
+            'title' => __('Podcast Card', 'stackless-theme'),
+            'description' => __('Display a podcast episode card with artwork, metadata, and playback link. Fetches data from RSS feeds.', 'stackless-theme'),
+            'icon' => 'microphone',
+            'callback' => 'stackless_theme_blocks_render_podcast_card',
         ],
         'pull-quote' => [
             'title' => __('Pull Quote', 'stackless-theme'),
@@ -217,6 +248,12 @@ function stackless_theme_blocks(): array
             'icon' => 'editor-ol',
             'callback' => 'stackless_theme_blocks_render_steps',
         ],
+        'theme-card' => [
+            'title' => __('Theme Card', 'stackless-theme'),
+            'description' => __('Display WordPress theme information. Fetch data automatically from WordPress.org.', 'stackless-theme'),
+            'icon' => 'admin-appearance',
+            'callback' => 'stackless_theme_blocks_render_theme_card',
+        ],
         'table-of-contents' => [
             'title' => __('Table of Contents', 'stackless-theme'),
             'description' => __('List the headings in this post, with links that jump to each section.', 'stackless-theme'),
@@ -236,6 +273,12 @@ function stackless_theme_blocks(): array
                 'exclude' => ['type' => 'string', 'default' => ''],
                 'min' => ['type' => 'number', 'default' => 0],
             ],
+        ],
+        'youtube-card' => [
+            'title' => __('YouTube Card', 'stackless-theme'),
+            'description' => __('Display a YouTube video card. Fetch title and channel automatically from YouTube.', 'stackless-theme'),
+            'icon' => 'video-alt3',
+            'callback' => 'stackless_theme_blocks_render_youtube_card',
         ],
     ];
     /**
@@ -407,6 +450,7 @@ function stackless_theme_blocks_editor_assets(): void
     wp_enqueue_script('stackless-blocks-editor', STACKLESS_THEME_URI . '/' . $common, $base, stackless_theme_asset_version($common), ['in_footer' => true]);
     wp_add_inline_script('stackless-blocks-editor', 'window.StacklessBlocks = Object.assign(window.StacklessBlocks || {}, ' . wp_json_encode(stackless_theme_blocks_editor_data()) . ');', 'before');
     wp_add_inline_script('stackless-blocks-editor', 'window.StacklessTocDefaults = ' . wp_json_encode(stackless_theme_blocks_toc_defaults()) . ';', 'before');
+    wp_add_inline_script('stackless-blocks-editor', 'window.StacklessCardImages = ' . wp_json_encode(stackless_theme_blocks_card_editor_data()) . ';', 'before');
     wp_add_inline_script('stackless-blocks-editor', 'window.StacklessRelatedContent = ' . wp_json_encode([
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('stackless_search_posts'),
@@ -453,8 +497,8 @@ function stackless_theme_blocks_editor_styles(): void
 
 /**
  * Data for the editor scripts: the palette for the color-class pickers, the icon picker's
- * options with their SVG, and the popup list (empty until Stackless Pro's Popups module fills
- * it through the filter).
+ * options with their SVG, the card blocks' small icons, and the popup list (empty until
+ * Stackless Pro's Popups module fills it through the filter).
  */
 function stackless_theme_blocks_editor_data(): array
 {
@@ -472,6 +516,7 @@ function stackless_theme_blocks_editor_data(): array
         'colors' => $colors,
         'icons' => $icons,
         'iconSvg' => $svg,
+        'cardIcons' => stackless_theme_blocks_card_icons(),
         'popups' => [['label' => __('None', 'stackless-theme'), 'value' => '']],
     ];
     return (array) apply_filters('stackless_theme_blocks_editor_data', $data);

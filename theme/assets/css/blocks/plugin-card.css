@@ -1,0 +1,244 @@
+/*
+ * Stackless blocks: Plugin Card.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+/* Base Plugin Card */
+.md-plugin-card {
+	background: var(--color-content-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-l);
+	overflow: hidden;
+	transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.md-plugin-card:hover {
+	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 15%);
+	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 92%);
+}
+
+/* Banner Image */
+.md-plugin-card-banner {
+	aspect-ratio: 3/1;
+	overflow: hidden;
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 35%);
+}
+
+.md-plugin-card-banner img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.md-plugin-card:hover .md-plugin-card-banner img {
+	transform: scale(1.03);
+}
+
+/* Card Body */
+.md-plugin-card-body {
+	padding: var(--space-single);
+}
+
+/* Header with Icon */
+.md-plugin-card-header {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--space-single);
+	margin-bottom: var(--space-single);
+}
+
+.md-plugin-card-icon {
+	width: 56px;
+	height: 56px;
+	border-radius: var(--radius-m);
+	object-fit: cover;
+	flex-shrink: 0;
+	box-shadow: 0 1px 3px color-mix(in srgb, var(--color-text), transparent 90%);
+}
+
+.md-plugin-card-icon-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 40%);
+	border-radius: var(--radius-m);
+	font-size: 1.5em;
+	flex-shrink: 0;
+}
+
+.md-plugin-card-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.md-plugin-card-name {
+	font-size: 1.1em;
+	line-height: 1.3;
+	margin: 0 0 2px 0;
+}
+
+.md-plugin-card-author {
+	display: block;
+	font-size: 0.85em;
+}
+
+.md-plugin-card-desc {
+	color: var(--color-text-sec);
+	margin-bottom: var(--space-single);
+	line-height: 1.6;
+	font-size: 0.92em;
+}
+
+/* Meta Information */
+.md-plugin-card-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-half) var(--space-single);
+	margin-bottom: var(--space-single);
+	font-size: 0.85em;
+	color: var(--color-text-sec);
+}
+
+.md-plugin-card-rating {
+	display: inline-flex;
+	align-items: center;
+	gap: 1px;
+}
+
+.md-plugin-card-rating .md-icon-star-full,
+.md-plugin-card-rating .md-icon-star-half {
+	font-size: 0.9em;
+}
+
+/* No opacity: at 70% the secondary text colour dropped to 2.9:1. */
+.md-plugin-card-rating-count {
+	margin-left: var(--space-xs);
+	font-size: 0.9em;
+}
+
+.md-plugin-card-installs,
+.md-plugin-card-version {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Requirements */
+.md-plugin-card-requirements {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-half);
+	padding: var(--space-half);
+	margin-bottom: var(--space-single);
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 15%);
+	border-radius: var(--radius-s);
+	font-size: 0.8em;
+	color: var(--color-text-sec);
+}
+
+/* Actions */
+.md-plugin-card-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-half);
+}
+
+/*------------------------------*\
+	Horizontal Style
+\*------------------------------*/
+.md-plugin-card-horizontal {
+	display: grid;
+	grid-template-columns: minmax(200px, 300px) 1fr;
+}
+
+.md-plugin-card-horizontal .md-plugin-card-banner {
+	aspect-ratio: auto;
+	height: 100%;
+	min-height: 160px;
+}
+
+.md-plugin-card-horizontal .md-plugin-card-body {
+	display: flex;
+	flex-direction: column;
+}
+
+.md-plugin-card-horizontal .md-plugin-card-actions {
+	margin-top: auto;
+}
+
+@media all and (max-width: 640px) {
+	.md-plugin-card-horizontal {
+		grid-template-columns: 1fr;
+	}
+	.md-plugin-card-horizontal .md-plugin-card-banner {
+		aspect-ratio: 3/1;
+		height: auto;
+		min-height: 0;
+	}
+}
+
+/*------------------------------*\
+	Compact Style
+\*------------------------------*/
+.md-plugin-card-compact .md-plugin-card-body {
+	padding: var(--space-half);
+}
+
+.md-plugin-card-compact .md-plugin-card-banner {
+	display: none;
+}
+
+.md-plugin-card-compact .md-plugin-card-icon,
+.md-plugin-card-compact .md-plugin-card-icon-placeholder {
+	width: 44px;
+	height: 44px;
+}
+
+.md-plugin-card-compact .md-plugin-card-desc {
+	display: none;
+}
+
+.md-plugin-card-compact .md-plugin-card-requirements {
+	display: none;
+}
+
+/*------------------------------*\
+	Minimal Style
+\*------------------------------*/
+.md-plugin-card-minimal {
+	background: transparent;
+	border: none;
+}
+
+.md-plugin-card-minimal:hover {
+	box-shadow: none;
+	border-color: transparent;
+}
+
+.md-plugin-card-minimal .md-plugin-card-body {
+	padding: 0;
+}
+
+.md-plugin-card-minimal .md-plugin-card-banner {
+	display: none;
+}
+
+.md-plugin-card-minimal .md-plugin-card-header {
+	margin-bottom: var(--space-half);
+}
+
+.md-plugin-card-minimal .md-plugin-card-icon,
+.md-plugin-card-minimal .md-plugin-card-icon-placeholder {
+	width: 40px;
+	height: 40px;
+}
+
+.md-plugin-card-minimal .md-plugin-card-requirements {
+	display: none;
+}

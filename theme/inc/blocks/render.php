@@ -1153,6 +1153,13 @@ function stackless_theme_blocks_legacy_style($parsed_block)
         'stackless/pull-quote' => 'quoteStyle',
         'stackless/quote' => 'quoteStyle',
         'stackless/related-content' => 'cardStyle',
+        'stackless/plugin-card' => 'cardStyle',
+        'stackless/theme-card' => 'cardStyle',
+        'stackless/github-card' => 'cardStyle',
+        'stackless/npm-card' => 'cardStyle',
+        'stackless/book-card' => 'cardStyle',
+        'stackless/youtube-card' => 'cardStyle',
+        'stackless/podcast-card' => 'cardStyle',
     ];
     if (!is_array($parsed_block) || empty($parsed_block['blockName']) || !isset($renamed[$parsed_block['blockName']])
         || !isset($parsed_block['attrs']['style']) || !is_string($parsed_block['attrs']['style'])) {

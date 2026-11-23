@@ -58,4 +58,23 @@
 
 		return el( tag, props );
 	};
+
+	SB.cardIcons = SB.cardIcons || {};
+
+	/**
+	 * Build one of the card blocks' small inline icons (version tag, forks,
+	 * license, author, date) for an editor preview. The SVG comes from the
+	 * localized cardIcons list; an unknown name returns an empty element.
+	 *
+	 * @param {string} name      Key in StacklessBlocks.cardIcons, e.g. 'tag'.
+	 * @param {string} className Class for the wrapper. Defaults to 'md-card-icon'.
+	 * @return {Object} Element.
+	 */
+	SB.cardIcon = function ( name, className ) {
+		return el( 'span', {
+			className: className === undefined ? 'md-card-icon' : className,
+			'aria-hidden': 'true',
+			dangerouslySetInnerHTML: { __html: SB.cardIcons[ name ] || '' }
+		} );
+	};
 } )( window.wp );
