@@ -1,0 +1,343 @@
+/*
+ * Stackless blocks: Pull Quote.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+/* Base Pull Quote */
+.md-pull-quote {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 85%;
+	position: relative;
+}
+
+/* The theme gives a bare blockquote a rail, padding and a muted color. This block draws its own,
+   so those are cleared first; the style rules below set what each style needs. */
+.md-pull-quote .md-pull-quote-text {
+	border: 0;
+	color: inherit;
+	padding: 0;
+}
+
+/* Two classes throughout, so the theme's blockquote margin does not push the citation away
+   from the quote it belongs to. */
+.md-pull-quote .md-pull-quote-text {
+	font-size: 1.35em;
+	font-style: italic;
+	line-height: 1.5;
+	margin: 0 0 var(--space-half);
+}
+
+.md-pull-quote-citation {
+	color: var(--color-text-sec);
+	font-size: 0.88em;
+}
+
+.md-pull-quote-citation:before {
+	content: '\2014 ';
+}
+
+/* Border Style */
+.md-pull-quote-border {
+	border-left: 4px solid var(--color-primary);
+	padding-left: var(--space-single);
+	text-align: left !important;
+}
+
+/* Quote Marks Style */
+.md-pull-quote-quote-marks {
+	position: relative;
+}
+
+.md-pull-quote-quote-marks .md-pull-quote-mark {
+	color: var(--color-primary);
+	font-family: Georgia, serif;
+	font-size: 4em;
+	left: -0.1em;
+	line-height: 1;
+	opacity: 0.25;
+	position: absolute;
+	top: -0.2em;
+}
+
+.md-pull-quote-quote-marks .md-pull-quote-text {
+	padding-left: 1.5em;
+}
+
+/* Boxed Style */
+.md-pull-quote-boxed {
+	background: var(--color-content-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-l);
+	max-width: 100%;
+	padding: var(--space-single) var(--space-double);
+	transition: border-color var(--transition);
+}
+
+.md-pull-quote-boxed:hover {
+	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 10%);
+}
+
+/* Minimal Style */
+.md-pull-quote-minimal .md-pull-quote-text {
+	color: var(--color-text-sec);
+}
+
+/* Width Alignment */
+.md-pull-quote.alignwide {
+	max-width: var(--wide);
+	width: calc(100% + 100px);
+	margin-left: -50px;
+	margin-right: -50px;
+}
+
+.md-pull-quote.alignfull {
+	max-width: 100vw;
+	width: 100vw;
+	margin-left: calc(-50vw + 50%);
+	margin-right: calc(-50vw + 50%);
+	padding-left: var(--space-double);
+	padding-right: var(--space-double);
+}
+
+.md-pull-quote.bleed-full {
+	max-width: 100vw;
+	width: 100vw;
+	margin-left: calc(-50vw + 50%);
+	margin-right: calc(-50vw + 50%);
+}
+
+.md-pull-quote.alignfull.md-pull-quote-boxed,
+.md-pull-quote.bleed-full.md-pull-quote-boxed {
+	border-radius: 0;
+}
+
+.md-pull-quote.alignfull .md-pull-quote-text,
+.md-pull-quote.bleed-full .md-pull-quote-text {
+	max-width: var(--content-width, 720px);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Float */
+.md-pull-quote.float-left {
+	float: left;
+	margin-right: var(--space-double);
+	margin-bottom: var(--space-single);
+	max-width: 45%;
+	width: 45%;
+}
+
+.md-pull-quote.float-right {
+	float: right;
+	margin-left: var(--space-double);
+	margin-bottom: var(--space-single);
+	max-width: 45%;
+	width: 45%;
+}
+
+.md-pull-quote.float-left,
+.md-pull-quote.float-right {
+	clear: none;
+}
+
+.md-pull-quote.float-left .md-pull-quote-text,
+.md-pull-quote.float-right .md-pull-quote-text {
+	font-size: 1.15em;
+}
+
+/* Shadow */
+.md-pull-quote.has-shadow {
+	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 90%);
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+	.md-pull-quote.alignwide {
+		margin-left: 0;
+		margin-right: 0;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.md-pull-quote.alignfull,
+	.md-pull-quote.bleed-full {
+		padding-left: var(--space-single);
+		padding-right: var(--space-single);
+	}
+
+	.md-pull-quote.float-left,
+	.md-pull-quote.float-right {
+		float: none;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 100%;
+		width: 100%;
+	}}
+
+/* Typographic Center Style */
+.md-pull-quote-typographic {
+	text-align: center;
+	max-width: 100%;
+	padding: var(--space-double) 0;
+}
+
+.md-pull-quote-typographic .md-pull-quote-text {
+	font-family: var(--font-serif);
+	font-size: 2em;
+	line-height: 1.35;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: -0.02em;
+	max-width: 32ch;
+	margin-inline: auto;
+}
+
+.md-pull-quote-typographic .md-pull-quote-citation {
+	margin-top: var(--space-single);
+	font-size: var(--fs-s);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-text-sec);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.md-pull-quote-typographic .md-pull-quote-citation:before {
+	content: none;
+}
+
+/* Sidebar Style */
+.md-pull-quote-sidebar {
+	float: right;
+	max-width: 45%;
+	width: 45%;
+	margin: 0.5em 0 var(--space-single) var(--space-double);
+	padding-left: var(--space-double);
+	border-left: 2px solid var(--color-primary);
+	text-align: left !important;
+}
+
+.md-pull-quote-sidebar .md-pull-quote-text {
+	font-family: var(--font-serif);
+	font-size: 1.25em;
+	line-height: 1.55;
+}
+
+.md-pull-quote-sidebar .md-pull-quote-citation {
+	margin-top: 0.75em;
+	font-size: 0.75em;
+	font-weight: var(--font-weight-bold);
+}
+
+/* Double Bezel Style */
+.md-pull-quote-bezel {
+	background: color-mix(in srgb, var(--color-primary) 5%, var(--color-content-bg));
+	outline: 1px solid color-mix(in srgb, var(--color-border), transparent 40%);
+	border-radius: var(--radius-xl);
+	padding: 6px;
+	max-width: 100%;
+}
+
+/* The top highlight was a hardcoded 60%-white inset line. On a dark content
+   surface that reads as a bright seam across the top of the quote, not as
+   refraction. Derived from the text colour so it inverts with the theme. */
+.md-pull-quote-bezel-inner {
+	background: var(--color-content-bg);
+	border-radius: calc(var(--radius-xl) - 6px);
+	padding: var(--space-double);
+	box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-content-bg), white 60%);
+}
+
+.md-pull-quote-bezel .md-pull-quote-bezel-mark {
+	font-family: var(--font-serif);
+	font-size: 3.5rem;
+	line-height: 1;
+	color: var(--color-primary);
+	opacity: 0.15;
+	display: block;
+	margin-bottom: var(--space-half);
+}
+
+.md-pull-quote-bezel .md-pull-quote-text {
+	font-family: var(--font-serif);
+	font-size: 1.3125em;
+	line-height: 1.6;
+	font-style: normal;
+}
+
+.md-pull-quote-bezel .md-pull-quote-citation {
+	margin-top: var(--space-single);
+	font-weight: var(--font-weight-bold);
+}
+
+.md-pull-quote-bezel .md-pull-quote-citation:before {
+	content: none;
+}
+
+/* Dark Highlight Style */
+.md-pull-quote-dark {
+	background: color-mix(in srgb, var(--color-headline) 94%, var(--color-primary));
+	border-radius: var(--radius-l);
+	/* The measure lives on the box, not the quote: the quote was centred at
+	   36ch on its own while the citation stayed at the box edge, so the two
+	   never shared a left edge under the block's Left alignment. */
+	padding: var(--space-double) max(var(--space-double), calc((100% - 33rem) / 2));
+	text-align: center;
+	max-width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.md-pull-quote-dark::before {
+	content: "\201C";
+	position: absolute;
+	top: -0.25rem;
+	right: 1.5rem;
+	font-family: var(--font-serif);
+	font-size: 10rem;
+	line-height: 1;
+	color: rgba(255, 255, 255, 0.04);
+}
+
+.md-pull-quote-dark .md-pull-quote-text {
+	font-family: var(--font-serif);
+	font-size: 1.75em;
+	line-height: 1.4;
+	font-weight: 400;
+	font-style: normal;
+	color: rgba(255, 255, 255, 0.92);
+	letter-spacing: -0.01em;
+	position: relative;
+}
+
+.md-pull-quote-dark .md-pull-quote-citation {
+	color: rgba(255, 255, 255, 0.5);
+	position: relative;
+	margin-top: var(--space-single);
+}
+
+.md-pull-quote-dark .md-pull-quote-citation:before {
+	content: none;
+}
+
+@media (max-width: 782px) {
+	.md-pull-quote-sidebar {
+		float: none;
+		max-width: 100%;
+		width: 100%;
+		margin-left: 0;
+		padding-left: var(--space-single);
+	}
+
+	.md-pull-quote-typographic .md-pull-quote-text {
+		font-size: 1.5em;
+	}
+
+	.md-pull-quote-dark {
+		padding: var(--space-single);
+	}
+
+	.md-pull-quote-dark .md-pull-quote-text {
+		font-size: 1.25em;
+	}}

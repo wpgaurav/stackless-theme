@@ -1,0 +1,124 @@
+/*
+ * Stackless blocks: Spoiler.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+.md-spoiler {
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-l);
+	overflow: hidden;
+	transition: border-color var(--transition);
+}
+
+.md-spoiler:hover {
+	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 10%);
+}
+
+.md-spoiler-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--space-half);
+	width: 100%;
+	padding: var(--space-single);
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 18%);
+	border: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+	text-align: left;
+	transition: background-color 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.md-spoiler-toggle:hover {
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 32%);
+}
+
+/* border: none above meant a focused toggle was completely indistinguishable
+   from an unfocused one. Inset ring so it can't be clipped by the wrapper. */
+.md-spoiler-toggle:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 32%);
+}
+
+.md-spoiler-icon {
+	font-size: 1.1em;
+	opacity: 0.6;
+	transition: opacity var(--transition);
+}
+
+.md-spoiler-toggle:hover .md-spoiler-icon {
+	opacity: 1;
+}
+
+.md-spoiler-label {
+	font-weight: var(--font-weight-bold);
+}
+
+.md-spoiler-content {
+	padding: var(--space-single);
+	border-top: 1px solid var(--color-border);
+}
+
+.md-spoiler-content[hidden] {
+	display: none;
+}
+
+/* The wrapper's padding sets the bottom edge, not the last paragraph's margin. */
+.md-spoiler-content > :last-child {
+	margin-block-end: 0;
+}
+
+.md-spoiler.is-revealed .md-spoiler-toggle {
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 32%);
+}
+
+/* Boxed Style */
+.md-spoiler-boxed {
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 12%);
+}
+
+.md-spoiler-boxed .md-spoiler-content {
+	background: var(--color-content-bg);
+}
+
+/* Minimal Style */
+.md-spoiler-minimal {
+	border: none;
+	border-radius: 0;
+}
+
+.md-spoiler-minimal:hover {
+	border-color: transparent;
+}
+
+.md-spoiler-minimal .md-spoiler-toggle {
+	background: transparent;
+	padding-left: 0;
+	padding-right: 0;
+	border-bottom: 1px dashed var(--color-border);
+}
+
+.md-spoiler-minimal .md-spoiler-content {
+	border-top: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Editor Preview. Scoped to the canvas: since Blocks 2.1 the front-end wrapper
+   also carries .wp-block-stackless-spoiler, so the unscoped rule kept
+   every spoiler revealed on the page — `!important` beat [hidden]. */
+.editor-styles-wrapper .wp-block-stackless-spoiler .md-spoiler-content {
+	display: block !important;
+}
+
+.editor-styles-wrapper .wp-block-stackless-spoiler .md-spoiler-toggle-preview {
+	display: flex;
+	align-items: center;
+	gap: var(--space-half);
+	padding: var(--space-single);
+	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 18%);
+	border-bottom: 1px solid var(--color-border);
+	font-weight: var(--font-weight-bold);
+}

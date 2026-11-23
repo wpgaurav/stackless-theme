@@ -1,0 +1,65 @@
+/*
+ * Stackless blocks: Key Takeaway.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+.md-key-takeaway {
+	--kt-accent: var(--color-primary);
+	background: color-mix(in srgb, var(--kt-accent) 6%, var(--color-content-bg));
+	border: 1px solid color-mix(in srgb, var(--kt-accent) 22%, var(--color-border));
+	border-radius: var(--radius-m);
+	padding: var(--space-single);
+}
+
+.md-key-takeaway-header {
+	align-items: center;
+	display: flex;
+	font-weight: var(--font-weight-bold);
+	gap: var(--space-half);
+	margin-bottom: var(--space-half);
+}
+
+.md-key-takeaway-icon {
+	color: var(--kt-accent);
+	font-size: 1.2em;
+	flex-shrink: 0;
+	line-height: 1;
+}
+
+/* The label is the only place the accent reads as text, so it carries the
+   semantic for anyone who cannot resolve the icon colour. */
+.md-key-takeaway-label {
+	color: color-mix(in srgb, var(--kt-accent) 70%, var(--color-text));
+}
+
+.md-key-takeaway-content p:last-child {
+	margin-bottom: 0;
+}
+
+/* Highlight Style */
+.md-key-takeaway-highlight {
+	--kt-accent: var(--color-warning);
+}
+
+/* Info Style */
+.md-key-takeaway-info {
+	--kt-accent: var(--color-info);
+}
+
+/* Success Style */
+.md-key-takeaway-success {
+	--kt-accent: var(--color-success);
+}
+
+/* Minimal Style — no tint at all, so it can sit next to a tinted one without
+   the two competing. Hairline and icon only. */
+.md-key-takeaway-minimal {
+	--kt-accent: var(--color-secondary);
+	background: var(--color-content-bg);
+	border-color: var(--color-border);
+}
+
+.md-key-takeaway-minimal .md-key-takeaway-label {
+	color: var(--color-text);
+}

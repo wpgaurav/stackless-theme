@@ -1,0 +1,218 @@
+/**
+ * Stackless blocks: editor-only styles.
+ *
+ * The front-end block stylesheets are loaded in the editor too, so this file
+ * holds only the rules for markup that exists in the editing UI alone: inner
+ * block wrappers, upload placeholders, and preview classes the front end never
+ * prints. Every selector starts at the block's own wrapper class, so nothing
+ * here depends on an .editor-styles-wrapper ancestor.
+ */
+
+/* Editor chrome neutrals (dropzones, placeholders), derived from the block's
+   own text and surface colors so they follow the palette and dark mode. */
+[class*="wp-block-stackless-"] {
+	--editor-surface: color-mix(in srgb, var(--color-text) 3%, var(--color-content-bg));
+	--editor-line: color-mix(in srgb, var(--color-text) 16%, var(--color-content-bg));
+	--editor-line-strong: color-mix(in srgb, var(--color-text) 28%, var(--color-content-bg));
+}
+
+/*------------------------------*\
+	$SECTION
+\*------------------------------*/
+
+/* Collapse the editor's inner-block wrappers so layout classes on the section
+   (grid, flex) reach the child blocks. */
+.wp-block-stackless-section > .block-editor-inner-blocks,
+.wp-block-stackless-section > .block-editor-inner-blocks > .block-editor-block-list__layout {
+	display: contents;
+}
+
+/*------------------------------*\
+	$CALLOUT
+\*------------------------------*/
+
+/* The preview prints md-callout-* classes; the published block is styled
+   through its own front-end class, so these mirror it for the canvas. */
+.wp-block-stackless-callout.md-callout {
+	background: color-mix(in srgb, var(--color-primary) 5%, var(--color-content-bg));
+	border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
+	border-radius: var(--radius-m, 0.5rem);
+	position: relative;
+}
+
+.wp-block-stackless-callout.md-callout.has-icon { padding-top: 0; }
+
+.wp-block-stackless-callout .md-callout-title,
+.wp-block-stackless-callout .md-callout-action { text-align: center; }
+
+.wp-block-stackless-callout.md-callout .md-callout-icon {
+	align-items: center;
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	color: var(--color-text-light);
+	display: flex;
+	justify-content: center;
+	margin-inline: auto;
+}
+
+.wp-block-stackless-callout.md-callout .md-callout-icon.icon {
+	background-color: #1e1e1e;
+	font-size: 43px;
+	height: 80px;
+	line-height: 1;
+	margin-top: -25px;
+	width: 80px;
+}
+
+.wp-block-stackless-callout.md-callout .md-callout-icon.image {
+	height: 100px;
+	margin-top: -35px;
+	width: 100px;
+}
+
+.wp-block-stackless-callout.md-callout .md-callout-icon.image img {
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+}
+
+.wp-block-stackless-callout .md-callout-list + .md-callout-action { margin-top: var(--space-single); }
+
+.wp-block-stackless-callout .md-callout-action .md-button { width: 100%; }
+
+/*------------------------------*\
+	$STEPS
+\*------------------------------*/
+
+/* Mirrors the front-end step layout. Without it the RichText heading keeps the
+   editor's default top margin and drops well below the number badge. */
+.wp-block-stackless-step.md-step-editor {
+	--step-badge: 2rem;
+	display: grid;
+	grid-template-columns: var(--step-badge) 1fr;
+	column-gap: var(--space-half);
+	margin-bottom: var(--space-single);
+	align-items: start;
+}
+
+.wp-block-stackless-step .md-step-number-editor {
+	grid-column: 1;
+	inline-size: var(--step-badge);
+	block-size: var(--step-badge);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--color-primary);
+	color: var(--color-text-light, #fff);
+	border-radius: 50%;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+.wp-block-stackless-step .md-step-content-editor {
+	grid-column: 2;
+	padding-block-start: calc((var(--step-badge) - 1.4em) / 2);
+	min-inline-size: 0;
+}
+
+/* RichText fields inherit the editor's block margins otherwise. */
+.wp-block-stackless-step .md-step-content-editor > * {
+	margin-block: 0;
+}
+
+.wp-block-stackless-step .md-step-content-editor > * + * {
+	margin-block-start: var(--space-third, calc(var(--space-single) / 3));
+}
+
+/*------------------------------*\
+	$SIDE_PROMOTION
+\*------------------------------*/
+
+.wp-block-stackless-side-promotion.md-side-promotion-editor {
+	background: var(--editor-surface);
+	border: 1px dashed var(--editor-line-strong);
+	border-radius: 8px;
+	padding: 15px;
+}
+
+.wp-block-stackless-side-promotion .md-side-promotion-label {
+	color: var(--color-text-sec);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+}
+
+.wp-block-stackless-side-promotion-item.md-side-promotion-item-editor {
+	background: var(--color-content-bg);
+	border: 1px solid var(--editor-line);
+	border-radius: 6px;
+	margin-bottom: 10px;
+	padding: 12px;
+}
+
+.wp-block-stackless-side-promotion-item .md-side-promotion-image-wrap {
+	margin-bottom: 10px;
+	position: relative;
+}
+
+.wp-block-stackless-side-promotion-item .md-side-promotion-image {
+	border-radius: 4px;
+	display: block;
+	width: 100%;
+}
+
+.wp-block-stackless-side-promotion-item .md-side-promotion-remove {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
+.wp-block-stackless-side-promotion-item .md-side-promotion-upload {
+	background: #f0f0f0;
+	border: 2px dashed var(--editor-line-strong);
+	border-radius: 4px;
+	display: block;
+	padding: 20px;
+	text-align: center;
+	width: 100%;
+}
+
+/*------------------------------*\
+	$RELATED_CONTENT
+\*------------------------------*/
+
+.wp-block-stackless-related-content.md-related-content-editor {
+	background: var(--color-content-bg);
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+/* Image placeholder shown in Card and Spotlight until an image is picked. */
+.wp-block-stackless-related-content.md-related-content-card .md-related-content-image-wrap {
+	flex-shrink: 0;
+	width: 120px;
+}
+
+.wp-block-stackless-related-content .md-related-content-upload {
+	align-items: center;
+	background: #f5f5f5;
+	border: 2px dashed var(--editor-line-strong);
+	border-radius: 4px;
+	display: flex;
+	height: 80px;
+	justify-content: center;
+}
+
+/*------------------------------*\
+	$QUOTE
+\*------------------------------*/
+
+/* Keep the avatar from being dragged or selected while editing the quote. */
+.wp-block-stackless-quote .md-quote-avatar {
+	pointer-events: none;
+}

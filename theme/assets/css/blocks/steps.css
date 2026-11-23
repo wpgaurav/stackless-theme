@@ -1,0 +1,78 @@
+/*
+ * Stackless blocks: Steps.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+.md-steps {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-single);
+}
+
+.md-step {
+	/* Single source of truth for the badge size — the connector and the
+	   content's optical offset are both derived from it. */
+	--step-badge: 2rem;
+	display: grid;
+	grid-template-columns: var(--step-badge) 1fr;
+	column-gap: var(--space-half);
+	position: relative;
+}
+
+.md-step-number {
+	grid-column: 1;
+	inline-size: var(--step-badge);
+	block-size: var(--step-badge);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* Primary, not accent: the default accent is a pale highlight (#FFFBCC),
+	   which left a white numeral on a near-white badge. */
+	background-color: var(--color-primary);
+	color: var(--color-text-light, #fff);
+	border-radius: 50%;
+	font-size: 0.8125rem;
+	font-weight: var(--font-weight-bold);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+/* Runs down the badge column, centred on the badge, from just below this
+   badge to the top of the next one. Spans the flex gap between steps. */
+.md-step:not(:last-child)::before {
+	content: '';
+	position: absolute;
+	inset-block-start: calc(var(--step-badge) + 0.25rem);
+	inset-block-end: calc(-1 * (var(--space-single)) - 0.25rem);
+	inset-inline-start: calc(var(--step-badge) / 2 - 1px);
+	inline-size: 2px;
+	background: var(--color-border);
+}
+
+.md-step-content {
+	grid-column: 2;
+	/* Optically centres the first line of the title against the badge. */
+	padding-block-start: calc((var(--step-badge) - 1.4em) / 2);
+	min-inline-size: 0;
+}
+
+/* Two classes: the theme's `.format :where(h4, p)` rhythm has the same
+   specificity as one and loads later, so it restored a full line of margin
+   under every step — and a doubled gap after the last. */
+.md-step .md-step-title {
+	margin-block: 0;
+	font-size: var(--fs-m);
+	line-height: 1.4;
+}
+
+.md-step .md-step-text {
+	margin-block: var(--space-third) 0;
+	color: var(--color-text-sec);
+	font-size: 0.9375em;
+}
+
+.md-step-title:empty,
+.md-step-text:empty {
+	display: none;
+}

@@ -20,6 +20,7 @@ require STACKLESS_THEME_DIR . '/inc/content-options.php';
 require STACKLESS_THEME_DIR . '/inc/design.php';
 require STACKLESS_THEME_DIR . '/inc/layout.php';
 require STACKLESS_THEME_DIR . '/inc/page-blocks.php';
+require STACKLESS_THEME_DIR . '/inc/blocks/blocks.php';
 
 if (class_exists('WooCommerce')) {
     require STACKLESS_THEME_DIR . '/inc/woocommerce.php';

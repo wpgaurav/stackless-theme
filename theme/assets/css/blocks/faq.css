@@ -1,0 +1,219 @@
+/*
+ * Stackless blocks: FAQ.
+ * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
+ * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ */
+
+.faq-accordion.accordion {
+	--faq-ease: cubic-bezier(0.32, 0.72, 0, 1);
+	--faq-pad-x: var(--space-single);
+	--faq-pad-y: calc(var(--space-single) * 0.75);
+	--faq-toggle: 2rem;
+	--faq-accent: var(--color-primary);
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	display: grid;
+	gap: var(--space-half);
+}
+
+/* Beats the shared `.accordion-group:not(:last-child)` divider in widgets.php,
+   which would otherwise leave every card but the last with a doubled edge. */
+.faq-accordion .faq-item.accordion-group {
+	background-color: var(--color-content-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-l);
+	overflow: hidden;
+	transition: border-color 0.3s var(--faq-ease), box-shadow 0.3s var(--faq-ease);
+}
+
+.faq-accordion .faq-item.accordion-group:hover {
+	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 22%);
+}
+
+.faq-accordion .faq-item.accordion-group.active {
+	border-color: color-mix(in srgb, var(--faq-accent) 55%, var(--color-border));
+	box-shadow: 0 10px 24px -18px color-mix(in srgb, var(--faq-accent) 60%, transparent);
+}
+
+/* The question is a <button> inside a role="heading" wrapper. Neither
+   should look like one: reset the UA button chrome and the theme's button
+   typography so it reads as the row it replaced. */
+.faq-item .accordion-heading {
+	margin: 0;
+}
+
+.faq-item .accordion-title {
+	appearance: none;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	color: var(--color-headline, var(--color-text));
+	cursor: pointer;
+	display: block;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: var(--font-weight-bold);
+	letter-spacing: inherit;
+	line-height: 1.45;
+	margin: 0;
+	min-block-size: calc(var(--faq-toggle) + var(--faq-pad-y) * 2);
+	padding: var(--faq-pad-y) var(--faq-pad-x);
+	padding-inline-end: calc(var(--faq-pad-x) + var(--faq-toggle) + var(--space-half));
+	position: relative;
+	text-align: start;
+	text-transform: none;
+	text-wrap: balance;
+	transition: background-color 0.3s var(--faq-ease);
+	width: 100%;
+}
+
+.faq-item.accordion-group.active .accordion-title {
+	background-color: color-mix(in srgb, var(--faq-accent) 7%, var(--color-content-bg));
+}
+
+.faq-item .accordion-title:focus-visible {
+	outline: 2px solid var(--faq-accent);
+	outline-offset: -2px;
+	border-radius: calc(var(--radius-l) - 1px);
+}
+
+/* Toggle: ::before is the chip and the horizontal bar, ::after the vertical
+   bar. Opening rotates the vertical bar flat, so plus becomes minus on the
+   compositor instead of swapping an icon-font glyph. */
+.faq-item .accordion-title::before,
+.faq-item .accordion-title::after {
+	content: '';
+	inset-block-start: 50%;
+	inset-inline-end: var(--faq-pad-x);
+	position: absolute;
+}
+
+.faq-item .accordion-title::before {
+	background:
+		linear-gradient(currentColor, currentColor) center / 0.75rem 1.5px no-repeat,
+		color-mix(in srgb, var(--faq-accent) 9%, var(--color-content-bg));
+	block-size: var(--faq-toggle);
+	border: 1px solid color-mix(in srgb, var(--faq-accent) 22%, var(--color-border));
+	border-radius: var(--radius-m);
+	color: var(--faq-accent);
+	inline-size: var(--faq-toggle);
+	transform: translateY(-50%);
+	transition: background-color 0.3s var(--faq-ease), border-color 0.3s var(--faq-ease), color 0.3s var(--faq-ease);
+}
+
+.faq-item .accordion-title::after {
+	background: var(--faq-accent);
+	block-size: 0.75rem;
+	display: block;
+	font-size: 0;
+	inline-size: 1.5px;
+	margin-inline-end: calc(var(--faq-toggle) / 2 - 0.75px);
+	transform: translateY(-50%);
+	transition: transform 0.4s var(--faq-ease), background-color 0.3s var(--faq-ease), opacity 0.3s var(--faq-ease);
+}
+
+.faq-item .accordion-title:hover::before {
+	background-color: color-mix(in srgb, var(--faq-accent) 16%, var(--color-content-bg));
+	border-color: color-mix(in srgb, var(--faq-accent) 45%, var(--color-border));
+}
+
+.faq-item.accordion-group.active .accordion-title::before {
+	background-color: var(--faq-accent);
+	border-color: var(--faq-accent);
+	color: var(--color-text-light, #fff);
+}
+
+.faq-item.accordion-group.active .accordion-title::after {
+	background: var(--color-text-light, #fff);
+	content: '';
+	opacity: 0;
+	transform: translateY(-50%) rotate(90deg);
+}
+
+.faq-item .accordion-content {
+	color: color-mix(in srgb, var(--color-text) 84%, var(--color-content-bg));
+	display: none;
+	line-height: 1.65;
+	padding: var(--faq-pad-y) var(--faq-pad-x) calc(var(--faq-pad-y) * 1.15);
+}
+
+.faq-item.accordion-group.active .accordion-content {
+	display: block;
+}
+
+/* Rhythm inside an answer: the theme's paragraph margin between blocks, none
+   after the last one, so the card's own padding sets the bottom edge. */
+.faq-item .accordion-content :where(p, ul, ol, dl, blockquote, pre, table, figure) {
+	margin-block: 0 var(--space-half);
+}
+
+.faq-item .accordion-content :where(p, ul, ol, dl, blockquote, pre, table, figure):last-child {
+	margin-block-end: 0;
+}
+
+/* Entry motion, where @starting-style is supported. MD.accordion() flips the
+   panel from hidden, so there is no from-state to transition without it. */
+@media (prefers-reduced-motion: no-preference) {
+	.faq-item.accordion-group.active .accordion-content > * {
+		transition: opacity 0.45s var(--faq-ease), transform 0.45s var(--faq-ease);
+	}
+
+	@starting-style {
+		.faq-item.accordion-group.active .accordion-content > * {
+			opacity: 0;
+			transform: translateY(-0.375rem);
+		}
+	}}
+
+@media (prefers-reduced-motion: reduce) {
+	.faq-accordion .faq-item.accordion-group,
+	.faq-item .accordion-title,
+	.faq-item .accordion-title::before,
+	.faq-item .accordion-title::after {
+		transition: none;
+	}}
+
+@media (max-width: 640px) {
+	.faq-accordion.accordion {
+		--faq-pad-x: var(--space-half);
+		--faq-pad-y: var(--space-half);
+	}}
+
+/* Editor Styles — every answer stays visible so it can be edited, on the same
+   cards the front end draws. */
+
+.faq-editor {
+	display: grid;
+	gap: var(--space-half);
+}
+
+.faq-item-editor {
+	background-color: var(--color-content-bg, #fff);
+	border: 1px solid var(--color-border, #e0e0e0);
+	border-radius: var(--radius-l);
+	overflow: hidden;
+}
+
+.faq-q {
+	background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-content-bg, #fff));
+	padding: calc(var(--space-single) * 0.75) var(--space-single);
+}
+
+.faq-q .faq-q-text,
+.faq-q-text p {
+	color: var(--color-headline, var(--color-text));
+	font-weight: var(--font-weight-bold);
+	margin: 0;
+}
+
+.faq-a {
+	color: color-mix(in srgb, var(--color-text, #333) 84%, var(--color-content-bg, #fff));
+	line-height: 1.65;
+	padding: calc(var(--space-single) * 0.75) var(--space-single);
+}
+
+.faq-a .faq-a-text > :last-child {
+	margin-block-end: 0;
+}
