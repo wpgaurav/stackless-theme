@@ -136,7 +136,9 @@ if ($stackless_theme_image !== 'hidden' && $stackless_theme_header !== 'image-fu
 	<?php stackless_theme_part_end(); endif; ?>
 
 	<?php
+	// get_the_tags() is false for a post with no tags, and an error object when the lookup fails.
 	$stackless_theme_tags = stackless_theme_option('stackless_single_tags') ? get_the_tags() : [];
+	$stackless_theme_tags = is_array($stackless_theme_tags) ? $stackless_theme_tags : [];
 	$stackless_theme_box = stackless_theme_option('stackless_single_author_box') && get_the_author_meta('ID') && get_the_author();
 	$stackless_theme_category_below = $stackless_theme_category && $stackless_theme_category_at === 'below';
 	$stackless_theme_byline_end = $stackless_theme_byline !== '' && $stackless_theme_byline_at === 'end';
@@ -155,7 +157,7 @@ if ($stackless_theme_image !== 'hidden' && $stackless_theme_header !== 'image-fu
 						<span class="post-tags__label"><?php echo esc_html(stackless_theme_text('filed_under', __('Filed under', 'stackless-theme'), $stackless_theme_ctx)); ?></span>
 						<a class="chip chip--category" href="<?php echo esc_url(get_category_link($stackless_theme_category)); ?>"><?php echo esc_html($stackless_theme_category->name); ?></a>
 					<?php endif; ?>
-					<?php foreach ((array) $stackless_theme_tags as $stackless_theme_tag) : ?>
+					<?php foreach ($stackless_theme_tags as $stackless_theme_tag) : ?>
 						<a class="chip" href="<?php echo esc_url(get_tag_link($stackless_theme_tag)); ?>" rel="tag">#<?php echo esc_html($stackless_theme_tag->name); ?></a>
 					<?php endforeach; ?>
 				</div>
