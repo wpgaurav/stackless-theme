@@ -159,10 +159,11 @@ function stackless_theme_currency_switcher(string $location): void
 }
 
 /**
- * IDs of related posts: same-category posts first, topped up with recent posts. Cached per post
- * for a day; publishing, editing or unpublishing any post bumps the version and refreshes them all.
+ * IDs of related items of a post type: for posts, same-category posts first; for other types,
+ * items sharing a term in the type's first taxonomy first. Topped up with recent items. Cached per
+ * item for a day; publishing, editing or unpublishing any of them bumps the version and refreshes all.
  */
-function stackless_theme_related_post_ids(int $post_id, int $count): array
+function stackless_theme_related_post_ids(int $post_id, int $count, string $post_type = 'post'): array
 {
     $version = (string) get_option('stackless_theme_related_version', '1');
     $key = 'stackless_related_' . $post_id;
@@ -172,14 +173,25 @@ function stackless_theme_related_post_ids(int $post_id, int $count): array
     }
 
     $args = [
-        'post_type' => 'post',
+        'post_type' => $post_type,
         'posts_per_page' => $count,
         'post__not_in' => [$post_id],
         'ignore_sticky_posts' => true,
         'no_found_rows' => true,
         'fields' => 'ids',
     ];
-    $ids = get_posts($args + ['category__in' => wp_get_post_categories($post_id)]);
+    $first = [];
+    if ($post_type === 'post') {
+        $first = ['category__in' => wp_get_post_categories($post_id)];
+    } else {
+        $taxonomies = get_object_taxonomies($post_type);
+        $taxonomy = $taxonomies ? (string) reset($taxonomies) : '';
+        $terms = $taxonomy !== '' ? wp_get_post_terms($post_id, $taxonomy, ['fields' => 'ids']) : [];
+        if ($terms && !is_wp_error($terms)) {
+            $first = ['tax_query' => [['taxonomy' => $taxonomy, 'terms' => $terms]]];
+        }
+    }
+    $ids = $first ? get_posts($args + $first) : [];
     if (count($ids) < $count) {
         $ids = array_merge($ids, get_posts(array_merge($args, [
             'posts_per_page' => $count - count($ids),
@@ -194,7 +206,60 @@ function stackless_theme_related_post_ids(int $post_id, int $count): array
 add_action('transition_post_status', 'stackless_theme_related_bump', 10, 3);
 function stackless_theme_related_bump(string $new_status, string $old_status, $post): void
 {
-    if ($post instanceof WP_Post && $post->post_type === 'post' && ($new_status === 'publish' || $old_status === 'publish')) {
+    $types = array_merge(['post'], function_exists('stackless_theme_custom_post_types') ? array_keys(stackless_theme_custom_post_types()) : []);
+    if ($post instanceof WP_Post && in_array($post->post_type, $types, true) && ($new_status === 'publish' || $old_status === 'publish')) {
         update_option('stackless_theme_related_version', (string) time(), true);
     }
+}
+
+/**
+ * The store's main product listing: the WooCommerce shop, the download archive, or whatever
+ * `stackless_theme_shop_url` returns (FluentCart's shop page). Empty when there is no store.
+ */
+function stackless_theme_shop_url(): string
+{
+    if (function_exists('wc_get_page_id') && wc_get_page_id('shop') > 0) {
+        return (string) wc_get_page_permalink('shop');
+    }
+    if (class_exists('Easy_Digital_Downloads') && post_type_exists('download')) {
+        return (string) get_post_type_archive_link('download');
+    }
+    return (string) apply_filters('stackless_theme_shop_url', '');
+}
+
+/** The store's product category taxonomy, when it exists. */
+function stackless_theme_store_taxonomy(): string
+{
+    foreach (['product_cat', 'download_category', 'product-categories'] as $taxonomy) {
+        if (taxonomy_exists($taxonomy)) {
+            return (string) apply_filters('stackless_theme_store_taxonomy', $taxonomy);
+        }
+    }
+    return (string) apply_filters('stackless_theme_store_taxonomy', '');
+}
+
+/** Product categories that hold at least one product, most used first. */
+function stackless_theme_store_terms_with_products(int $limit = 8): array
+{
+    $taxonomy = stackless_theme_store_taxonomy();
+    if ($taxonomy === '') {
+        return [];
+    }
+    $terms = get_terms(['taxonomy' => $taxonomy, 'hide_empty' => true, 'orderby' => 'count', 'order' => 'DESC', 'number' => $limit]);
+    return is_array($terms) ? $terms : [];
+}
+
+/**
+ * A product in search results: its image and price markup, from whichever store owns the post
+ * type. Null for posts and pages, which keep the post summary.
+ *
+ * @return array{image: string, price: string}|null
+ */
+function stackless_theme_search_product(WP_Post $post): ?array
+{
+    $product = apply_filters('stackless_theme_search_product', null, $post);
+    if (!is_array($product)) {
+        return null;
+    }
+    return ['image' => (string) ($product['image'] ?? ''), 'price' => (string) ($product['price'] ?? '')];
 }

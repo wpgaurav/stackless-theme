@@ -533,3 +533,16 @@ function stackless_theme_edd_related_downloads(int $download_id, int $count): ar
     }
     return array_map('intval', $ids);
 }
+
+/** A download in search results shows its image and price, not a blog teaser. */
+add_filter('stackless_theme_search_product', 'stackless_theme_edd_search_product', 10, 2);
+function stackless_theme_edd_search_product($product, WP_Post $post)
+{
+    if ($product !== null || $post->post_type !== 'download' || !function_exists('edd_price')) {
+        return $product;
+    }
+    return [
+        'image' => has_post_thumbnail($post) ? get_the_post_thumbnail($post, 'medium', ['loading' => 'lazy', 'alt' => '']) : '',
+        'price' => (string) edd_price($post->ID, false),
+    ];
+}

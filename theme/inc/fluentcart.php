@@ -79,6 +79,19 @@ add_action('wp_enqueue_scripts', 'stackless_theme_fluentcart_assets', 25);
 function stackless_theme_fluentcart_assets(): void
 {
     stackless_theme_style('stackless-theme-fluentcart', 'assets/css/fluentcart.css', ['stackless-theme-layout']);
+
+    // Keyboard and screen-reader behavior for FluentCart's cart drawer, mobile filters and checkout summary.
+    $js = stackless_theme_asset('assets/js/fluentcart.js');
+    wp_enqueue_script('stackless-theme-fluentcart', STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
+    wp_localize_script('stackless-theme-fluentcart', 'stacklessFluentCart', [
+        'i18n' => [
+            'filters' => __('Filters', 'stackless-theme'),
+            /* translators: word after the item count in the cart drawer heading, as in "Shopping Cart (1 item)" */
+            'item'    => _n('item', 'items', 1, 'stackless-theme'),
+            /* translators: word after the item count in the cart drawer heading, as in "Shopping Cart (3 items)" */
+            'items'   => _n('item', 'items', 2, 'stackless-theme'),
+        ],
+    ]);
 }
 
 /** Items in the buyer's cart. An instant checkout has a cart of its own, which is not counted. */
@@ -175,7 +188,10 @@ function stackless_theme_fluentcart_menu_exclude(array $exclude): array
  */
 function stackless_theme_fluentcart_single_ready(): bool
 {
+    // A product on a page template (Page Blocks Builder's, or the theme's Full width and Canvas)
+    // gets that template; the theme's product layout steps aside.
     return is_singular('fluent-products')
+        && (string) get_page_template_slug((int) get_queried_object_id()) === ''
         && class_exists('\FluentCart\App\Services\Renderer\ProductRenderer')
         && class_exists('\FluentCart\App\Modules\Data\ProductDataSetup')
         && locate_template('single-fluent-products.php') !== '';
@@ -216,7 +232,8 @@ function stackless_theme_fluentcart_related(int $product_id): void
     if (!class_exists('\FluentCart\Api\StoreSettings') || !class_exists('\FluentCart\App\Services\Renderer\ProductListRenderer') || !class_exists('\FluentCart\Api\Resource\ShopResource')) {
         return;
     }
-    $show = (new \FluentCart\Api\StoreSettings())->get('show_relevant_product_in_single_page') === 'yes';
+    $show = stackless_theme_option('stackless_store_related')
+        && (new \FluentCart\Api\StoreSettings())->get('show_relevant_product_in_single_page') === 'yes';
     if (!apply_filters('fluent_cart/single_product_page/show_relevant_products', $show, $product_id)) {
         return;
     }
@@ -227,9 +244,52 @@ function stackless_theme_fluentcart_related(int $product_id): void
     echo '<section class="st-related-downloads st-fc-related">';
     (new \FluentCart\App\Services\Renderer\ProductListRenderer(
         $products,
-        __('Related products', 'stackless-theme'),
+        stackless_theme_text('related_products_title', __('Related products', 'stackless-theme'), ['store' => 'fluentcart']),
         'fct-similar-product-list-container',
         ['rating_context' => 'relevant']
     ))->render();
     echo '</section>';
+}
+
+/** The shop page, for the empty search state and other "browse all" links. */
+add_filter('stackless_theme_shop_url', 'stackless_theme_fluentcart_shop_url');
+function stackless_theme_fluentcart_shop_url(string $url): string
+{
+    if ($url !== '') {
+        return $url;
+    }
+    $page = stackless_theme_fluentcart_page_id('shop');
+    if ($page > 0 && get_post_status($page) === 'publish') {
+        return (string) get_permalink($page);
+    }
+    return (string) get_post_type_archive_link('fluent-products');
+}
+
+/** A product in search results shows its image and FluentCart's own card price, not a blog teaser. */
+add_filter('stackless_theme_search_product', 'stackless_theme_fluentcart_search_product', 10, 2);
+function stackless_theme_fluentcart_search_product($product, WP_Post $post)
+{
+    if ($product !== null || $post->post_type !== 'fluent-products' || !class_exists('\FluentCart\App\Modules\Data\ProductDataSetup')) {
+        return $product;
+    }
+    $model = \FluentCart\App\Modules\Data\ProductDataSetup::getProductModel($post->ID);
+    if (!$model || !$model->detail) {
+        return $product;
+    }
+    $image = '';
+    if (has_post_thumbnail($post)) {
+        $image = get_the_post_thumbnail($post, 'medium', ['loading' => 'lazy', 'alt' => '']);
+    } else {
+        $url = is_array($model->detail->featured_media) ? (string) ($model->detail->featured_media['url'] ?? '') : '';
+        if ($url !== '') {
+            $image = sprintf('<img src="%s" alt="" loading="lazy" decoding="async">', esc_url($url));
+        }
+    }
+    $price = '';
+    if (class_exists('\FluentCart\App\Services\Renderer\ProductCardRender')) {
+        ob_start();
+        (new \FluentCart\App\Services\Renderer\ProductCardRender($model))->renderPrices();
+        $price = (string) ob_get_clean();
+    }
+    return ['image' => $image, 'price' => $price];
 }

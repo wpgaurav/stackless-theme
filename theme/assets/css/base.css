@@ -155,15 +155,16 @@ h6 {
 	margin: 1.75em 0 .6em;
 	color: var(--st-heading);
 	font-family: var(--st-font-heading, inherit);
-	font-weight: 600;
+	font-weight: var(--st-heading-weight, 600);
 	line-height: 1.25;
-	letter-spacing: -.01em;
+	letter-spacing: var(--st-heading-tracking, -.01em);
+	text-transform: var(--st-heading-transform, none);
 	text-wrap: balance;
 }
 
 h1 {
 	font-size: clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem);
-	letter-spacing: -.02em;
+	letter-spacing: var(--st-heading-tracking, -.02em);
 }
 
 h2 {
@@ -220,7 +221,8 @@ a {
 	transition: color var(--st-ease), text-decoration-color var(--st-ease);
 }
 
-a:hover {
+/* :where() keeps this at a:hover's specificity while leaving button links to their own hover colors. */
+a:where(:not(.wp-element-button, .wp-block-button__link, .button)):hover {
 	color: var(--st-primary-hover);
 	text-decoration-thickness: 2px;
 }
@@ -783,6 +785,11 @@ input[type="reset"]:hover,
 .wp-block-button__link:focus-visible {
 	outline: 0;
 	box-shadow: var(--st-ring);
+}
+
+/* Filled buttons keep a white label on hover and focus, whatever link rule a section adds. Outline and custom-colored buttons keep their own. */
+:where(.wp-block-button:not(.is-style-outline)) > .wp-block-button__link:not(.has-text-color):is(:hover, :focus-visible) {
+	color: #fff;
 }
 
 .is-style-outline > .wp-block-button__link.wp-block-button__link:not(.has-background) {

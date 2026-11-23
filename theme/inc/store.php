@@ -168,8 +168,12 @@ function stackless_theme_store_toolbar(string $store, int $current_term = 0): vo
     if ($promo_text === '' && $promo_code === '' && !$currency && !$search && !$terms && !$links) {
         return;
     }
+    $context = ['store' => $store, 'term' => $current_term];
+    if (!stackless_theme_part_start('store_toolbar', $context)) {
+        return;
+    }
     ?>
-	<div class="st-store-bar st-store-bar--<?php echo esc_attr($store); ?>">
+	<div class="<?php echo stackless_theme_class('store_toolbar', ['st-store-bar', 'st-store-bar--' . $store], $context); ?>">
 		<?php if ($promo_text !== '' || $promo_code !== '') : ?>
 			<p class="st-store-promo">
 				<?php stackless_theme_the_icon('tag', 18); ?>
@@ -232,6 +236,7 @@ function stackless_theme_store_toolbar(string $store, int $current_term = 0): vo
 		<?php endif; ?>
 	</div>
 	<?php
+    stackless_theme_part_end();
 }
 
 /* ------------------------------------------------------------------ Easy Digital Downloads wiring */
@@ -316,19 +321,19 @@ function stackless_theme_store_customize_register(WP_Customize_Manager $wp_custo
     $stores = [];
     if (class_exists('Easy_Digital_Downloads')) {
         $stores['edd'] = [
-            'title' => __('Store (Easy Digital Downloads)', 'stackless-theme'),
-            'description' => __('The toolbar above the download grid on the store page and the download archives.', 'stackless-theme'),
+            'title' => __('Shop toolbar: Easy Digital Downloads', 'stackless-theme'),
+            'description' => __('Search, sorting, category chips and a promo line above the download grid on the store page and download archives.', 'stackless-theme'),
         ];
     }
     if (class_exists('WooCommerce')) {
         $stores['woo'] = [
-            'title' => __('Store (WooCommerce)', 'stackless-theme'),
-            'description' => __('An optional toolbar above the shop grid. Off by default; WooCommerce keeps its own sorting and result count.', 'stackless-theme'),
+            'title' => __('Shop toolbar: WooCommerce', 'stackless-theme'),
+            'description' => __('Category chips, quick links and a promo line above the shop grid. Off by default; WooCommerce keeps its own sorting and result count.', 'stackless-theme'),
         ];
     }
     foreach ($stores as $store => $section) {
         $id = 'stackless_theme_store_' . $store;
-        $wp_customize->add_section($id, $section + ['priority' => 31]);
+        $wp_customize->add_section($id, $section + ['panel' => STACKLESS_THEME_PANEL, 'priority' => $store === 'edd' ? 76 : 75]);
         $defaults = stackless_theme_store_defaults($store);
         $setting = static function (string $key, $sanitize) use ($wp_customize, $store, $defaults): string {
             $name = 'stackless_' . $store . '_store_' . $key;
@@ -344,7 +349,7 @@ function stackless_theme_store_customize_register(WP_Customize_Manager $wp_custo
                 'type' => 'dropdown-pages',
             ]);
         }
-        $wp_customize->add_control($setting('toolbar', 'rest_sanitize_boolean'), ['label' => __('Show the store toolbar', 'stackless-theme'), 'section' => $id, 'type' => 'checkbox']);
+        $wp_customize->add_control($setting('toolbar', 'rest_sanitize_boolean'), ['label' => __('Show the toolbar', 'stackless-theme'), 'section' => $id, 'type' => 'checkbox']);
         $wp_customize->add_control($setting('currency', 'stackless_theme_sanitize_store_currency'), [
             'label' => __('Currency switcher', 'stackless-theme'),
             'description' => __('Shown only while the Stackless Currency Selector module is on.', 'stackless-theme'),

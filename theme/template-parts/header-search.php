@@ -3,6 +3,9 @@
  * Full-screen search: a large field, live product results, popular categories and best sellers.
  * Live results come from the WooCommerce Store API; without JavaScript the form submits normally.
  *
+ * Parts: search_overlay, search_form, search_categories, search_best_sellers.
+ * Filters: stackless_theme_search_terms, stackless_theme_search_popular (what Discover shows).
+ *
  * @package Stackless_Theme
  */
 
@@ -22,17 +25,21 @@ if ($stackless_theme_downloads) {
 	$stackless_theme_terms = $stackless_theme_discover['terms'];
 }
 $stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads;
+$stackless_theme_terms = apply_filters('stackless_theme_search_terms', $stackless_theme_terms);
+$stackless_theme_popular = (array) apply_filters('stackless_theme_search_popular', $stackless_theme_popular);
 ?>
-<div id="site-search" class="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-overlay-title" hidden data-st-search>
+<?php if (stackless_theme_part_start('search_overlay')) : ?>
+<div id="site-search" class="<?php echo stackless_theme_class('search_overlay', ['search-overlay']); ?>" role="dialog" aria-modal="true" aria-labelledby="search-overlay-title" hidden data-st-search>
 	<div class="search-overlay__inner container">
 		<div class="search-overlay__top">
-			<p id="search-overlay-title" class="search-overlay__title"><?php $stackless_theme_store ? esc_html_e('Search the store', 'stackless-theme') : esc_html_e('Search', 'stackless-theme'); ?></p>
+			<p id="search-overlay-title" class="search-overlay__title"><?php echo esc_html($stackless_theme_store ? stackless_theme_text('search_store_title', __('Search the store', 'stackless-theme')) : stackless_theme_text('search', __('Search', 'stackless-theme'))); ?></p>
 			<button type="button" class="search-overlay__close" data-st-close>
 				<?php stackless_theme_the_icon('x', 22); ?>
 				<span class="screen-reader-text"><?php esc_html_e('Close search', 'stackless-theme'); ?></span>
 			</button>
 		</div>
 
+		<?php if (stackless_theme_part_start('search_form')) : ?>
 		<form role="search" method="get" class="header-search" action="<?php echo esc_url(home_url('/')); ?>">
 			<label class="screen-reader-text" for="header-search-field"><?php $stackless_theme_products ? esc_html_e('Search products', 'stackless-theme') : ($stackless_theme_downloads ? esc_html_e('Search downloads', 'stackless-theme') : esc_html_e('Search', 'stackless-theme')); ?></label>
 			<span class="header-search__icon"><?php stackless_theme_the_icon('search', 24); ?></span>
@@ -44,6 +51,7 @@ $stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads
 			<?php endif; ?>
 			<button type="submit" class="header-search__submit"><?php esc_html_e('Search', 'stackless-theme'); ?></button>
 		</form>
+		<?php stackless_theme_part_end(); endif; ?>
 
 		<section id="search-overlay-results" class="search-results" aria-live="polite" hidden>
 			<div class="search-results__head">
@@ -55,19 +63,22 @@ $stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads
 
 		<div class="search-overlay__discover" data-st-discover>
 			<?php if (!is_wp_error($stackless_theme_terms) && $stackless_theme_terms) : ?>
+				<?php if (stackless_theme_part_start('search_categories')) : ?>
 				<section class="search-overlay__section">
-					<h2 class="search-overlay__heading"><?php esc_html_e('Popular categories', 'stackless-theme'); ?></h2>
+					<h2 class="search-overlay__heading"><?php echo esc_html(stackless_theme_text('popular_categories', __('Popular categories', 'stackless-theme'))); ?></h2>
 					<div class="search-overlay__chips">
 						<?php foreach ($stackless_theme_terms as $stackless_theme_term) : ?>
 							<a class="chip" href="<?php echo esc_url(get_term_link($stackless_theme_term)); ?>"><?php echo esc_html($stackless_theme_term->name); ?></a>
 						<?php endforeach; ?>
 					</div>
 				</section>
+				<?php stackless_theme_part_end(); endif; ?>
 			<?php endif; ?>
 
 			<?php if ($stackless_theme_popular) : ?>
-				<section class="search-overlay__section">
-					<h2 class="search-overlay__heading"><?php esc_html_e('Best sellers', 'stackless-theme'); ?></h2>
+				<?php if (stackless_theme_part_start('search_best_sellers')) : ?>
+<section class="search-overlay__section">
+					<h2 class="search-overlay__heading"><?php echo esc_html(stackless_theme_text('best_sellers', __('Best sellers', 'stackless-theme'))); ?></h2>
 					<ul class="search-results__list search-results__list--grid">
 						<?php foreach ($stackless_theme_popular as $stackless_theme_product) : ?>
 							<li>
@@ -82,11 +93,13 @@ $stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads
 						<?php endforeach; ?>
 					</ul>
 				</section>
+<?php stackless_theme_part_end(); endif; ?>
 			<?php endif; ?>
 
 			<?php if ($stackless_theme_downloads && !empty($stackless_theme_discover['popular'])) : ?>
-				<section class="search-overlay__section">
-					<h2 class="search-overlay__heading"><?php esc_html_e('Best sellers', 'stackless-theme'); ?></h2>
+				<?php if (stackless_theme_part_start('search_best_sellers')) : ?>
+<section class="search-overlay__section">
+					<h2 class="search-overlay__heading"><?php echo esc_html(stackless_theme_text('best_sellers', __('Best sellers', 'stackless-theme'))); ?></h2>
 					<ul class="search-results__list search-results__list--grid">
 						<?php foreach ($stackless_theme_discover['popular'] as $stackless_theme_download) : ?>
 							<li>
@@ -104,7 +117,9 @@ $stackless_theme_store = $stackless_theme_products || $stackless_theme_downloads
 						<?php endforeach; ?>
 					</ul>
 				</section>
+<?php stackless_theme_part_end(); endif; ?>
 			<?php endif; ?>
 		</div>
 	</div>
 </div>
+<?php stackless_theme_part_end(); endif; ?>

@@ -440,6 +440,88 @@ html.search-open .has-header-on-dark .site-header,
 		display: block;
 		box-shadow: none;
 	}
+
+	/*
+	 * Full-screen drawer (Header and menu > Mobile menu style). The menu covers the viewport under
+	 * the header's own brand and buttons, so Menu turns into the close button in the same place.
+	 * The header drops its backdrop blur while open, which would otherwise make it the drawer's
+	 * containing block, and the page behind stops scrolling.
+	 */
+	html.nav-open body.has-menu-drawer {
+		overflow: hidden;
+	}
+
+	html.nav-open .has-menu-drawer .site-header {
+		background: var(--st-surface);
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	.has-menu-drawer .site-nav {
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		max-height: none;
+		padding: calc(4rem + var(--st-drawer-offset, 0px) + 1.5rem) var(--st-gutter) 2rem;
+		border-bottom: 0;
+		box-shadow: none;
+		overscroll-behavior: contain;
+	}
+
+	.has-menu-drawer .site-nav a {
+		padding: .875rem 0;
+		font-size: 1.375rem;
+		font-weight: 600;
+		letter-spacing: -.01em;
+	}
+
+	.has-menu-drawer .site-nav .sub-menu a,
+	.has-menu-drawer .site-nav .children a {
+		font-size: 1.0625rem;
+		font-weight: 500;
+	}
+
+	.has-menu-drawer .site-nav li + li {
+		border-top-color: var(--st-border);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.nav-open .has-menu-drawer .site-nav {
+			animation: st-drawer-in .2s ease-out;
+		}
+	}
+}
+
+/* The drawer starts below the admin bar, which stays fixed above 600px. */
+@media (min-width: 601px) {
+	.admin-bar.has-menu-drawer {
+		--st-drawer-offset: var(--wp-admin--admin-bar--height, 32px);
+	}
+}
+
+@keyframes st-drawer-in {
+	from {
+		opacity: 0;
+		transform: translateY(-.5rem);
+	}
+}
+
+/* Header and menu > Keep the header in view: off, it scrolls away with the page. */
+.has-static-header .site-header {
+	position: relative;
+	top: auto;
+}
+
+.has-static-header.has-transparent-header .site-header {
+	position: absolute;
+}
+
+/* A drawer opened on a scrolled page still needs the header's close button in view. */
+html.nav-open .has-static-header.has-menu-drawer .site-header {
+	position: fixed;
+	top: var(--st-drawer-offset, 0px);
+	right: 0;
+	left: 0;
 }
 
 /* ------------------------------------------------------------------ Content */
@@ -650,8 +732,9 @@ html.search-open .has-header-on-dark .site-header,
 	margin-block: 0;
 }
 
-/* Page Blocks Builder's template: its sections own the whole width and their own spacing. */
-body.page-template-page-blocks-builder .site-main {
+/* Page Blocks Builder's template, on any post type: its sections own the whole width and their own spacing. */
+body.page-template-page-blocks-builder .site-main,
+body.has-page-blocks-template .site-main {
 	max-width: none;
 	padding: 0;
 }
@@ -681,6 +764,56 @@ body.page-template-page-blocks-builder .site-main {
 
 .blog-layout .post-list {
 	max-width: none;
+}
+
+/*
+ * Grid layouts (Blog and archives > Post list layout). Columns are capped at two or three and
+ * drop as the column narrows, so a grid beside the sidebar falls back to fewer columns by itself.
+ */
+.post-list--grid {
+	max-width: none;
+	gap: 1.5rem;
+}
+
+.post-list--grid-2 {
+	grid-template-columns: repeat(auto-fill, minmax(max(18rem, calc((100% - 1.5rem) / 2)), 1fr));
+}
+
+.post-list--grid-3 {
+	grid-template-columns: repeat(auto-fill, minmax(max(15rem, calc((100% - 3rem) / 3)), 1fr));
+}
+
+.post-list--grid .post-card,
+.post-list--grid .post-card.has-post-thumbnail {
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: auto 1fr;
+	align-content: start;
+}
+
+.post-list--grid .post-card__media img {
+	aspect-ratio: 16 / 10;
+	min-height: 0;
+}
+
+.post-list--grid .post-card__body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.post-list--grid .more-link {
+	margin-top: auto;
+}
+
+/* Featured images switched off: the text takes the whole card. */
+.post-card.is-text-only,
+.post-card.is-text-only.has-post-thumbnail {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+/* Single posts > Featured image: Text column width. */
+.entry .entry-media:not(.alignwide) {
+	max-width: var(--st-content);
 }
 
 .blog-sidebar {
@@ -816,6 +949,93 @@ body.page-template-page-blocks-builder .site-main {
 	font-size: var(--st-text-sm);
 	font-weight: 500;
 	text-decoration: none;
+}
+
+/* A product in search results: square thumbnail, title, price and View product. */
+.post-card--product.has-media {
+	grid-template-columns: 7rem 1fr;
+	align-items: center;
+}
+
+@media (min-width: 720px) {
+	.post-card--product.has-media {
+		grid-template-columns: 9rem 1fr;
+	}
+}
+
+.post-card--product .post-card__media {
+	align-self: stretch;
+	background: var(--st-surface-muted);
+}
+
+.post-card--product .post-card__media img {
+	aspect-ratio: 1;
+	min-height: 0;
+}
+
+.post-card--product .post-card__body {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .5rem 1rem;
+	padding: 1rem 1.25rem;
+}
+
+.post-card--product .entry-title {
+	flex-basis: 100%;
+	margin: 0;
+	font-size: 1.125rem;
+}
+
+.post-card__price {
+	margin-right: auto;
+	color: var(--st-heading);
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+}
+
+.post-card__price > * {
+	margin: 0;
+}
+
+/* FluentCart's price labels for screen readers, in case its stylesheet is not on the search page. */
+.post-card__price .fct-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* In a grid layout a product result matches the post cards beside it. */
+.post-list--grid .post-card--product .post-card__body {
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.post-list--grid .post-card--product .post-card__media img {
+	aspect-ratio: 16 / 10;
+}
+
+.post-list--grid .post-card--product .post-card__action {
+	margin-top: auto;
+}
+
+/* Recovery paths under an empty search. */
+.empty-state__browse {
+	display: grid;
+	justify-items: center;
+	gap: 1rem;
+}
+
+.empty-state__links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: .5rem 1rem;
+	font-size: var(--st-text-sm);
 }
 
 /* Pagination. */
@@ -1325,7 +1545,7 @@ p.demo_store a {
 
 .entry--post .entry-title {
 	font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem);
-	letter-spacing: -.025em;
+	letter-spacing: var(--st-heading-tracking, -.025em);
 	line-height: 1.15;
 }
 
@@ -2028,4 +2248,207 @@ html.search-open {
 	color: var(--st-muted);
 	font-size: var(--st-text-xs);
 	line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------ Single post options */
+/* Breadcrumbs (Single posts > Breadcrumbs): the theme's own trail or an SEO plugin's, in the reading column. */
+.entry > .st-breadcrumbs {
+	max-width: var(--st-content);
+	margin: 0 auto 1.5rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	line-height: 1.5;
+}
+
+.st-breadcrumbs :is(nav, p, ol, ul) {
+	margin: 0;
+}
+
+.st-breadcrumbs ol,
+.st-breadcrumbs ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem .5rem;
+	padding: 0;
+	list-style: none;
+}
+
+.st-breadcrumbs a {
+	color: var(--st-gray-600);
+	text-decoration: none;
+}
+
+.st-breadcrumbs a:hover {
+	color: var(--st-primary);
+	text-decoration: underline;
+}
+
+.st-breadcrumb {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .25rem .5rem;
+}
+
+.st-breadcrumbs [aria-current="page"] {
+	color: var(--st-heading);
+}
+
+/* Header style: left-aligned title (and always beside a sidebar). */
+.entry--post .post-header--left {
+	text-align: left;
+}
+
+.post-header--left .post-standfirst {
+	margin-inline: 0;
+}
+
+/* Header style: featured image above the title. */
+.entry--post > .entry-media:first-child,
+.entry--post > .st-breadcrumbs + .entry-media {
+	margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+/* Byline placements. Above the title it sits between the category label and the title. */
+.post-byline--above {
+	margin: 0 0 1rem;
+}
+
+.post-eyebrow + .post-byline--above {
+	margin-top: .25rem;
+}
+
+.post-byline--end {
+	margin: 0 0 1.5rem;
+}
+
+.post-byline__category {
+	color: var(--st-primary-text, var(--st-primary));
+	font-weight: 500;
+	text-decoration: none;
+}
+
+.post-byline__category:hover {
+	text-decoration: underline;
+}
+
+/* Category after the post, leading the tag chips. */
+.post-tags__label {
+	align-self: center;
+	margin-right: .25rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+.chip--category {
+	border-color: transparent;
+	background: var(--st-primary-light);
+	color: var(--st-primary-text, var(--st-primary));
+}
+
+/*
+ * Layout: sidebar beside the post. The whole layout is the reading width plus the sidebar, centred,
+ * so the text, wide images and sidebar line up with no empty band between them. The main column
+ * is the reading column; wide images and blocks fill it. Phones stack the sidebar below.
+ */
+.single-layout {
+	--st-sidebar: 18rem;
+	--st-sidebar-gap: 4rem;
+	display: grid;
+	gap: 3rem;
+	max-width: calc(var(--st-content) + var(--st-sidebar) + var(--st-sidebar-gap) + var(--st-gutter) * 2);
+}
+
+.single-layout__main {
+	--st-wide: 100%;
+	min-width: 0;
+}
+
+.single-layout .entry {
+	padding-inline: 0;
+}
+
+.single-layout .entry > .st-breadcrumbs,
+.single-layout .entry .entry-header,
+.single-layout .entry .entry-content > *,
+.single-layout .entry .entry-footer,
+.single-layout .entry .post-navigation,
+.single-layout .entry .page-links,
+.single-layout .comments-area {
+	margin-inline: 0;
+}
+
+.single-layout .entry .entry-content > .alignfull {
+	max-width: none;
+	margin-inline: 0;
+}
+
+.single-layout .comments-area {
+	width: 100%;
+}
+
+@media (min-width: 960px) {
+	.single-layout {
+		grid-template-columns: minmax(0, 1fr) var(--st-sidebar);
+		align-items: start;
+		gap: var(--st-sidebar-gap);
+	}
+
+	.single-layout--sidebar-left {
+		grid-template-columns: var(--st-sidebar) minmax(0, 1fr);
+	}
+
+	.single-layout--sidebar-left .single-layout__aside {
+		order: -1;
+	}
+
+	/* Sticky sidebar: below the header when that stays in view, otherwise at the top. */
+	.single-layout__aside.is-sticky {
+		position: sticky;
+		top: calc(var(--wp-admin--admin-bar--height, 0px) + 4rem + 1.5rem);
+	}
+
+	.has-static-header .single-layout__aside.is-sticky {
+		top: calc(var(--wp-admin--admin-bar--height, 0px) + 1.5rem);
+	}
+
+	.single-layout__aside.is-sticky.is-too-tall {
+		position: static;
+	}
+}
+
+/* Footer: the theme credit after the default copyright line. */
+.site-info__sep {
+	margin-inline: .35rem;
+}
+
+.site-info__credit a {
+	text-decoration: underline;
+	text-decoration-color: var(--st-border-strong);
+	text-underline-offset: .2em;
+}
+
+/* Single posts > Header style: full-width featured image above the post and sidebar. */
+.has-post-hero .site-main {
+	padding-top: 0;
+}
+
+.post-hero {
+	margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+}
+
+.post-hero__image,
+.post-hero img {
+	display: block;
+	width: 100%;
+	height: clamp(16rem, 52vh, 36rem);
+	object-fit: cover;
+}
+
+@media (max-width: 600px) {
+	.post-hero__image,
+	.post-hero img {
+		height: auto;
+		aspect-ratio: 4 / 3;
+	}
 }

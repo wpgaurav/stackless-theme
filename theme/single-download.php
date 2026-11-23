@@ -3,6 +3,10 @@
  * A single Easy Digital Downloads product: image and description on the left, a sticky summary with
  * price, price options and the purchase button on the right, related downloads below.
  *
+ * Parts (see inc/hooks.php), shared with the FluentCart product page: product_breadcrumbs,
+ * product, product_media, product_summary, product_title, product_price, product_excerpt,
+ * product_purchase, product_meta, product_content, product_related. $context['store'] is 'edd'.
+ *
  * @package Stackless_Theme
  */
 
@@ -11,7 +15,7 @@ defined('ABSPATH') || exit;
 get_header();
 ?>
 <?php stackless_theme_before_content(); ?>
-<main id="main" class="site-main site-main--shop container">
+<main id="main" class="<?php echo stackless_theme_class('main', ['site-main', 'site-main--shop', 'container'], ['template' => 'single-download']); ?>">
 	<?php
 	while (have_posts()) {
 		the_post();
@@ -19,7 +23,9 @@ get_header();
 		$stackless_theme_categories = get_the_terms($stackless_theme_id, 'download_category');
 		$stackless_theme_category = is_array($stackless_theme_categories) ? $stackless_theme_categories[0] : null;
 		$stackless_theme_archive = get_post_type_archive_link('download');
+		$stackless_theme_ctx = ['store' => 'edd', 'post_id' => (int) $stackless_theme_id];
 		?>
+		<?php if (stackless_theme_option('stackless_store_breadcrumb') && stackless_theme_part_start('product_breadcrumbs', $stackless_theme_ctx)) : ?>
 		<nav class="st-breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'stackless-theme'); ?>">
 			<a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'stackless-theme'); ?></a>
 			<?php if ($stackless_theme_archive) : ?>
@@ -33,18 +39,30 @@ get_header();
 			<span class="breadcrumb-sep" aria-hidden="true">/</span>
 			<span aria-current="page"><?php the_title(); ?></span>
 		</nav>
+		<?php stackless_theme_part_end(); endif; ?>
 
-		<article id="post-<?php the_ID(); ?>" <?php post_class('st-download' . (has_post_thumbnail() ? ' has-media' : '')); ?>>
-			<?php if (has_post_thumbnail() && !post_password_required()) : ?>
+		<?php if (stackless_theme_part_start('product', $stackless_theme_ctx)) : ?>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('product', ['st-download', has_post_thumbnail() ? 'has-media' : ''], $stackless_theme_ctx)); ?>>
+			<?php if (has_post_thumbnail() && !post_password_required() && stackless_theme_part_start('product_media', $stackless_theme_ctx)) : ?>
 				<figure class="st-download__media"><?php the_post_thumbnail('large', ['fetchpriority' => 'high']); ?></figure>
-			<?php endif; ?>
+			<?php stackless_theme_part_end(); endif; ?>
 
+			<?php if (stackless_theme_part_start('product_summary', $stackless_theme_ctx)) : ?>
 			<div class="st-download__summary">
-				<?php the_title('<h1 class="st-download__title">', '</h1>'); ?>
+				<?php do_action('stackless_theme_product_summary_start', $stackless_theme_ctx); ?>
+				<?php
+				if (stackless_theme_part_start('product_title', $stackless_theme_ctx)) {
+					the_title('<h1 class="st-download__title">', '</h1>');
+					stackless_theme_part_end();
+				}
+				?>
+				<?php if (stackless_theme_part_start('product_price', $stackless_theme_ctx)) : ?>
 				<p class="st-download__price"><?php echo stackless_theme_edd_price_html($stackless_theme_id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?></p>
-				<?php if (has_excerpt()) : ?>
+				<?php stackless_theme_part_end(); endif; ?>
+				<?php if (has_excerpt() && stackless_theme_part_start('product_excerpt', $stackless_theme_ctx)) : ?>
 					<div class="st-download__excerpt"><?php the_excerpt(); ?></div>
-				<?php endif; ?>
+				<?php stackless_theme_part_end(); endif; ?>
+				<?php if (stackless_theme_part_start('product_purchase', $stackless_theme_ctx)) : ?>
 				<div class="st-download__purchase">
 					<?php echo stackless_theme_edd_purchase_form($stackless_theme_id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- EDD escapes its purchase form. ?>
 					<?php
@@ -53,46 +71,53 @@ get_header();
 					}
 					?>
 				</div>
+				<?php stackless_theme_part_end(); endif; ?>
 				<?php
-				$stackless_theme_cats = get_the_term_list($stackless_theme_id, 'download_category', '', ', ');
+				$stackless_theme_cats = stackless_theme_option('stackless_store_categories') ? get_the_term_list($stackless_theme_id, 'download_category', '', ', ') : '';
 				$stackless_theme_tags = get_the_term_list($stackless_theme_id, 'download_tag', '', ', ');
 				?>
-				<?php if ($stackless_theme_cats || $stackless_theme_tags) : ?>
+				<?php if (($stackless_theme_cats || $stackless_theme_tags) && stackless_theme_part_start('product_meta', $stackless_theme_ctx)) : ?>
 					<div class="st-download__meta">
 						<?php if ($stackless_theme_cats && !is_wp_error($stackless_theme_cats)) : ?>
-							<span><?php esc_html_e('Category:', 'stackless-theme'); ?> <?php echo wp_kses_post($stackless_theme_cats); ?></span>
+							<span><?php echo esc_html(stackless_theme_text('product_category_label', __('Category:', 'stackless-theme'))); ?> <?php echo wp_kses_post($stackless_theme_cats); ?></span>
 						<?php endif; ?>
 						<?php if ($stackless_theme_tags && !is_wp_error($stackless_theme_tags)) : ?>
-							<span><?php esc_html_e('Tags:', 'stackless-theme'); ?> <?php echo wp_kses_post($stackless_theme_tags); ?></span>
+							<span><?php echo esc_html(stackless_theme_text('product_tags_label', __('Tags:', 'stackless-theme'))); ?> <?php echo wp_kses_post($stackless_theme_tags); ?></span>
 						<?php endif; ?>
 					</div>
-				<?php endif; ?>
+				<?php stackless_theme_part_end(); endif; ?>
+				<?php do_action('stackless_theme_product_summary_end', $stackless_theme_ctx); ?>
 			</div>
+			<?php stackless_theme_part_end(); endif; ?>
 
+			<?php if (stackless_theme_part_start('product_content', $stackless_theme_ctx)) : ?>
 			<div class="st-download__content entry-content">
 				<?php the_content(); ?>
 			</div>
+			<?php stackless_theme_part_end(); endif; ?>
 		</article>
+		<?php stackless_theme_part_end(); endif; ?>
 
 		<?php
 		$stackless_theme_related = stackless_theme_edd_related_downloads($stackless_theme_id, function_exists('stackless_theme_related_count') ? stackless_theme_related_count('downloads') : 6);
-		if ($stackless_theme_related) :
+		if ($stackless_theme_related && stackless_theme_part_start('product_related', $stackless_theme_ctx)) :
 			?>
 			<section class="st-related-downloads" aria-labelledby="st-related-downloads-title">
-				<h2 id="st-related-downloads-title" class="st-related-downloads__title"><?php esc_html_e('You may also like', 'stackless-theme'); ?></h2>
+				<h2 id="st-related-downloads-title" class="st-related-downloads__title"><?php echo esc_html(stackless_theme_text('related_products_title', __('You may also like', 'stackless-theme'), $stackless_theme_ctx)); ?></h2>
 				<div class="st-downloads">
 					<?php
 					global $post;
 					foreach ($stackless_theme_related as $stackless_theme_related_id) {
 						$post = get_post($stackless_theme_related_id); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- setup_postdata needs the global.
 						setup_postdata($post);
-						get_template_part('template-parts/content', 'download-card');
+						stackless_theme_template_part('template-parts/content', 'download-card');
 					}
 					wp_reset_postdata();
 					?>
 				</div>
 			</section>
 			<?php
+			stackless_theme_part_end();
 		endif;
 
 		if (comments_open() || get_comments_number()) {

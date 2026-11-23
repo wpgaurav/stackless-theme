@@ -35,7 +35,7 @@ add_action('woocommerce_before_main_content', 'stackless_theme_shop_open', 10);
 function stackless_theme_shop_open(): void
 {
     stackless_theme_before_content();
-    echo '<main id="main" class="site-main site-main--shop container">';
+    echo '<main id="main" class="' . stackless_theme_class('main', ['site-main', 'site-main--shop', 'container'], ['template' => 'woocommerce', 'store' => 'woocommerce']) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper.
 }
 
 add_action('woocommerce_after_main_content', 'stackless_theme_shop_close', 10);
@@ -213,4 +213,33 @@ function stackless_theme_woo_late_shortcode_style($output, string $tag)
         stackless_theme_woo_enqueue_style();
     }
     return $output;
+}
+
+/** A product in search results shows its image and price, not a blog teaser. */
+add_filter('stackless_theme_search_product', 'stackless_theme_woo_search_product', 10, 2);
+function stackless_theme_woo_search_product($product, WP_Post $post)
+{
+    if ($product !== null || $post->post_type !== 'product' || !function_exists('wc_get_product')) {
+        return $product;
+    }
+    $item = wc_get_product($post->ID);
+    if (!$item) {
+        return $product;
+    }
+    return [
+        'image' => $item->get_image_id() ? $item->get_image('woocommerce_thumbnail', ['loading' => 'lazy', 'alt' => '']) : '',
+        'price' => stackless_theme_price_without_links((string) $item->get_price_html()),
+    ];
+}
+
+/** Store options: WooCommerce prints its breadcrumb and category line from its own hooks. */
+add_action('wp', 'stackless_theme_woo_store_options');
+function stackless_theme_woo_store_options(): void
+{
+    if (!stackless_theme_option('stackless_store_breadcrumb')) {
+        remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+    }
+    if (!stackless_theme_option('stackless_store_categories')) {
+        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+    }
 }

@@ -10,12 +10,27 @@
 	var useSelect = wp.data.useSelect;
 	var useDispatch = wp.data.useDispatch;
 	var ToggleControl = wp.components.ToggleControl;
+	var SelectControl = wp.components.SelectControl;
+	var Notice = wp.components.Notice;
+	var choices = config.choices || {};
+	var owning = config.owningTemplates || [];
 
 	function LayoutPanel() {
-		var meta = useSelect(function (select) {
-			return select('core/editor').getEditedPostAttribute('meta') || {};
+		var state = useSelect(function (select) {
+			var editor = select('core/editor');
+			return {
+				meta: editor.getEditedPostAttribute('meta') || {},
+				template: editor.getEditedPostAttribute('template') || ''
+			};
 		}, []);
+		var meta = state.meta;
 		var editPost = useDispatch('core/editor').editPost;
+
+		function set(key, value) {
+			var next = {};
+			next[key] = value;
+			editPost({ meta: next });
+		}
 
 		var toggles = Object.keys(config.options).map(function (key) {
 			if (!(key in meta)) {
@@ -28,18 +43,40 @@
 				checked: !!meta[key],
 				__nextHasNoMarginBottom: true,
 				onChange: function (value) {
-					var next = {};
-					next[key] = value;
-					editPost({ meta: next });
+					set(key, value);
 				}
 			});
 		});
+
+		// Post layout and header style: per-post overrides of the Customizer. A page template with
+		// its own layout (Full width, Canvas, Page Blocks Builder) replaces them with a note.
+		var choiceKeys = Object.keys(choices).filter(function (key) {
+			return key in meta;
+		});
+		var selects = [];
+		if (choiceKeys.length && owning.indexOf(state.template) !== -1) {
+			selects.push(el(Notice, { key: 'owning', status: 'info', isDismissible: false }, config.owningHelp));
+		} else {
+			selects = choiceKeys.map(function (key) {
+				return el(SelectControl, {
+					key: key,
+					label: choices[key].label,
+					value: meta[key] || '',
+					options: choices[key].options,
+					__nextHasNoMarginBottom: true,
+					__next40pxDefaultSize: true,
+					onChange: function (value) {
+						set(key, value);
+					}
+				});
+			});
+		}
 
 		return el(wp.editor.PluginDocumentSettingPanel, {
 			name: 'stackless-theme-layout',
 			title: config.title,
 			className: 'stackless-theme-layout-panel'
-		}, el('div', { style: { display: 'grid', gap: '12px' } }, toggles));
+		}, el('div', { style: { display: 'grid', gap: '12px' } }, selects.concat(toggles)));
 	}
 
 	wp.plugins.registerPlugin('stackless-theme-layout', { render: LayoutPanel });

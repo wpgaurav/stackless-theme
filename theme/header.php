@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
 <?php
 if (stackless_theme_shows('header')) {
 	stackless_theme_chrome('header', static function (): void {
-		get_template_part('template-parts/site', 'header');
+		stackless_theme_template_part('template-parts/site', 'header');
 	});
 }
 stackless_theme_region('hero');

@@ -22,6 +22,63 @@ function stackless_theme_layout_options(): array
     ];
 }
 
+/**
+ * Per-post choices that override a Customizer setting for one post: meta key => label, the post
+ * types it applies to, and its choices. An empty value follows the Customizer.
+ */
+function stackless_theme_layout_choices(): array
+{
+    $default = __('Site default (Customizer)', 'stackless-theme');
+    return (array) apply_filters('stackless_theme_layout_choices', [
+        '_stackless_single_layout' => [
+            'label' => __('Post layout', 'stackless-theme'),
+            'types' => ['post'],
+            'choices' => [
+                '' => $default,
+                'centered' => __('Centered, no sidebar', 'stackless-theme'),
+                'sidebar-right' => __('Sidebar on the right', 'stackless-theme'),
+                'sidebar-left' => __('Sidebar on the left', 'stackless-theme'),
+            ],
+        ],
+        '_stackless_single_header' => [
+            'label' => __('Header style', 'stackless-theme'),
+            'types' => ['post'],
+            'choices' => [
+                '' => $default,
+                'center' => __('Centered title', 'stackless-theme'),
+                'left' => __('Left-aligned title', 'stackless-theme'),
+                'image-first' => __('Featured image above the title', 'stackless-theme'),
+                'image-full' => __('Full-width featured image above the post and sidebar', 'stackless-theme'),
+            ],
+        ],
+    ]);
+}
+
+/** A per-post choice for the post being viewed, or '' to follow the Customizer. */
+function stackless_theme_layout_choice(string $key): string
+{
+    $choices = stackless_theme_layout_choices();
+    if (!isset($choices[$key]) || !is_singular($choices[$key]['types'])) {
+        return '';
+    }
+    $value = (string) get_post_meta((int) get_queried_object_id(), $key, true);
+    return array_key_exists($value, $choices[$key]['choices']) ? $value : '';
+}
+
+/**
+ * Page templates that bring their own layout: the theme's Full width and Canvas and Page Blocks
+ * Builder's two. A post on one of them skips the single-post layout options.
+ */
+function stackless_theme_layout_owning_templates(): array
+{
+    return (array) apply_filters('stackless_theme_layout_owning_templates', [
+        STACKLESS_THEME_TEMPLATE_FULL,
+        STACKLESS_THEME_TEMPLATE_CANVAS,
+        'page-blocks-builder.php',
+        'page-blocks-full-builder.php',
+    ]);
+}
+
 /** Post types that get the templates and layout options: every public type but attachments. */
 function stackless_theme_layout_post_types(): array
 {
@@ -35,6 +92,24 @@ function stackless_theme_register_layout_meta(): void
     foreach (stackless_theme_layout_post_types() as $type) {
         // Block editor meta needs custom-fields support to reach the REST API.
         add_post_type_support($type, 'custom-fields');
+        foreach (stackless_theme_layout_choices() as $key => $choice) {
+            if (!in_array($type, $choice['types'], true)) {
+                continue;
+            }
+            $allowed = array_keys($choice['choices']);
+            register_post_meta($type, $key, [
+                'type' => 'string',
+                'single' => true,
+                'default' => '',
+                'show_in_rest' => true,
+                'sanitize_callback' => static function ($value) use ($allowed): string {
+                    return in_array((string) $value, $allowed, true) ? (string) $value : '';
+                },
+                'auth_callback' => static function ($allowed_cap, $meta_key, $post_id): bool {
+                    return current_user_can('edit_post', (int) $post_id);
+                },
+            ]);
+        }
         foreach (array_keys(stackless_theme_layout_options()) as $key) {
             register_post_meta($type, $key, [
                 'type' => 'boolean',
@@ -141,6 +216,18 @@ function stackless_theme_layout_editor_assets(): void
     wp_localize_script('stackless-theme-editor-layout', 'stacklessThemeLayout', [
         'title' => __('Layout', 'stackless-theme'),
         'options' => stackless_theme_layout_options(),
+        'choices' => array_map(static function (array $choice): array {
+            return [
+                'label' => $choice['label'],
+                'options' => array_map(static function ($value, $label): array {
+                    return ['value' => (string) $value, 'label' => $label];
+                }, array_keys($choice['choices']), array_values($choice['choices'])),
+            ];
+        }, array_filter(stackless_theme_layout_choices(), static function (array $choice) use ($screen): bool {
+            return in_array($screen->post_type, $choice['types'], true);
+        })),
+        'owningTemplates' => stackless_theme_layout_owning_templates(),
+        'owningHelp' => __('This post uses a page template with its own layout, so the post layout and header style do not apply.', 'stackless-theme'),
         'transparentHelp' => __('The header sits over the first section and turns solid once you scroll. Give the first section a background and room at the top.', 'stackless-theme'),
     ]);
 }
@@ -166,6 +253,17 @@ function stackless_theme_layout_meta_box_render(WP_Post $post): void
             esc_html($label)
         );
     }
+    foreach (stackless_theme_layout_choices() as $key => $choice) {
+        if (!in_array($post->post_type, $choice['types'], true)) {
+            continue;
+        }
+        $current = (string) get_post_meta($post->ID, $key, true);
+        printf('<p><label for="%1$s">%2$s</label><br><select id="%1$s" name="%1$s" style="width:100%%">', esc_attr($key), esc_html($choice['label']));
+        foreach ($choice['choices'] as $value => $label) {
+            printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr((string) $value), selected($current, (string) $value, false), esc_html($label));
+        }
+        echo '</select></p>';
+    }
 }
 
 add_action('save_post', 'stackless_theme_layout_meta_box_save', 10, 2);
@@ -180,6 +278,17 @@ function stackless_theme_layout_meta_box_save(int $post_id, WP_Post $post): void
     foreach (array_keys(stackless_theme_layout_options()) as $key) {
         if (!empty($_POST[$key])) {
             update_post_meta($post_id, $key, true);
+        } else {
+            delete_post_meta($post_id, $key);
+        }
+    }
+    foreach (stackless_theme_layout_choices() as $key => $choice) {
+        if (!in_array($post->post_type, $choice['types'], true) || !isset($_POST[$key])) {
+            continue;
+        }
+        $value = sanitize_key(wp_unslash($_POST[$key]));
+        if ($value !== '' && array_key_exists($value, $choice['choices'])) {
+            update_post_meta($post_id, $key, $value);
         } else {
             delete_post_meta($post_id, $key);
         }

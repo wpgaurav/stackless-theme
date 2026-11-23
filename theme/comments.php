@@ -1,6 +1,6 @@
 <?php
 /**
- * Comments.
+ * Comments. Part: comments. Filters: stackless_theme_comment_list_args, stackless_theme_comment_form_args.
  *
  * @package Stackless_Theme
  */
@@ -11,7 +11,8 @@ if (post_password_required()) {
 	return;
 }
 ?>
-<section id="comments" class="comments-area">
+<?php if (stackless_theme_part_start('comments')) : ?>
+<section id="comments" class="<?php echo stackless_theme_class('comments', ['comments-area']); ?>">
 	<?php if (have_comments()) : ?>
 		<h2 class="comments-title">
 			<?php
@@ -21,7 +22,7 @@ if (post_password_required()) {
 			?>
 		</h2>
 		<ol class="comment-list">
-			<?php wp_list_comments(['style' => 'ol', 'short_ping' => true, 'avatar_size' => 40]); ?>
+			<?php wp_list_comments((array) apply_filters('stackless_theme_comment_list_args', ['style' => 'ol', 'short_ping' => true, 'avatar_size' => 40])); ?>
 		</ol>
 		<?php the_comments_navigation(); ?>
 		<?php if (!comments_open()) : ?>
@@ -29,5 +30,6 @@ if (post_password_required()) {
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<?php comment_form(['title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">', 'title_reply_after' => '</h2>']); ?>
+	<?php comment_form((array) apply_filters('stackless_theme_comment_form_args', ['title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">', 'title_reply_after' => '</h2>'])); ?>
 </section>
+<?php stackless_theme_part_end(); endif; ?>

@@ -32,8 +32,24 @@
 				lastToggle.focus();
 			}
 		} else {
+			var wasOpen = html.classList.contains('nav-open');
 			html.classList.toggle('nav-open', open);
+			// The menu sits before its toggle in the source, so move focus into it on open and back to Menu on close.
+			if (open) {
+				var first = navLinks(target)[0];
+				if (first) {
+					first.focus();
+				}
+			} else if (wasOpen && target.contains(document.activeElement)) {
+				button.focus();
+			}
 		}
+	}
+
+	function navLinks(nav) {
+		return Array.prototype.filter.call(nav.querySelectorAll('a[href], button, select, input:not([type="hidden"])'), function (el) {
+			return el.offsetParent !== null;
+		});
 	}
 
 	function closeAll() {
@@ -61,8 +77,35 @@
 
 	document.addEventListener('keydown', function (event) {
 		if (event.key === 'Escape') {
+			var openNav = document.querySelector('[data-st-toggle="nav"][aria-expanded="true"]');
 			closeAll();
+			if (openNav) {
+				openNav.focus();
+			}
 			return;
+		}
+		// In the open mobile menu, Tab past the last link or Shift+Tab before the first returns to Menu.
+		var navToggle = event.key === 'Tab' && document.querySelector('[data-st-toggle="nav"][aria-expanded="true"]');
+		if (navToggle) {
+			var links = navLinks(panelFor(navToggle));
+			if (links.length) {
+				if (event.shiftKey && document.activeElement === links[0]) {
+					event.preventDefault();
+					navToggle.focus();
+					return;
+				}
+				if (!event.shiftKey && document.activeElement === links[links.length - 1]) {
+					event.preventDefault();
+					navToggle.focus();
+					return;
+				}
+				if (!event.shiftKey && document.activeElement === navToggle) {
+					// From Menu, Tab re-enters the list rather than jumping to the page behind it.
+					event.preventDefault();
+					links[0].focus();
+					return;
+				}
+			}
 		}
 		// Keep keyboard focus inside the open search overlay.
 		if (event.key === 'Tab' && html.classList.contains('search-open')) {
@@ -95,6 +138,19 @@
 			setOpen(toggle, false);
 		}
 	});
+
+	// A sticky post sidebar only stays pinned while it fits on screen; a taller one scrolls with the page.
+	var stickyAside = document.querySelector('.single-layout__aside.is-sticky');
+	if (stickyAside) {
+		var fitSidebar = function () {
+			stickyAside.classList.remove('is-too-tall');
+			var top = parseFloat(getComputedStyle(stickyAside).top) || 0;
+			stickyAside.classList.toggle('is-too-tall', stickyAside.offsetHeight + top > window.innerHeight);
+		};
+		fitSidebar();
+		window.addEventListener('resize', fitSidebar, { passive: true });
+		window.addEventListener('load', fitSidebar);
+	}
 
 	// A header laid over the first section turns solid once the page scrolls.
 	if (document.body && document.body.classList.contains('has-transparent-header')) {

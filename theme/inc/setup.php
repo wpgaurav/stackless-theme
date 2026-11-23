@@ -196,9 +196,6 @@ function stackless_theme_menu_link_attributes(array $atts, $item): array
     return $atts;
 }
 
-add_filter('excerpt_length', static function (): int {
-    return 28;
-});
 add_filter('excerpt_more', static function (): string {
     return '&hellip;';
 });

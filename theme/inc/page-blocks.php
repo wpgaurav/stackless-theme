@@ -64,6 +64,29 @@ function stackless_theme_after_content(): void
     do_action('stackless_theme_after_content');
 }
 
+/** Whether the singular view uses one of Page Blocks Builder's page templates. */
+function stackless_theme_uses_page_blocks_template(): bool
+{
+    if (!is_singular()) {
+        return false;
+    }
+    $template = (string) get_page_template_slug((int) get_queried_object_id());
+    return in_array($template, ['page-blocks-builder.php', 'page-blocks-full-builder.php'], true);
+}
+
+/**
+ * WordPress names template body classes per post type (page-template-..., post-template-...,
+ * fluent-products-template-...). One class for every type lets the theme style the template once.
+ */
+add_filter('body_class', 'stackless_theme_page_blocks_body_class');
+function stackless_theme_page_blocks_body_class(array $classes): array
+{
+    if (stackless_theme_uses_page_blocks_template()) {
+        $classes[] = 'has-page-blocks-template';
+    }
+    return $classes;
+}
+
 /** Store regions of the theme's own, offered in the Page Blocks position list. */
 add_filter('gt_pb_positions', 'stackless_theme_page_blocks_positions');
 function stackless_theme_page_blocks_positions($positions)
@@ -71,6 +94,7 @@ function stackless_theme_page_blocks_positions($positions)
     if (!is_array($positions)) {
         return $positions;
     }
+    $positions['region:single_sidebar'] = __('Stackless: Post sidebar (top, posts with a sidebar layout)', 'stackless-theme');
     if (class_exists('WooCommerce')) {
         $positions['region:shop_top'] = __('Stackless: Above the shop grid', 'stackless-theme');
     }

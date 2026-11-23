@@ -543,3 +543,147 @@ body.stackless-theme .st-fc-related .fct-similar-product-list-container {
 	padding: 0;
 	max-width: none;
 }
+
+/*
+ * Below two columns the product name and price come before the gallery, so a phone's first screen
+ * says what the product is and what it costs. The summary's box steps aside (display: contents) and
+ * the grid orders its pieces; FluentCart's price markup stays a single element it can update.
+ */
+@media (max-width: 899.98px) {
+	body.stackless-theme .st-fc-product > .st-download__summary {
+		display: contents;
+	}
+
+	body.stackless-theme .st-fc-product .st-download__title {
+		order: -2;
+	}
+
+	body.stackless-theme .st-fc-product .st-download__price {
+		order: -1;
+	}
+
+	body.stackless-theme .st-fc-product__media {
+		margin-block-end: 1.5rem;
+	}
+
+	body.stackless-theme .st-fc-product .st-download__meta {
+		margin-block-end: 2rem;
+	}
+}
+
+/* ------------------------------------------------------------------ Shop layout */
+/*
+ * Once the filter sidebar has collapsed into its button, the products take the whole row.
+ * FluentCart only does this when the page first loads narrow, not after a resize, so the grid kept
+ * four-fifths of the width and wrapped the card buttons on tablets.
+ */
+body.stackless-theme .fct-products-wrapper-inner:has(> .fct-shop-filter-wrapper.is-collapsed) > :is(.fct-products-container, .fluent-cart-shop-no-result-found) {
+	grid-column: 1 / -1;
+}
+
+body.stackless-theme .fct-products-wrapper :is(.fct-product-card, .fct-product-card-template) > :is(.fluent-cart-add-to-cart-button, .fct-product-view-button) {
+	white-space: nowrap;
+}
+
+/*
+ * List view on wide screens: one compact row of image, details and the action, which sits at the
+ * row's end beside the details instead of under them. The excerpt keeps to two lines.
+ * .mode-list is doubled for one class of headroom: FluentCart 2.3.3 added :not(:has()) to its own
+ * list rules, which outweighed these at the same selector length.
+ */
+@media (min-width: 768px) {
+	body.stackless-theme .fct-products-wrapper .fct-products-wrapper-inner.mode-list.mode-list .fct-products-container .fct-product-card {
+		grid-template:
+			"image title button" auto
+			"image price button" auto
+			"image rating button" auto
+			"image excerpt button" 1fr
+			/ 140px minmax(0, 1fr) auto;
+		align-items: start;
+		gap: .25rem 1.5rem;
+		padding-block-end: 0;
+		padding-inline-end: 1.25rem;
+	}
+
+	body.stackless-theme .fct-products-wrapper .fct-products-wrapper-inner.mode-list.mode-list .fct-products-container .fct-product-card > .fct-product-card-image-wrap {
+		position: relative;
+		grid-area: image;
+		align-self: start;
+		width: 140px;
+		height: auto;
+		aspect-ratio: 1;
+	}
+
+	body.stackless-theme .fct-products-wrapper .fct-products-wrapper-inner.mode-list.mode-list .fct-products-container .fct-product-card > :is(button, .fluent-cart-add-to-cart-button, .fct-product-view-button, .fct-dynamic-product-button) {
+		grid-area: button;
+		place-self: center end;
+		min-width: 0;
+		margin: 0;
+	}
+
+	body.stackless-theme .fct-products-wrapper .fct-products-wrapper-inner.mode-list.mode-list .fct-products-container .fct-product-card :is(.fct-product-card-excerpt, .fct-dynamic-product-excerpt) {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+	}
+}
+
+/*
+ * Price filter: FluentCart draws the minimum and maximum as bare text that ignores the pointer.
+ * They take a field's border and fill, accept clicks (FluentCart already moves the slider when they
+ * change), and show their Minimum and Maximum labels above them.
+ */
+body.stackless-theme .fct-shop-price-range-wrap {
+	gap: .75rem;
+	overflow: visible;
+}
+
+body.stackless-theme .fct-shop-price-range-wrap .fct-shop-price-range {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	column-gap: .375rem;
+	flex: 1 1 0;
+	max-width: none;
+	min-width: 0;
+}
+
+body.stackless-theme .fct-shop-price-range-wrap .fct-shop-price-range > label.sr-only {
+	position: static;
+	grid-column: 1 / -1;
+	width: auto;
+	height: auto;
+	margin: 0 0 .25rem;
+	overflow: visible;
+	clip: auto;
+	clip-path: none;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+body.stackless-theme .fct-shop-price-range-wrap .fc_price_range_input {
+	width: 100%;
+	min-width: 0;
+	min-height: 2.25rem !important;
+	padding: .375rem .5rem !important;
+	border: 1px solid var(--st-border-strong) !important;
+	border-radius: var(--st-radius) !important;
+	background-color: var(--st-surface) !important;
+	pointer-events: auto !important;
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme .fct-shop-price-range-wrap .fc_price_range_input:focus-visible {
+	border-color: var(--st-primary) !important;
+	outline: 0;
+	box-shadow: var(--st-ring) !important;
+}
+
+/* FluentCart's floating cart button would sit over the full-screen menu; the header cart stays. */
+html.nav-open body.has-menu-drawer .fct-cart-drawer-open-btn {
+	visibility: hidden;
+}

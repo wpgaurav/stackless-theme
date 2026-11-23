@@ -12,36 +12,149 @@ defined('ABSPATH') || exit;
 /** Color settings: theme mod suffix => [label, CSS custom property, base.css default]. */
 function stackless_theme_design_colors(): array
 {
-    return [
+    return (array) apply_filters('stackless_theme_design_colors', [
         'primary' => [__('Primary (links and buttons)', 'stackless-theme'), '--st-primary', '#066fd1'],
         'text' => [__('Text', 'stackless-theme'), '--st-text', '#262626'],
         'heading' => [__('Headings', 'stackless-theme'), '--st-heading', '#171717'],
         'bg' => [__('Page background', 'stackless-theme'), '--st-bg', '#fafafa'],
         'surface' => [__('Cards and header', 'stackless-theme'), '--st-surface', '#ffffff'],
-    ];
+    ]);
+}
+
+/**
+ * Fonts that ship with the theme in assets/fonts, each under the SIL Open Font License 1.1 (see
+ * the OFL.txt beside it), subset to Latin and Latin Extended. Nothing loads until a font is picked
+ * in Typography; then only that family's @font-face rules print.
+ *
+ * slug => [
+ *   name     CSS family name,
+ *   fallback generic stack after it,
+ *   use      'both' (body or headings) or 'heading' (display faces),
+ *   faces    [file, weight or weight range, style],
+ *   heading  optional heading weight and letter spacing that suit the face,
+ * ]
+ */
+function stackless_theme_bundled_fonts(): array
+{
+    $sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    $serif = 'Charter, "Bitstream Charter", Cambria, Georgia, serif';
+    $display = 'Impact, "Arial Narrow Bold", "Helvetica Neue", sans-serif';
+    return (array) apply_filters('stackless_theme_bundled_fonts', [
+        'inter' => ['name' => 'Inter', 'fallback' => $sans, 'use' => 'both', 'faces' => [['Inter.woff2', '100 900', 'normal'], ['Inter-Italic.woff2', '100 900', 'italic']]],
+        'geist' => ['name' => 'Geist', 'fallback' => $sans, 'use' => 'both', 'faces' => [['Geist-Regular.woff2', '400', 'normal'], ['Geist-Italic.woff2', '400', 'italic'], ['Geist-Medium.woff2', '500', 'normal'], ['Geist-SemiBold.woff2', '600', 'normal'], ['Geist-Bold.woff2', '700', 'normal']]],
+        'intern' => ['name' => 'Intern', 'fallback' => $sans, 'use' => 'both', 'faces' => [['Intern-Regular.woff2', '400', 'normal'], ['Intern-Medium.woff2', '500', 'normal'], ['Intern-SemiBold.woff2', '600', 'normal'], ['Intern-Bold.woff2', '700', 'normal']]],
+        'allo' => ['name' => 'Allo', 'fallback' => $sans, 'use' => 'both', 'faces' => [['Allo.woff2', '100 900', 'normal']]],
+        'newsreader' => ['name' => 'Newsreader', 'fallback' => $serif, 'use' => 'both', 'faces' => [['Newsreader.woff2', '200 800', 'normal'], ['Newsreader-Italic.woff2', '200 800', 'italic']], 'heading' => ['weight' => 500, 'tracking' => '-.015em']],
+        'geist-serif' => ['name' => 'Geist Serif', 'fallback' => $serif, 'use' => 'both', 'faces' => [['GeistSerif-Regular.woff2', '400', 'normal']], 'heading' => ['weight' => 400, 'tracking' => '-.02em']],
+        'anton' => ['name' => 'Anton', 'fallback' => $display, 'use' => 'heading', 'faces' => [['Anton-Regular.woff2', '400', 'normal']], 'heading' => ['weight' => 400, 'tracking' => '.005em']],
+        'bebas-neue' => ['name' => 'Bebas Neue', 'fallback' => $display, 'use' => 'heading', 'faces' => [['BebasNeue-Regular.woff2', '400', 'normal']], 'heading' => ['weight' => 400, 'tracking' => '.02em']],
+        'oswald' => ['name' => 'Oswald', 'fallback' => $display, 'use' => 'heading', 'faces' => [['Oswald.woff2', '200 700', 'normal']], 'heading' => ['weight' => 600, 'tracking' => '0']],
+        'archivo-black' => ['name' => 'Archivo Black', 'fallback' => $display, 'use' => 'heading', 'faces' => [['ArchivoBlack-Regular.woff2', '400', 'normal']], 'heading' => ['weight' => 400, 'tracking' => '-.01em']],
+    ]);
 }
 
 /** Font stacks offered for body and headings. '' keeps the theme's system sans. */
 function stackless_theme_font_stacks(): array
 {
-    return [
+    $bundled = [];
+    foreach (stackless_theme_bundled_fonts() as $slug => $font) {
+        $bundled['font-' . $slug] = [
+            /* translators: %s: font name, e.g. Inter */
+            sprintf($font['use'] === 'heading' ? __('%s (included, headings)', 'stackless-theme') : __('%s (included)', 'stackless-theme'), $font['name']),
+            '"' . $font['name'] . '", ' . $font['fallback'],
+        ];
+    }
+    return (array) apply_filters('stackless_theme_font_stacks', [
         '' => [__('System sans (default)', 'stackless-theme'), ''],
         'serif' => [__('System serif', 'stackless-theme'), 'Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif'],
         'humanist' => [__('Humanist sans', 'stackless-theme'), 'Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif'],
         'geometric' => [__('Geometric sans', 'stackless-theme'), 'Avenir, Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif'],
         'rounded' => [__('Rounded sans', 'stackless-theme'), 'ui-rounded, "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari, "Arial Rounded MT", Calibri, source-sans-pro, sans-serif'],
         'mono' => [__('Monospace', 'stackless-theme'), 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'],
+    ] + $bundled + [
         'custom' => [__('Custom stack', 'stackless-theme'), ''],
-    ];
+    ]);
+}
+
+/** The bundled font chosen for 'body' or 'heading': its slug, or '' for a system or custom stack. */
+function stackless_theme_design_bundled_font(string $where): string
+{
+    $choice = stackless_theme_sanitize_font_choice(get_theme_mod('stackless_font_' . $where, ''));
+    if (strpos($choice, 'font-') !== 0) {
+        return '';
+    }
+    $slug = substr($choice, 5);
+    $fonts = stackless_theme_bundled_fonts();
+    // A heading-only display face never sets body text.
+    return isset($fonts[$slug]) && ($where === 'heading' || $fonts[$slug]['use'] === 'both') ? $slug : '';
+}
+
+/** @font-face rules for the bundled fonts in use, and nothing for the rest. */
+function stackless_theme_font_face_css(): string
+{
+    $fonts = stackless_theme_bundled_fonts();
+    $css = '';
+    foreach (array_unique(array_filter([stackless_theme_design_bundled_font('body'), stackless_theme_design_bundled_font('heading')])) as $slug) {
+        foreach ($fonts[$slug]['faces'] as [$file, $weight, $style]) {
+            $css .= sprintf(
+                '@font-face{font-family:"%1$s";src:url("%2$s") format("woff2");font-weight:%3$s;font-style:%4$s;font-display:swap}',
+                $fonts[$slug]['name'],
+                esc_url(STACKLESS_THEME_URI . '/assets/fonts/' . $slug . '/' . $file),
+                $weight,
+                $style
+            );
+        }
+    }
+    return $css;
+}
+
+/** The face a role reads first, to preload: the upright face that covers the weight it is set in. */
+function stackless_theme_font_preload_url(string $slug, int $weight): string
+{
+    $font = stackless_theme_bundled_fonts()[$slug] ?? null;
+    if (!$font) {
+        return '';
+    }
+    foreach ($font['faces'] as [$file, $range, $style]) {
+        $bounds = array_map('intval', explode(' ', $range));
+        if ($style === 'normal' && $weight >= $bounds[0] && $weight <= ($bounds[1] ?? $bounds[0])) {
+            return STACKLESS_THEME_URI . '/assets/fonts/' . $slug . '/' . $file;
+        }
+    }
+    return STACKLESS_THEME_URI . '/assets/fonts/' . $slug . '/' . $font['faces'][0][0];
+}
+
+/** Preloads the bundled fonts in use, so text does not swap late. */
+add_action('wp_head', 'stackless_theme_font_preload', 2);
+function stackless_theme_font_preload(): void
+{
+    $urls = [];
+    $body = stackless_theme_design_bundled_font('body');
+    if ($body !== '') {
+        $urls[] = stackless_theme_font_preload_url($body, 400);
+    }
+    $heading = stackless_theme_design_bundled_font('heading');
+    if ($heading !== '') {
+        $urls[] = stackless_theme_font_preload_url($heading, (int) (stackless_theme_bundled_fonts()[$heading]['heading']['weight'] ?? 600));
+    }
+    foreach (array_unique(array_filter($urls)) as $url) {
+        printf('<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n", esc_url($url));
+    }
+}
+
+/** Heading letter case: 'none' or 'uppercase'. */
+function stackless_theme_sanitize_heading_case($value): string
+{
+    return $value === 'uppercase' ? 'uppercase' : 'none';
 }
 
 /** Width limits in px: setting => [min, max, default]. */
 function stackless_theme_design_widths(): array
 {
-    return [
+    return (array) apply_filters('stackless_theme_design_widths', [
         'content' => [560, 960, 720],
         'wide' => [960, 1600, 1200],
-    ];
+    ]);
 }
 
 /** A width in px clamped to its range; 0 keeps the default. */
@@ -136,6 +249,9 @@ function stackless_theme_design_font(string $where): string
     if ($choice === 'custom') {
         return stackless_theme_sanitize_font_stack(get_theme_mod('stackless_font_' . $where . '_custom', ''));
     }
+    if (strpos($choice, 'font-') === 0 && stackless_theme_design_bundled_font($where) === '') {
+        return '';
+    }
     return $choice === '' ? '' : stackless_theme_font_stacks()[$choice][1];
 }
 
@@ -174,13 +290,24 @@ function stackless_theme_design_vars(): array
     if ($heading !== '') {
         $vars['--st-font-heading'] = $heading;
     }
+    $heading_font = stackless_theme_design_bundled_font('heading');
+    $tuning = $heading_font !== '' ? (stackless_theme_bundled_fonts()[$heading_font]['heading'] ?? []) : [];
+    if (isset($tuning['weight'])) {
+        $vars['--st-heading-weight'] = (string) (int) $tuning['weight'];
+    }
+    if (isset($tuning['tracking'])) {
+        $vars['--st-heading-tracking'] = preg_replace('/[^0-9.em-]/', '', (string) $tuning['tracking']);
+    }
+    if (stackless_theme_sanitize_heading_case(get_theme_mod('stackless_heading_case', 'none')) === 'uppercase') {
+        $vars['--st-heading-transform'] = 'uppercase';
+    }
     return (array) apply_filters('stackless_theme_design_vars', $vars);
 }
 
 /** The design overrides as CSS, or '' when nothing is customized. */
 function stackless_theme_design_css(): string
 {
-    $css = '';
+    $css = stackless_theme_font_face_css();
     $vars = stackless_theme_design_vars();
     if ($vars) {
         $css .= ':root{';
@@ -193,6 +320,7 @@ function stackless_theme_design_css(): string
     if ($logo > 0) {
         $css .= '.custom-logo{width:min(' . $logo . 'px,60vw);max-height:none;height:auto}';
     }
+    $css = (string) apply_filters('stackless_theme_design_css', $css);
     // Strip anything that could close the style element; values are sanitized above.
     return str_replace(['<', '>'], '', $css);
 }
@@ -250,9 +378,25 @@ function stackless_theme_design_theme_json($theme_json)
 /** The footer line: the saved text with {year} and {site}, else "© year Site". */
 function stackless_theme_footer_text(): string
 {
+    return (string) apply_filters('stackless_theme_footer_text', stackless_theme_footer_text_default());
+}
+
+/** The footer line before stackless_theme_footer_text: the saved text, or the copyright and credit. */
+function stackless_theme_footer_text_default(): string
+{
     $text = stackless_theme_sanitize_footer_text(get_theme_mod('stackless_footer_text', ''));
     if ($text === '') {
-        return sprintf('&copy; %1$s <a href="%2$s">%3$s</a>', esc_html(wp_date('Y')), esc_url(home_url('/')), esc_html(get_bloginfo('name')));
+        $line = sprintf('&copy; %1$s <a href="%2$s">%3$s</a>', esc_html(wp_date('Y')), esc_url(home_url('/')), esc_html(get_bloginfo('name')));
+        // The theme credit rides along with the default line only; custom footer text replaces both.
+        if (stackless_theme_option('stackless_footer_credit')) {
+            $theme = wp_get_theme(get_template());
+            $line .= ' <span class="site-info__sep" aria-hidden="true">&middot;</span> <span class="site-info__credit">' . sprintf(
+                /* translators: %s: theme name linked to its home page */
+                esc_html(stackless_theme_text('theme_credit', __('Built with %s', 'stackless-theme'))),
+                '<a href="' . esc_url((string) $theme->get('ThemeURI')) . '">' . esc_html((string) $theme->get('Name')) . '</a>'
+            ) . '</span>';
+        }
+        return $line;
     }
     return strtr($text, ['{year}' => esc_html(wp_date('Y')), '{site}' => esc_html(get_bloginfo('name'))]);
 }
@@ -281,12 +425,6 @@ function stackless_theme_print_footer_code(): void
 add_action('customize_register', 'stackless_theme_design_customize_register', 15);
 function stackless_theme_design_customize_register(WP_Customize_Manager $wp_customize): void
 {
-    $wp_customize->add_section('stackless_theme_design', [
-        'title' => __('Stackless: Design', 'stackless-theme'),
-        'description' => __('Leave a field empty to keep the theme default.', 'stackless-theme'),
-        'priority' => 29,
-    ]);
-
     foreach (stackless_theme_design_colors() as $key => [$label, , $default]) {
         $id = 'stackless_color_' . $key;
         $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'sanitize_hex_color']);
@@ -294,7 +432,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
             'label' => $label,
             /* translators: %s: default hex color */
             'description' => sprintf(__('Default %s', 'stackless-theme'), $default),
-            'section' => 'stackless_theme_design',
+            'section' => 'stackless_theme_colors',
         ]));
     }
 
@@ -308,7 +446,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
         $wp_customize->add_control($id, [
             'label' => $labels[$key][0],
             'description' => $labels[$key][1],
-            'section' => 'stackless_theme_design',
+            'section' => 'stackless_theme_layout',
             'type' => 'number',
             'input_attrs' => ['min' => 0, 'max' => $max, 'step' => 10, 'placeholder' => (string) $min . '-' . $max],
         ]);
@@ -317,27 +455,50 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
     $choices = array_map(static function (array $font): string {
         return $font[0];
     }, stackless_theme_font_stacks());
+    $fonts = stackless_theme_bundled_fonts();
     foreach (['body' => __('Body font', 'stackless-theme'), 'heading' => __('Heading font', 'stackless-theme')] as $where => $label) {
         $id = 'stackless_font_' . $where;
         $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_choice']);
         $wp_customize->add_control($id, [
             'label' => $label,
-            'section' => 'stackless_theme_design',
+            'description' => $where === 'heading'
+                ? __('"Included" fonts ship with the theme and load only when picked. The "headings" ones are bold display faces.', 'stackless-theme')
+                : __('"Included" fonts ship with the theme and load only when picked.', 'stackless-theme'),
+            'section' => 'stackless_theme_typography',
             'type' => 'select',
-            'choices' => $choices,
+            // Display faces are for headings only.
+            'choices' => $where === 'heading' ? $choices : array_filter($choices, static function ($key) use ($fonts): bool {
+                return strpos((string) $key, 'font-') !== 0 || ($fonts[substr((string) $key, 5)]['use'] ?? '') === 'both';
+            }, ARRAY_FILTER_USE_KEY),
         ]);
         $wp_customize->add_setting($id . '_custom', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_stack']);
         $wp_customize->add_control($id . '_custom', [
             /* translators: %s: Body font or Heading font */
             'label' => sprintf(__('%s: custom stack', 'stackless-theme'), $label),
-            'description' => __('Used when "Custom stack" is picked, e.g. Inter, system-ui, sans-serif. Load web fonts with a font plugin first.', 'stackless-theme'),
-            'section' => 'stackless_theme_design',
+            'description' => sprintf(
+                /* translators: %s: link to the Functionalities plugin on WordPress.org */
+                __('Used when "Custom stack" is picked, e.g. Inter, system-ui, sans-serif. Stackless loads no web fonts itself: add them first with the free %s plugin, whose Fonts module adds web fonts to your site.', 'stackless-theme'),
+                '<a href="' . esc_url('https://wordpress.org/plugins/functionalities/') . '" target="_blank" rel="noopener">' . esc_html__('Functionalities', 'stackless-theme') . '</a>'
+            ),
+            'section' => 'stackless_theme_typography',
             'type' => 'text',
             'active_callback' => static function () use ($id): bool {
                 return get_theme_mod($id, '') === 'custom';
             },
         ]);
     }
+
+    $wp_customize->add_setting('stackless_heading_case', ['default' => 'none', 'sanitize_callback' => 'stackless_theme_sanitize_heading_case']);
+    $wp_customize->add_control('stackless_heading_case', [
+        'label' => __('Heading letter case', 'stackless-theme'),
+        'description' => __('Capitals suit the condensed display faces.', 'stackless-theme'),
+        'section' => 'stackless_theme_typography',
+        'type' => 'radio',
+        'choices' => [
+            'none' => __('As written', 'stackless-theme'),
+            'uppercase' => __('All capitals', 'stackless-theme'),
+        ],
+    ]);
 
     $wp_customize->add_setting('stackless_logo_width', ['default' => 0, 'sanitize_callback' => 'stackless_theme_sanitize_logo_width']);
     $wp_customize->add_control('stackless_logo_width', [
@@ -352,29 +513,34 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
     $wp_customize->add_setting('stackless_view_transitions', ['default' => false, 'sanitize_callback' => 'rest_sanitize_boolean']);
     $wp_customize->add_control('stackless_view_transitions', [
         'label' => __('Fade between pages', 'stackless-theme'),
-        'description' => __('Cross-document view transitions in browsers that support them. Off for visitors who prefer reduced motion.', 'stackless-theme'),
-        'section' => 'stackless_theme_design',
+        'description' => __('A short cross-fade when moving between pages, in browsers that support it. Skipped for visitors who prefer reduced motion.', 'stackless-theme'),
+        'section' => 'stackless_theme_layout',
         'type' => 'checkbox',
     ]);
 
-    $wp_customize->add_section('stackless_theme_footer', [
-        'title' => __('Stackless: Footer and code', 'stackless-theme'),
-        'priority' => 32,
-    ]);
     $wp_customize->add_setting('stackless_footer_text', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_footer_text']);
     $wp_customize->add_control('stackless_footer_text', [
         'label' => __('Footer text', 'stackless-theme'),
-        'description' => __('Replaces "© year Site name". {year} and {site} are filled in; links, bold and italics are allowed.', 'stackless-theme'),
+        'description' => __('Replaces the default "© year Site name · Built with Stackless" line. {year} and {site} are filled in; links, bold and italics are allowed.', 'stackless-theme'),
         'section' => 'stackless_theme_footer',
         'type' => 'textarea',
     ]);
-    foreach (['header' => __('Code in <head>', 'stackless-theme'), 'footer' => __('Code before </body>', 'stackless-theme')] as $where => $label) {
+    $wp_customize->add_setting('stackless_footer_credit', ['default' => true, 'sanitize_callback' => 'rest_sanitize_boolean']);
+    $wp_customize->add_control('stackless_footer_credit', [
+        'label' => __('Theme credit', 'stackless-theme'),
+        'description' => __('"Built with Stackless" after the copyright. Only shown with the default footer line.', 'stackless-theme'),
+        'section' => 'stackless_theme_footer',
+        'type' => 'checkbox',
+        'active_callback' => static function (): bool {
+            return trim((string) get_theme_mod('stackless_footer_text', '')) === '';
+        },
+    ]);
+    foreach (['header' => __('Code in the page head', 'stackless-theme'), 'footer' => __('Code at the end of the page', 'stackless-theme')] as $where => $label) {
         $id = 'stackless_' . $where . '_code';
         $wp_customize->add_setting($id, ['default' => '', 'capability' => 'unfiltered_html', 'sanitize_callback' => 'stackless_theme_sanitize_code']);
         $wp_customize->add_control($id, [
             'label' => $label,
-            'description' => __('Analytics, verification tags and similar snippets. Printed on every front-end page.', 'stackless-theme'),
-            'section' => 'stackless_theme_footer',
+            'section' => 'stackless_theme_code',
             'type' => 'textarea',
             'input_attrs' => ['class' => 'code', 'spellcheck' => 'false'],
         ]);

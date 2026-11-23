@@ -248,7 +248,7 @@ function stackless_theme_md_plan(string $source): array
             $stack = stackless_theme_sanitize_font_stack('"' . $google . '", ' . ($fallbacks !== '' ? $fallbacks : 'system-ui, sans-serif'));
             $mod('design', 'stackless_font_' . $key, 'custom');
             $mod('design', 'stackless_font_' . $key . '_custom', $stack);
-            $item('design', $label, $google . ' (Google)', $stack, 'partial', __('Stackless does not load Google Fonts. Load this font with a font plugin, or it falls back to the system font.', 'stackless-theme'));
+            $item('design', $label, $google . ' (Google)', $stack, 'partial', __('Stackless does not load Google Fonts. Add this font with the Functionalities plugin (Fonts module, free on WordPress.org), or it falls back to the system font.', 'stackless-theme'));
         } elseif ($family !== '' && $family !== $md_system && stripos($family, 'system-ui') !== 0) {
             $stack = stackless_theme_sanitize_font_stack($family);
             $mod('design', 'stackless_font_' . $key, 'custom');

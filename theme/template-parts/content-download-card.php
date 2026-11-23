@@ -10,8 +10,12 @@ defined('ABSPATH') || exit;
 
 $stackless_theme_id = get_the_ID();
 $stackless_theme_variable = function_exists('edd_has_variable_prices') && edd_has_variable_prices($stackless_theme_id);
+$stackless_theme_ctx = ['store' => 'edd', 'post_id' => (int) $stackless_theme_id, 'variable' => $stackless_theme_variable];
+if (!stackless_theme_part_start('product_card', $stackless_theme_ctx)) {
+	return;
+}
 ?>
-<article id="download-<?php the_ID(); ?>" <?php post_class('st-download-card'); ?>>
+<article id="download-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('product_card', ['st-download-card'], $stackless_theme_ctx)); ?>>
 	<a class="st-download-card__media" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
 		<?php if (has_post_thumbnail()) : ?>
 			<?php the_post_thumbnail('medium_large', ['loading' => 'lazy', 'alt' => '']); ?>
@@ -26,7 +30,7 @@ $stackless_theme_variable = function_exists('edd_has_variable_prices') && edd_ha
 	<div class="st-download-card__action">
 		<?php if ($stackless_theme_variable) : ?>
 			<a class="button st-download-card__choose" href="<?php the_permalink(); ?>">
-				<?php esc_html_e('Choose an option', 'stackless-theme'); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
+				<?php echo esc_html(stackless_theme_text('choose_option', __('Choose an option', 'stackless-theme'), $stackless_theme_ctx)); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
 			</a>
 		<?php else : ?>
 			<?php
@@ -34,7 +38,7 @@ $stackless_theme_variable = function_exists('edd_has_variable_prices') && edd_ha
 			if (stackless_theme_edd_form_needs_page($stackless_theme_form)) :
 				?>
 				<a class="button st-download-card__choose" href="<?php the_permalink(); ?>">
-					<?php esc_html_e('Choose options', 'stackless-theme'); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
+					<?php echo esc_html(stackless_theme_text('choose_options', __('Choose options', 'stackless-theme'), $stackless_theme_ctx)); ?><span class="screen-reader-text">: <?php the_title(); ?></span>
 				</a>
 			<?php else : ?>
 				<?php echo $stackless_theme_form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- EDD escapes its purchase form. ?>
@@ -42,3 +46,4 @@ $stackless_theme_variable = function_exists('edd_has_variable_prices') && edd_ha
 		<?php endif; ?>
 	</div>
 </article>
+<?php stackless_theme_part_end(); ?>

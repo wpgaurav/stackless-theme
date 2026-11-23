@@ -13,15 +13,17 @@ defined('ABSPATH') || exit;
 
 get_header();
 ?>
-<main id="main" class="site-main site-main--full site-main--canvas">
+<main id="main" class="<?php echo stackless_theme_class('main', ['site-main', 'site-main--full', 'site-main--canvas'], ['template' => 'canvas']); ?>">
 	<?php
 	while (have_posts()) {
 		the_post();
 		?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class('entry entry--full'); ?>>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('entry', ['entry', 'entry--full'], ['template' => 'canvas'])); ?>>
+			<?php do_action('stackless_theme_before_entry_content', ['template' => 'canvas']); ?>
 			<div class="entry-content">
 				<?php the_content(); ?>
 			</div>
+			<?php do_action('stackless_theme_after_entry_content', ['template' => 'canvas']); ?>
 		</article>
 		<?php
 	}
