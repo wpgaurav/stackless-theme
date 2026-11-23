@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,12 +14,12 @@ A minimal classic theme for WooCommerce, Easy Digital Downloads and FluentCart s
 Stackless is a quiet, fast classic theme. It styles every semantic HTML element, every form control, WooCommerce's classic templates and its Cart and Checkout blocks, Easy Digital Downloads' downloads, checkout, receipts and account pages, and every Stackless for WooCommerce and Stackless for EDD module (wishlist, sold count, quotes, licenses, subscriptions, saved carts, order bumps and more).
 
 * Classic PHP templates with full Block Editor support: theme.json palette, type scale, spacing, wide and full alignment, editor styles.
-* System font stack, no web fonts, no jQuery, one small script for the mobile menu and header search.
+* System font stack by default and no jQuery. Ten open-source fonts are included and load only when you pick them.
 * Header with logo, two-level primary menu, account link and live cart count.
 * Full-screen product search with live results, popular categories and best sellers.
-* Single product pages with a sticky summary column; editorial single posts with author box and related posts.
+* Single product pages with a sticky summary column; editorial single posts with author box, related posts, optional sidebar layouts and per-post layout choices.
 * Footer widget area and footer menu. Optional "Shop" widget area above the product grid.
-* Design settings for colors, reading and wide widths, fonts and logo width, plus a footer line and header and footer code.
+* One Customizer panel for colors, typography, widths, the header and mobile menu, blog and archives, single posts, custom post types, store elements, the footer line and header and footer code.
 * Full width and Canvas templates, and per-page options to hide the title, header or footer or lay the header over the first section.
 * Page Blocks Builder regions (header, hero, before and after content, sidebar, footer, 404, shop and store) and an edge-to-edge builder template.
 * Settings export and import with backups, and an importer for sites moving from Marketers Delight.
@@ -37,7 +37,31 @@ Stackless theme, Copyright 2026 Gaurav Tiwari. Distributed under the terms of th
 Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecalm.net, MIT License.
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
+Fonts in assets/fonts, each under the SIL Open Font License 1.1 (OFL.txt beside each font), subset to Latin and converted to WOFF2:
+Inter, Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter).
+Geist and Geist Serif, Copyright 2024-2026 The Geist Project Authors (https://github.com/vercel/geist-font).
+Allo, Copyright 2026 Josh Puckett (https://joshpuckett.me), portions Copyright 2016 The Inter Project Authors.
+Intern, Copyright 2016 The Inter Project Authors, Copyright 2026 Luke.
+Newsreader, Copyright 2020 The Newsreader Project Authors (https://github.com/productiontype/Newsreader).
+Anton, Copyright 2020 The Anton Project Authors (https://github.com/googlefonts/AntonFont).
+Bebas Neue, Copyright 2019 The Bebas Neue Project Authors (https://github.com/dharmatype/Bebas-Neue).
+Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont).
+Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
+
 == Changelog ==
+
+= 1.7.0 =
+* New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.
+* New: single post layouts. A post can sit beside a sidebar that stays in view, open with a centered or left-aligned title, the featured image above the title, or a full-width featured image, and show breadcrumbs from Yoast SEO, Rank Math, SEOPress, All in One SEO, The SEO Framework, Slim SEO or Breadcrumb NavXT. The category and byline can sit above the title, below it or after the post, and each post can pick its own layout in the editor's Layout panel.
+* New: blog and archive options. List or two- and three-column grids, switches for images, dates, excerpts and Read more, excerpt length, and options for each custom post type's single pages.
+* New: ten fonts are included: Inter, Geist, Intern, Allo, Newsreader and Geist Serif for text, and Anton, Bebas Neue, Oswald and Archivo Black for headings. Only the fonts you pick are loaded, and headings can be set in capitals.
+* New: the mobile menu can open as a full-screen drawer, the header can scroll away with the page, and the header search, cart and account buttons, product breadcrumbs and category lines can be switched off.
+* New: products in search results show their image and price, and a search with no results offers the shop and its categories.
+* New: every part of the theme can be hidden, replaced or added to through hooks, option defaults can be filtered, and template parts can be served from a plugin.
+* Improved: Page Blocks Builder. Products and posts on a Page Blocks template get that template edge to edge, and a new region sits at the top of the post sidebar.
+* Improved: FluentCart stores. On phones the product name and price come before the gallery, the shop grid fills the row on tablets, list view rows are compact, and the price filter's fields look and work like fields.
+* Fixed: buttons with a filled background lost their label on hover.
+* Fixed: keyboard use of the mobile menu, FluentCart's cart drawer, mobile filters and checkout order summary. Focus moves into an open panel, stays there, and returns when it closes.
 
 = 1.6.1 =
 * New: FluentCart product pages use the same layout as WooCommerce products and EDD downloads: a breadcrumb, the gallery beside a summary that stays in view, the price, options and one buy row with quantity, Buy Now and Add to Cart, the category, then the description and related products.
