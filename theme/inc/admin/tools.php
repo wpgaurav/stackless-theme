@@ -254,6 +254,9 @@ function stackless_theme_tools_notice(): void
         'no-backup' => ['error', __('That backup no longer exists.', 'stackless-theme')],
         'md-imported' => ['success', __('Marketers Delight import finished. Check the summary below; the previous Stackless settings are saved as a backup.', 'stackless-theme')],
         'md-nothing' => ['warning', __('Nothing was selected to import.', 'stackless-theme')],
+        'blocks-preview' => ['info', __('Block conversion preview: nothing was changed. The posts that would change are listed under Convert blocks.', 'stackless-theme')],
+        'blocks-done' => ['success', __('Blocks converted. Each changed post has a revision of its earlier content.', 'stackless-theme')],
+        'blocks-none' => ['warning', __('No blocks to convert were found.', 'stackless-theme')],
     ];
     if (isset($messages[$notice])) {
         printf('<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>', esc_attr($messages[$notice][0]), esc_html($messages[$notice][1]));
@@ -296,6 +299,12 @@ function stackless_theme_tools_render(): void
 					<?php submit_button(__('Import', 'stackless-theme'), 'secondary', 'submit', false); ?>
 				</form>
 			</div>
+
+			<?php
+			if (function_exists('stackless_theme_blocks_tools_card')) {
+				stackless_theme_blocks_tools_card();
+			}
+			?>
 
 			<?php $backups = array_reverse(stackless_theme_backups(), true); ?>
 			<div class="card">
