@@ -157,6 +157,7 @@ function stackless_theme_blocks_icon_map(): array
         'cloud' => 'cloud',
         'server' => 'server',
         'gauge' => 'gauge',
+        'file' => 'file',
     ];
     /**
      * Filters the Marketers Delight icon name => Tabler icon map. A Tabler icon added here must
