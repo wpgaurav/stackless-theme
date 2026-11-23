@@ -50,6 +50,12 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 
 == Changelog ==
 
+= Unreleased =
+* New: Stackless blocks. Callout, Content Upgrade, FAQ, Steps, Key Takeaway, Pull Quote, Quote, Related Content, Share Notice, Spoiler, Section, Query Loop, Side Promotion, Arrow and Table of Contents are in the editor under Stackless. Each block loads its own small stylesheet only on pages that use it, and only the FAQ, Spoiler and Table of Contents have a script.
+* New: style variations for core blocks: paragraphs, headings, lists, buttons, images, tables, groups, covers, videos, separators and the query loop. A variation's stylesheet loads only on pages that use it.
+* New: the blocks match the Marketers Delight theme blocks by name and settings, so content moves between the two themes. Appearance > Stackless Tools > Convert blocks switches the block names in posts, pages and patterns either way, with a preview first and a revision of every changed post. From the command line: wp stackless blocks migrate --from=marketers-delight, with --dry-run to preview and --to=marketers-delight to go back.
+* New: icons chosen in a block are drawn as Tabler icons, and each block can be hidden, replaced or filtered through the theme's hooks.
+
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.
 * New: single post layouts. A post can sit beside a sidebar that stays in view, open with a centered or left-aligned title, the featured image above the title, or a full-width featured image, and show breadcrumbs from Yoast SEO, Rank Math, SEOPress, All in One SEO, The SEO Framework, Slim SEO or Breadcrumb NavXT. The category and byline can sit above the title, below it or after the post, and each post can pick its own layout in the editor's Layout panel.

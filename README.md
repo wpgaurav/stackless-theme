@@ -17,10 +17,14 @@ theme/
   inc/                 setup, icons, template tags, design settings, page layouts, Page Blocks Builder regions,
                        WooCommerce and EDD integration
   inc/admin/           Stackless tools (settings export/import, backups) and the Marketers Delight importer
+  inc/blocks/          Stackless blocks (the Marketers Delight theme blocks under stackless/), core block style
+                       variations and the block converter; self-contained, so it can move to a plugin
   assets/css/          base (tokens, elements, forms, blocks), layout, woocommerce, stackless, editor
   assets/js/theme.js   mobile menu, header search and the transparent-header scroll state
   assets/js/editor-layout.js  the editor's Layout panel
-  assets/icons/        Tabler Icons used by the theme
+  assets/css/blocks/   one stylesheet per block and per styled core block, the token bridge and editor styles
+  assets/js/blocks/    FAQ, Spoiler and Table of Contents scripts; editor/ holds the block editor scripts
+  assets/icons/        Tabler Icons used by the theme and the blocks
 ```
 
 CSS is plain, unbuilt CSS with `--st-*` custom properties on `:root`. WooCommerce and Stackless layers load only when those plugins are active. Asset URLs carry the file's modification time, so edits bust caches without purging anything.

@@ -160,6 +160,43 @@ The FluentCart product page and the EDD download page share these parts. `$conte
 | `product_card` | EDD card | yes | |
 | `store_toolbar` | Promo line, search, sorting, category chips (WooCommerce, EDD) | yes | |
 
+### Blocks
+
+Each Stackless block renders as a part named `block_` plus the block's name with underscores, so the pattern above applies to it: `stackless_theme_show_block_callout`, `stackless_theme_pre_block_faq`, `stackless_theme_block_quote_html`, and so on. `$context` holds `block` (the name after the slash), `attributes` and `content` (the rendered inner blocks). The `_html` filters receive the finished markup, with icons and block-support classes in place.
+
+| Part | Block |
+|---|---|
+| `block_arrow` | `stackless/arrow` |
+| `block_callout` | `stackless/callout` |
+| `block_content_upgrade` | `stackless/content-upgrade` |
+| `block_faq`, `block_faq_item` | `stackless/faq` and its items |
+| `block_key_takeaway` | `stackless/key-takeaway` |
+| `block_pull_quote` | `stackless/pull-quote` |
+| `block_query_loop` | `stackless/query-loop` |
+| `block_quote` | `stackless/quote` |
+| `block_related_content` | `stackless/related-content` |
+| `block_section` | `stackless/section` |
+| `block_share_notice` | `stackless/share-notice` |
+| `block_side_promotion`, `block_side_promotion_item` | `stackless/side-promotion` and its panels |
+| `block_spoiler` | `stackless/spoiler` |
+| `block_steps`, `block_step` | `stackless/steps` and its steps |
+| `block_table_of_contents` | `stackless/table-of-contents` (the list is filled once the post has rendered, so filter that with `stackless_theme_blocks_toc_markup`) |
+
+Block filters:
+
+| Filter | Use it to |
+|---|---|
+| `stackless_theme_blocks` | Add, remove or change block definitions before they register. |
+| `stackless_theme_blocks_supports` | Change a block's supports (`$supports, $slug`). |
+| `stackless_theme_blocks_icon_map` | Map a stored icon name to a Tabler icon in `assets/icons/`. |
+| `stackless_theme_blocks_palette` | The colors offered by the blocks' color-class pickers. |
+| `stackless_theme_blocks_editor_data` | The data handed to the editor scripts (colors, icons, popups). |
+| `stackless_theme_blocks_popup_trigger` | Return the attributes that make a Callout or Content Upgrade button open a popup (`'', $popup, $slug`). Empty by default: the `popup` attribute is stored and ignored. |
+| `stackless_theme_blocks_toc_defaults`, `stackless_theme_blocks_toc_markup` | The table of contents defaults, and its inner markup (`$html, $headings, $args`). |
+| `stackless_theme_blocks_query_loop_max_posts` | The most posts one Query Loop may render (50). |
+| `stackless_theme_blocks_related_image_size` | The image size for Related Content thumbnails. |
+| `stackless_theme_blocks_core_styles`, `stackless_theme_blocks_core_legacy_styles_enabled` | The core block style variations, and whether the older ones show in the style picker. |
+
 ### Page wrapper
 
 The `main` class filter is `stackless_theme_main_class`. Its `$context['template']` is `singular`, `index`, `404`, `full-width`, `canvas`, `single-download`, `single-fluent-products`, `archive-download` or `woocommerce`.
