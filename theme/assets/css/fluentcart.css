@@ -348,3 +348,198 @@ body.stackless-theme :is(.fct-customer-logout-btn, #fct-customer-menu-toggle),
 body.stackless-theme .fct-customer-dashboard-app-container .fct-nav-compact-toggle-wrap button {
 	border-radius: var(--st-radius);
 }
+
+/* ------------------------------------------------------------------ Single product template */
+/* single-fluent-products.php uses the EDD download layout. These rules repeat edd.css's, which loads only with EDD. */
+body.stackless-theme.is-fluentcart-product .st-breadcrumb {
+	margin-block: 0 1.25rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme.is-fluentcart-product .st-breadcrumb a {
+	color: var(--st-muted);
+	text-decoration: none;
+}
+
+body.stackless-theme.is-fluentcart-product .st-breadcrumb a:hover {
+	color: var(--st-primary);
+}
+
+body.stackless-theme.is-fluentcart-product .st-fc-single {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+}
+
+body.stackless-theme .st-fc-product {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+}
+
+/* FluentCart gives .fct-product-summary a grid area of its own; here the theme's grid places it. */
+body.stackless-theme .st-fc-product > * {
+	grid-area: auto;
+}
+
+/* Two columns: the summary stays in view while the gallery and description scroll on the left. */
+@media (min-width: 900px) {
+	body.stackless-theme .st-fc-product {
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+		column-gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
+	}
+
+	body.stackless-theme .st-fc-product > * {
+		grid-column: 1;
+		min-width: 0;
+	}
+
+	body.stackless-theme .st-fc-product > .st-download__summary {
+		position: sticky;
+		top: calc(var(--wp-admin--admin-bar--height, 0px) + 5.5rem);
+		grid-column: 2;
+		grid-row: 1 / span 2;
+	}
+}
+
+body.stackless-theme .st-fc-product__media {
+	margin-block: 0 2rem;
+	overflow: hidden;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-sm, 4px);
+	background: var(--st-surface);
+}
+
+/* The image fills the column at its own proportions, as on WooCommerce and EDD products. */
+body.stackless-theme .st-fc-product__media .fct-product-gallery-wrapper {
+	margin: 0;
+}
+
+body.stackless-theme .st-fc-product__media .fct-product-gallery-thumb {
+	aspect-ratio: auto;
+	max-height: none;
+	border: 0;
+	border-radius: 0;
+	background: none;
+}
+
+body.stackless-theme .st-fc-product__media .fct-product-gallery-thumb img {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: none;
+	object-fit: cover;
+}
+
+body.stackless-theme .st-fc-product .st-download__summary {
+	margin-bottom: 2rem;
+}
+
+body.stackless-theme .st-fc-product .st-download__title {
+	margin-block: 0 .5rem;
+	font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.125rem);
+	line-height: 1.2;
+}
+
+body.stackless-theme .st-fc-product .st-download__price {
+	margin-block: 0 1.25rem;
+	color: var(--st-heading);
+	font-size: 1.375rem;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme .st-fc-product .st-download__price .fct-product-prices {
+	margin: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	color: inherit;
+}
+
+body.stackless-theme .st-fc-product .st-download__excerpt {
+	margin-bottom: 1.5rem;
+	color: var(--st-gray-600);
+}
+
+body.stackless-theme .st-fc-product .st-download__excerpt > :last-child {
+	margin-bottom: 0;
+}
+
+body.stackless-theme .st-fc-product .st-download__purchase {
+	margin-block: 0 1.5rem;
+	padding: 1.25rem 0;
+	border-block: 1px solid var(--st-border);
+}
+
+/* One buy row: quantity, then the buttons at their own width. Options and the wishlist link get lines of their own. */
+body.stackless-theme .st-fc-product .fct_buy_section {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .75rem;
+}
+
+body.stackless-theme .st-fc-product .fct_buy_section > :not(.fct-product-quantity-container, .fct-product-buttons-wrap) {
+	flex: 1 1 100%;
+	margin: 0;
+}
+
+body.stackless-theme .st-fc-product .fct_buy_section > .is-hidden {
+	display: none;
+}
+
+body.stackless-theme .st-fc-product .fct-product-quantity-container {
+	margin: 0;
+}
+
+body.stackless-theme .st-fc-product .fct-product-quantity-container .quantity-title {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* The buttons join the quantity's row; the wishlist link and other add-ons drop to the line below. */
+body.stackless-theme .st-fc-product .fct-product-buttons-wrap {
+	display: contents;
+}
+
+body.stackless-theme .st-fc-product .fct-product-buttons-wrap > :is(.fluent-cart-direct-checkout-button, .fluent-cart-add-to-cart-button) {
+	flex: 0 0 auto;
+	width: auto;
+	min-height: 2.875rem;
+	margin: 0;
+	padding-inline: 1.5rem;
+	font-size: 1rem;
+}
+
+body.stackless-theme .st-fc-product .fct-product-buttons-wrap > :not(.fluent-cart-direct-checkout-button, .fluent-cart-add-to-cart-button) {
+	flex: 1 1 100%;
+}
+
+body.stackless-theme .st-fc-product .st-download__meta {
+	display: grid;
+	gap: .35rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme .st-fc-product .st-download__content > :first-child {
+	margin-top: 0;
+}
+
+body.stackless-theme .st-fc-related {
+	margin-top: clamp(2rem, 5vw, 3.5rem);
+	padding-top: clamp(2rem, 5vw, 3rem);
+	border-top: 1px solid var(--st-border);
+}
+
+body.stackless-theme .st-fc-related .fct-similar-product-list-container {
+	margin: 0;
+	padding: 0;
+	max-width: none;
+}

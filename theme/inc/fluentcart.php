@@ -166,3 +166,70 @@ function stackless_theme_fluentcart_menu_exclude(array $exclude): array
     }
     return array_values(array_filter($exclude));
 }
+
+/**
+ * Single products use the theme's own template, laid out like a WooCommerce product or an EDD
+ * download: breadcrumb, the gallery beside a sticky summary, then the description and related
+ * products. FluentCart's automatic product header is switched off on those pages so nothing prints
+ * twice.
+ */
+function stackless_theme_fluentcart_single_ready(): bool
+{
+    return is_singular('fluent-products')
+        && class_exists('\FluentCart\App\Services\Renderer\ProductRenderer')
+        && class_exists('\FluentCart\App\Modules\Data\ProductDataSetup')
+        && locate_template('single-fluent-products.php') !== '';
+}
+
+add_filter('template_include', 'stackless_theme_fluentcart_single_template', 20);
+function stackless_theme_fluentcart_single_template(string $template): string
+{
+    if (!stackless_theme_fluentcart_single_ready()) {
+        return $template;
+    }
+    return locate_template('single-fluent-products.php') ?: $template;
+}
+
+add_filter('fluent_cart/disable_auto_single_product_page', 'stackless_theme_fluentcart_disable_auto_single', 20);
+function stackless_theme_fluentcart_disable_auto_single($disabled)
+{
+    return stackless_theme_fluentcart_single_ready() ? true : $disabled;
+}
+
+/** FluentCart's renderer for a product, or null when the product or the classes are missing. */
+function stackless_theme_fluentcart_renderer(int $product_id)
+{
+    $product = \FluentCart\App\Modules\Data\ProductDataSetup::getProductModel($product_id);
+    if (!$product || !$product->detail) {
+        return null;
+    }
+    $settings = class_exists('\FluentCart\Api\StoreSettings') ? new \FluentCart\Api\StoreSettings() : null;
+    return new \FluentCart\App\Services\Renderer\ProductRenderer($product, [
+        'view_type'   => $settings ? $settings->get('variation_view', 'both') : 'both',
+        'column_type' => $settings ? $settings->get('variation_columns', 'masonry') : 'masonry',
+    ]);
+}
+
+/** Related products in FluentCart's own card list, when its Product Page setting shows them. */
+function stackless_theme_fluentcart_related(int $product_id): void
+{
+    if (!class_exists('\FluentCart\Api\StoreSettings') || !class_exists('\FluentCart\App\Services\Renderer\ProductListRenderer') || !class_exists('\FluentCart\Api\Resource\ShopResource')) {
+        return;
+    }
+    $show = (new \FluentCart\Api\StoreSettings())->get('show_relevant_product_in_single_page') === 'yes';
+    if (!apply_filters('fluent_cart/single_product_page/show_relevant_products', $show, $product_id)) {
+        return;
+    }
+    $products = \FluentCart\Api\Resource\ShopResource::getSimilarProducts($product_id, false);
+    if (!$products || (is_countable($products) && !count($products))) {
+        return;
+    }
+    echo '<section class="st-related-downloads st-fc-related">';
+    (new \FluentCart\App\Services\Renderer\ProductListRenderer(
+        $products,
+        __('Related products', 'stackless-theme'),
+        'fct-similar-product-list-container',
+        ['rating_context' => 'relevant']
+    ))->render();
+    echo '</section>';
+}

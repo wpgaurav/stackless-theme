@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,9 @@ Design tokens follow Tabler (https://tabler.io), Copyright (c) 2018-2026 codecal
 Icons: Tabler Icons 3.47.0 (https://tabler.io/icons), Copyright (c) 2020-2026 Paweł Kuna, MIT License.
 
 == Changelog ==
+
+= 1.6.1 =
+* New: FluentCart product pages use the same layout as WooCommerce products and EDD downloads: a breadcrumb, the gallery beside a summary that stays in view, the price, options and one buy row with quantity, Buy Now and Add to Cart, the category, then the description and related products.
 
 = 1.6.0 =
 * New: FluentCart support. The shop, product, cart, checkout, receipt, account and cart drawer use the theme's colors, with 4px corners on buttons, fields and standard product cards, and flat primary buttons replace the dark gradient ones. FluentCart's optional card layouts keep their own shapes. Colors chosen in FluentCart's settings still win.
