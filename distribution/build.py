@@ -23,7 +23,7 @@ def main():
     root=args.root.resolve(); source=root/'theme';slug=header((source/'style.css').read_text(),'Text Domain')
     style=(source/'style.css').read_text();version=header(style,'Version')
     assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',slug)
-    assert re.fullmatch(r'\d+(?:\.\d+){1,3}',version)
+    assert re.fullmatch(r'\d+(?:\.\d+){1,3}(?:-(?:alpha|beta|rc)\.\d+)?',version)  # 1.8.0 or a pre-release such as 1.8.0-beta.1
     assert 'Update URI:' not in style and not (source/'inc/gt-theme-updater.php').exists() and not (source/'inc/gt-license.php').exists(), 'Canonical theme must remain updater-free'
     import subprocess
     subprocess.run([str(root/'scripts/minify.sh'),'--check'],check=True)  # minified assets must match their sources
