@@ -1,0 +1,179 @@
+/*
+ * Stackless blocks: Slider.
+ *
+ * Full-width slides, one in view at a time. Each slide is a photo with an overlay and the blocks
+ * laid over it; a slide without a photo uses the theme's surface and text colors. The row, arrows
+ * and dots are in scroller.css.
+ */
+
+.stb-slider {
+	--stb-slider-height: 40rem;
+	--stb-slide-pad-block: clamp(2.5rem, 6vw, 4.5rem);
+	--stb-slide-pad-inline: max(var(--st-gutter, 1.5rem), calc((100% - var(--st-wide, 1200px)) / 2));
+	/* Room above the content for a clear header laid over the slider (see below). */
+	--stb-slider-header-room: 0px;
+}
+
+/* A clear header sits over a slider that opens the page: keep the content below it. */
+.has-transparent-header :is(.entry-content, .site-main, .page-blocks-region) > .stb-slider:first-child {
+	--stb-slider-header-room: var(--st-header-height, 4rem);
+}
+
+.stb-slider .stb-scroller-track {
+	scroll-snap-type: x mandatory;
+}
+
+.stb-slider .stb-slide {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	flex: 0 0 100%;
+	width: 100%;
+	min-height: var(--stb-slider-height);
+	margin: 0;
+	overflow: hidden;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	background-color: var(--st-surface-muted, #f6f6f6);
+	color: var(--st-text, #262626);
+}
+
+/* On a photo: light text, whatever the page's colors, over a dark backdrop while it loads. */
+.stb-slider .stb-slide.has-image {
+	--st-heading: #fff;
+	--st-text: rgba(255, 255, 255, .92);
+	--st-muted: rgba(255, 255, 255, .8);
+	--st-link: #fff;
+	--st-link-hover: #fff;
+	background-color: #1b1b1b;
+	color: var(--st-text);
+}
+
+/* A text color picked for the slide reaches its headings and links too. */
+.stb-slider .stb-slide.has-text-color {
+	--st-heading: currentColor;
+	--st-text: currentColor;
+	--st-muted: currentColor;
+	--st-link: currentColor;
+}
+
+.stb-slider .stb-slide-image {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	width: 100%;
+	max-width: none;
+	height: 100%;
+	margin: 0;
+	object-fit: cover;
+}
+
+.stb-slider .stb-slide-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: #000;
+	pointer-events: none;
+}
+
+.stb-slider .stb-slide-content {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	padding: calc(var(--stb-slide-pad-block) + var(--stb-slider-header-room)) var(--stb-slide-pad-inline) var(--stb-slide-pad-block);
+}
+
+/* Arrows sit at the sides: keep the content clear of them. */
+.stb-slider:not(.has-no-arrows) .stb-slide-content {
+	padding-inline: max(var(--stb-slide-pad-inline), calc(var(--stb-control-size) + 1.5rem));
+}
+
+/* Dots sit at the bottom of the slide. */
+.stb-slider .stb-slide-content {
+	padding-bottom: max(var(--stb-slide-pad-block), 4.5rem);
+}
+
+.stb-slider .stb-slide.is-v-top .stb-slide-content {
+	justify-content: flex-start;
+}
+
+.stb-slider .stb-slide.is-v-bottom .stb-slide-content {
+	justify-content: flex-end;
+}
+
+.stb-slider .stb-slide.is-h-center .stb-slide-content {
+	align-items: center;
+	text-align: center;
+}
+
+.stb-slider .stb-slide.is-h-right .stb-slide-content {
+	align-items: flex-end;
+	text-align: end;
+}
+
+.stb-slider .stb-slide-inner {
+	width: 100%;
+	max-width: 40rem;
+}
+
+.stb-slider .stb-slide.is-h-center .stb-slide-inner {
+	max-width: 48rem;
+}
+
+.stb-slider .stb-slide-inner > :first-child {
+	margin-top: 0;
+}
+
+.stb-slider .stb-slide-inner > :last-child {
+	margin-bottom: 0;
+}
+
+.stb-slider .stb-slide.is-h-center .stb-slide-inner > .wp-block-buttons {
+	justify-content: center;
+}
+
+.stb-slider .stb-slide.is-h-right .stb-slide-inner > .wp-block-buttons {
+	justify-content: flex-end;
+}
+
+/* The dots and pause button float on the slide, on a pill of the surface color. */
+.stb-slider .stb-scroller-nav {
+	position: absolute;
+	bottom: 1rem;
+	left: 50%;
+	z-index: 2;
+	min-height: 0;
+	margin: 0;
+	padding: .25rem .5rem;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--stb-control-bg) 88%, transparent);
+	box-shadow: var(--st-shadow-sm, 0 1px 2px rgba(0, 0, 0, .1));
+	transform: translateX(-50%);
+}
+
+.stb-slider .stb-scroller-pause {
+	width: 2rem;
+	height: 2rem;
+	border: 0;
+	background: transparent;
+}
+
+@media (max-width: 599.98px) {
+	.stb-slider {
+		--stb-control-size: 2.5rem;
+	}
+
+	/* Phones swipe: the arrows move down beside the dots instead of covering the text. */
+	.stb-slider .stb-scroller-arrow {
+		top: auto;
+		bottom: 1rem;
+		transform: none;
+	}
+
+	.stb-slider:not(.has-no-arrows) .stb-slide-content {
+		padding-inline: var(--stb-slide-pad-inline);
+	}
+}

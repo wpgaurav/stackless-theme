@@ -342,6 +342,7 @@ Each Stackless block renders as a part named `block_` plus the block's name with
 | `block_arrow` | `stackless/arrow` |
 | `block_book_card` | `stackless/book-card` |
 | `block_callout` | `stackless/callout` |
+| `block_carousel` | `stackless/carousel` |
 | `block_content_upgrade` | `stackless/content-upgrade` |
 | `block_faq`, `block_faq_item` | `stackless/faq` and its items |
 | `block_github_card` | `stackless/github-card` |
@@ -356,6 +357,7 @@ Each Stackless block renders as a part named `block_` plus the block's name with
 | `block_section` | `stackless/section` |
 | `block_share_notice` | `stackless/share-notice` |
 | `block_side_promotion`, `block_side_promotion_item` | `stackless/side-promotion` and its panels |
+| `block_slider`, `block_slide` | `stackless/slider` and its slides |
 | `block_spoiler` | `stackless/spoiler` |
 | `block_steps`, `block_step` | `stackless/steps` and its steps |
 | `block_theme_card` | `stackless/theme-card` |
@@ -378,6 +380,56 @@ Block filters:
 | `stackless_theme_blocks_refresh_cards` | Whether the Plugin, Theme, GitHub and npm cards refresh their stats (`true, $type`). Return false and they print the saved values and make no outside requests. |
 | `stackless_theme_blocks_card_schema` | A card's structured data (`$data, $slug`). Return an empty array to print none. |
 | `stackless_theme_blocks_core_styles`, `stackless_theme_blocks_core_legacy_styles_enabled` | The core block style variations, and whether the older ones show in the style picker. |
+| `stackless_theme_blocks_slider_heights` | The Slider's height presets (`small`, `medium`, `large` => CSS length). |
+| `stackless_theme_blocks_carousel_gaps` | The Carousel's gap presets (`none`, `small`, `medium`, `large` => CSS length). |
+| `stackless_theme_blocks_carousel_lists` | The class names of the lists a Carousel scrolls when it holds a single block. |
+
+#### Slider and Carousel
+
+Both blocks save only their attributes and inner blocks; PHP prints the markup. The row is a CSS scroll-snap scroller, so it scrolls sideways without JavaScript. One shared script (`assets/js/blocks/scroller.js`, handle `stackless-block-scroller`) adds the arrows, dots or progress bar, the arrow keys, Home and End, and autoplay. The shared stylesheet `assets/css/blocks/scroller.css` (handle `stackless-block-scroller`) loads with either block's own stylesheet, only on pages that use one. Block definitions can share files the same way: `'script' => 'scroller'` names a shared script and `'style_deps' => ['scroller']` a shared stylesheet.
+
+`stackless/slider` (supports anchor, class, align wide and full, top and bottom margin) holds only `stackless/slide` blocks.
+
+| Attribute | Type | Default | Meaning |
+|---|---|---|---|
+| `label` | string | `''` | The region's accessible name. Empty reads "Slideshow". |
+| `height` | string | `large` | `small` (24rem), `medium` (32rem), `large` (40rem) or `viewport`. Slides grow when their content needs more room. |
+| `viewportHeight` | number | `100` | With `viewport`: the share of the screen height, 30 to 100. |
+| `autoplay` | boolean | `false` | Moves on by itself and adds a pause button. Pauses on hover, on focus, off screen and in a hidden tab; never runs with reduced motion. |
+| `interval` | number | `6` | Seconds per slide, 2 to 30. |
+| `arrows`, `dots` | boolean | `true` | The previous and next buttons, and the dots. |
+| `loop` | boolean | `true` | The arrows wrap from the last slide to the first. |
+| `align` | string | `full` | Block alignment. |
+
+`stackless/slide` (supports anchor, class, text and background color with gradients, padding; parent `stackless/slider`) holds any blocks, laid over its photo.
+
+| Attribute | Type | Default | Meaning |
+|---|---|---|---|
+| `mediaId` | number | `0` | The photo's attachment ID. Printed with `wp_get_attachment_image()`, its alt text and `srcset`. |
+| `mediaUrl` | string | `''` | The photo's URL, used when there is no attachment ID and by the editor preview. |
+| `focalPoint` | object | `{"x":0.5,"y":0.5}` | The part of the photo kept in view (`object-position`). |
+| `dimRatio` | number | `40` | The black overlay's opacity, 0 to 100. |
+| `contentPosition` | string | `center center` | Vertical then horizontal: `top`, `center` or `bottom`, and `left`, `center` or `right`. |
+
+A slide with a photo uses white text (it redefines `--st-heading`, `--st-text`, `--st-muted` and `--st-link` inside the slide); one without uses the page's surface and text colors. The first slide's photo is `loading="eager"` (with `fetchpriority="high"` in the first Slider on the page); the rest are lazy. A Slider that opens a page whose header sits over the first section leaves room for the header (`--st-header-height`, 4rem when unset) and adds `has-header-on-dark` through the `stackless_theme_header_on_dark` filter.
+
+`stackless/carousel` (supports anchor, class, align wide and full, top and bottom margin) holds any blocks. Each becomes an item wrapped in `<div class="stb-carousel-item" role="group" aria-roledescription="slide" aria-label="2 of 5">`.
+
+| Attribute | Type | Default | Meaning |
+|---|---|---|---|
+| `label` | string | `''` | The region's accessible name. Empty reads "Carousel". |
+| `perView`, `perViewTablet`, `perViewPhone` | number | `3`, `2`, `1` | Items in view on desktop, under 1024px and under 600px, 1 to 8. A fraction (1.2) lets the next item peek in. |
+| `gap` | string | `medium` | `none`, `small`, `medium` or `large`. |
+| `arrows` | boolean | `true` | Previous and next buttons; they move a page at a time. |
+| `pagination` | string | `dots` | `dots`, `progress` or `none`. |
+| `snap` | boolean | `true` | Scrolling settles with an item at the edge. |
+| `loop` | boolean | `false` | The arrows wrap from the end to the start. |
+| `autoplay`, `interval` | boolean, number | `false`, `6` | As on the Slider. |
+| `listClass` | string | `''` | With a single inner block: the class of the list to scroll, when it is not one of the known lists. |
+
+**A single Query Loop or product block.** When the Carousel holds exactly one block, it looks inside it for a known list and makes that list the row: core Query Loop (`wp-block-post-template`), WooCommerce Product Collection (`wc-block-product-template`), the older WooCommerce product grids (`wc-block-grid__products`, `ul.products`), Easy Digital Downloads (`edd-blocks__downloads`, `edd_downloads_list`), FluentCart's Products block (`fct-products-container`), the Stackless Query Loop (`loop-cards`, `loop-teasers`, `loop-blocks`), Columns and Gallery. The list gets `stb-scroller-track` and `data-stb-track`, its items keep their own markup, and the block's title, pagination and filters stay outside the row. Set `listClass` (Advanced panel) for any other list, or add a class with `stackless_theme_blocks_carousel_lists`. A block whose script redraws its list (a filtered or paged FluentCart shop) drops the row class when it redraws, so use the Carousel around a fixed selection.
+
+Markup the script reads: the root `[data-stb-scroller]` with `data-loop`, `data-autoplay` (seconds, `0` for off) and `data-label-*` interface text; the row `[data-stb-track]`; `.stb-scroller-prev`, `.stb-scroller-next`, `.stb-scroller-dots`, `.stb-scroller-progress-bar`, `.stb-scroller-pause` and the live `.stb-scroller-status`. The root gets `is-ready` once the script runs and `is-playing` while autoplay runs.
 
 ### Page wrapper
 

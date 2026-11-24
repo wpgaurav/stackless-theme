@@ -20,6 +20,7 @@ require __DIR__ . '/render.php';
 require __DIR__ . '/cards.php';
 require __DIR__ . '/toc.php';
 require __DIR__ . '/query-loop.php';
+require __DIR__ . '/slider.php';
 require __DIR__ . '/core-styles.php';
 
 /**
@@ -30,7 +31,9 @@ require __DIR__ . '/core-styles.php';
  *               theirs in the editor script, and the callbacks rely on unset attributes staying
  *               unset, so do not add defaults here.
  * - style:      false when the block has no stylesheet of its own.
- * - script:     true when the block has a front-end script (assets/js/blocks/<name>.js).
+ * - style_deps: shared stylesheets (assets/css/blocks/<name>.css) the block's stylesheet needs.
+ * - script:     true when the block has a front-end script (assets/js/blocks/<name>.js), or the
+ *               name of a script it shares with other blocks.
  * - editor:     false for child blocks that are registered by their parent's editor script.
  *
  * @return array<string, array<string, mixed>>
@@ -217,6 +220,87 @@ function stackless_theme_blocks(): array
             'icon' => 'megaphone',
             'callback' => 'stackless_theme_blocks_render_side_promotion',
         ],
+        'slider' => [
+            'title' => __('Slider', 'stackless-theme'),
+            'description' => __('Full-width photo slides with a heading, text and buttons on each.', 'stackless-theme'),
+            'icon' => 'slides',
+            'keywords' => ['slider', 'slideshow', 'hero', 'banner', 'carousel'],
+            'callback' => 'stackless_theme_blocks_render_slider',
+            'style_deps' => ['scroller'],
+            'script' => 'scroller',
+            'supports' => [
+                'anchor' => true,
+                'className' => true,
+                'html' => false,
+                'align' => ['wide', 'full'],
+                'spacing' => ['margin' => ['top', 'bottom']],
+            ],
+            'attributes' => [
+                'label' => ['type' => 'string', 'default' => ''],
+                'height' => ['type' => 'string', 'default' => 'large'],
+                'viewportHeight' => ['type' => 'number', 'default' => 100],
+                'autoplay' => ['type' => 'boolean', 'default' => false],
+                'interval' => ['type' => 'number', 'default' => 6],
+                'arrows' => ['type' => 'boolean', 'default' => true],
+                'dots' => ['type' => 'boolean', 'default' => true],
+                'loop' => ['type' => 'boolean', 'default' => true],
+                'align' => ['type' => 'string', 'default' => 'full'],
+            ],
+        ],
+        'slide' => [
+            'title' => __('Slide', 'stackless-theme'),
+            'description' => __('One slide: a photo, an overlay, and blocks laid over it.', 'stackless-theme'),
+            'icon' => 'format-image',
+            'parent' => ['stackless/slider'],
+            'callback' => 'stackless_theme_blocks_render_slide',
+            'style' => false,
+            'editor' => false,
+            'supports' => [
+                'anchor' => true,
+                'className' => true,
+                'html' => false,
+                'reusable' => false,
+                'color' => ['text' => true, 'background' => true, 'gradients' => true],
+                'spacing' => ['padding' => true],
+            ],
+            'attributes' => [
+                'mediaId' => ['type' => 'number', 'default' => 0],
+                'mediaUrl' => ['type' => 'string', 'default' => ''],
+                'focalPoint' => ['type' => 'object', 'default' => ['x' => 0.5, 'y' => 0.5]],
+                'dimRatio' => ['type' => 'number', 'default' => 40],
+                'contentPosition' => ['type' => 'string', 'default' => 'center center'],
+            ],
+        ],
+        'carousel' => [
+            'title' => __('Carousel', 'stackless-theme'),
+            'description' => __('A row of cards, images, products or posts that scrolls sideways.', 'stackless-theme'),
+            'icon' => 'images-alt2',
+            'keywords' => ['carousel', 'scroller', 'products', 'cards', 'gallery'],
+            'callback' => 'stackless_theme_blocks_render_carousel',
+            'style_deps' => ['scroller'],
+            'script' => 'scroller',
+            'supports' => [
+                'anchor' => true,
+                'className' => true,
+                'html' => false,
+                'align' => ['wide', 'full'],
+                'spacing' => ['margin' => ['top', 'bottom']],
+            ],
+            'attributes' => [
+                'label' => ['type' => 'string', 'default' => ''],
+                'perView' => ['type' => 'number', 'default' => 3],
+                'perViewTablet' => ['type' => 'number', 'default' => 2],
+                'perViewPhone' => ['type' => 'number', 'default' => 1],
+                'gap' => ['type' => 'string', 'default' => 'medium'],
+                'arrows' => ['type' => 'boolean', 'default' => true],
+                'pagination' => ['type' => 'string', 'default' => 'dots'],
+                'snap' => ['type' => 'boolean', 'default' => true],
+                'loop' => ['type' => 'boolean', 'default' => false],
+                'autoplay' => ['type' => 'boolean', 'default' => false],
+                'interval' => ['type' => 'number', 'default' => 6],
+                'listClass' => ['type' => 'string', 'default' => ''],
+            ],
+        ],
         'side-promotion-item' => [
             'title' => __('Promotion Item', 'stackless-theme'),
             'description' => __('A single promotional panel with image, title, and link.', 'stackless-theme'),
@@ -345,7 +429,18 @@ function stackless_theme_blocks_register(): void
         $handle = 'stackless-block-' . $slug;
         $css = ($block['style'] ?? true) ? stackless_theme_blocks_asset('css', (string) $slug) : '';
         if ($css !== '') {
-            wp_register_style($handle, STACKLESS_THEME_URI . '/' . $css, ['stackless-blocks'], stackless_theme_asset_version($css));
+            $style_deps = ['stackless-blocks'];
+            foreach ((array) ($block['style_deps'] ?? []) as $shared) {
+                $shared_css = stackless_theme_blocks_asset('css', (string) $shared);
+                if ($shared_css === '') {
+                    continue;
+                }
+                if (!wp_style_is('stackless-block-' . $shared, 'registered')) {
+                    wp_register_style('stackless-block-' . $shared, STACKLESS_THEME_URI . '/' . $shared_css, ['stackless-blocks'], stackless_theme_asset_version($shared_css));
+                }
+                $style_deps[] = 'stackless-block-' . $shared;
+            }
+            wp_register_style($handle, STACKLESS_THEME_URI . '/' . $css, $style_deps, stackless_theme_asset_version($css));
             if ($attach) {
                 $args['style_handles'] = [$handle];
             }
@@ -354,10 +449,15 @@ function stackless_theme_blocks_register(): void
             $args['style_handles'] = ['stackless-blocks'];
         }
 
-        $js = !empty($block['script']) ? stackless_theme_blocks_asset('js', (string) $slug) : '';
+        // A shared script (the Slider's and Carousel's) registers once under its own name.
+        $script = !empty($block['script']) ? (is_string($block['script']) ? $block['script'] : (string) $slug) : '';
+        $js = $script !== '' ? stackless_theme_blocks_asset('js', $script) : '';
         if ($js !== '') {
-            wp_register_script($handle, STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
-            $args['view_script_handles'] = [$handle];
+            $script_handle = 'stackless-block-' . $script;
+            if (!wp_script_is($script_handle, 'registered')) {
+                wp_register_script($script_handle, STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
+            }
+            $args['view_script_handles'] = [$script_handle];
         }
 
         register_block_type('stackless/' . $slug, $args);

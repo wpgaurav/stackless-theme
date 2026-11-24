@@ -1,0 +1,83 @@
+/*
+ * Stackless blocks: Carousel.
+ *
+ * Any blocks in a sideways row, a set number in view at each screen size. With a single Query
+ * Loop, product grid, Columns or Gallery inside, that block's own list becomes the row (the
+ * stb-scroller-track class marks it), so its grid and float rules are overridden here. The row,
+ * arrows, dots and progress bar are in scroller.css.
+ */
+
+.stb-carousel {
+	--stb-per-view: 3;
+	--stb-pv: var(--stb-per-view);
+	--stb-gap: 1.5rem;
+}
+
+@media (max-width: 1023.98px) {
+	.stb-carousel {
+		--stb-pv: var(--stb-per-view-tablet, 2);
+	}
+}
+
+@media (max-width: 599.98px) {
+	.stb-carousel {
+		--stb-pv: var(--stb-per-view-phone, 1);
+	}
+}
+
+/* Doubled classes: the row may be a product grid or query list with layout rules of its own. */
+.stb-carousel.stb-carousel .stb-scroller-track.stb-scroller-track {
+	display: flex;
+	flex-wrap: nowrap;
+	grid-template-columns: none;
+	gap: var(--stb-gap);
+	width: auto;
+	max-width: none;
+	margin: 0;
+	/* Room for the items' focus rings inside the clipped row. */
+	padding: 4px 0;
+	margin-block: -4px;
+}
+
+.stb-carousel.stb-carousel .stb-scroller-track.stb-scroller-track > * {
+	flex: 0 0 calc((100% - (var(--stb-pv) - 1) * var(--stb-gap)) / var(--stb-pv));
+	width: auto;
+	max-width: none;
+	margin: 0;
+	float: none;
+	clear: none;
+}
+
+.stb-carousel.has-no-snap .stb-scroller-track {
+	scroll-snap-type: none;
+}
+
+.stb-carousel .stb-carousel-item {
+	display: flex;
+	flex-direction: column;
+}
+
+.stb-carousel .stb-carousel-item > * {
+	margin-block: 0;
+}
+
+.stb-carousel .stb-carousel-item > :only-child {
+	flex: 1 1 auto;
+}
+
+/* A single block: only its list scrolls; its title, pagination and the rest stay put. */
+.stb-carousel .stb-carousel-body > * {
+	margin-block: 0;
+}
+
+/* A carousel at the content width has room beside it: the arrows sit outside the row, clear of
+   the items' text. Wide and full carousels keep them inside, over the edges of the items. */
+@media (min-width: 1024px) {
+	.stb-carousel:not(.alignfull, .alignwide) .stb-scroller-prev {
+		inset-inline-start: calc((var(--stb-control-size) + .75rem) * -1);
+	}
+
+	.stb-carousel:not(.alignfull, .alignwide) .stb-scroller-next {
+		inset-inline-end: calc((var(--stb-control-size) + .75rem) * -1);
+	}
+}
