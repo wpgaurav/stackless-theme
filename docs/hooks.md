@@ -219,7 +219,23 @@ The FluentCart product page and the EDD download page share these parts. `$conte
 | `product_related` | Related products | | |
 | `product_grid` | EDD archive grid | yes | |
 | `product_card` | EDD card | yes | |
+| `product_sale_badge` | `<span class="stackless-sale-badge">Sale</span>` over the image of a FluentCart or EDD card (`$context['placement']` is `card`) or product page (`single`; above the title when an EDD download has no image). Prints, and fires its hooks, only when the product is on sale. | yes | |
 | `store_toolbar` | Promo line, search, sorting, category chips (WooCommerce, EDD) | yes | |
+
+Whether a product is on sale comes from the `stackless_theme_product_on_sale` filter (`bool $on_sale, int $post_id, string $store`), through `stackless_theme_product_on_sale($post_id, $store)`:
+
+- **FluentCart:** the theme answers at priority 5: on sale when any variation's compare-at price is above its price. A filter at the default priority can overrule it.
+- **EDD:** EDD has no sale price, so the default is `false` and no badge prints until a filter returns `true`, for example from a discount or a custom field.
+- **WooCommerce:** keeps its own `.onsale` badge and `woocommerce_sale_flash` filter.
+
+```php
+// Show the badge on EDD downloads that carry a "_on_sale" meta value.
+add_filter('stackless_theme_product_on_sale', function (bool $on_sale, int $post_id, string $store): bool {
+    return $store === 'edd' ? (bool) get_post_meta($post_id, '_on_sale', true) : $on_sale;
+}, 10, 3);
+```
+
+The FluentCart card badge prints from FluentCart's `fluent_cart/product/group/before_image_block` action, on the cards FluentCart draws with its own renderer (the product shortcodes, product lists, related products). Cards built from FluentCart's blocks (render source `gutenberg`, such as the default Shop page template) are skipped, because those templates carry FluentCart's own Sale badge block, which the site owner places or removes. FluentCart versions without render sources get the badge on every renderer card.
 
 ### Blocks
 
@@ -281,7 +297,7 @@ Filter `stackless_theme_text_{key}` (or `stackless_theme_text` with the key as t
 | Search | `search_store_title`, `search_for`, `search_placeholder`, `search_results_title`, `popular_categories`, `best_sellers` |
 | Posts | `previous`, `next`, `read_more`, `filed_under`, `written_by`, `about_author`, `related_posts_title`, `page_links_label`, `blog_sidebar_label` |
 | Empty states | `empty_title`, `empty_text`, `empty_search_text`, `browse_all_products`, `not_found_title`, `not_found_text`, `back_home` |
-| Store | `view_product`, `choose_option`, `choose_options`, `related_products_title`, `product_category_label`, `product_tags_label`, `breadcrumb_label`, `home` |
+| Store | `sale_badge`, `view_product`, `choose_option`, `choose_options`, `related_products_title`, `product_category_label`, `product_tags_label`, `breadcrumb_label`, `home` |
 | Footer | `theme_credit` (keep the `%s`; it becomes the theme link) |
 
 ## Options, presets and design
@@ -393,3 +409,53 @@ These are theme positions for Page Blocks Builder blocks. Each renders where the
 | `shop_top`, `store_top` | Above the WooCommerce shop grid, or the EDD download grid. |
 
 Every part above also works on pages that use Page Blocks Builder's templates, wherever the theme's markup prints. Posts and products on a PBB template get the `has-page-blocks-template` body class.
+
+## Focus trap for panels
+
+`assets/js/focus.js` is registered (not enqueued) as the `stackless-theme-focus` script, deferred in the footer. List the handle as a dependency and `window.StacklessFocus` is there when your script runs. No jQuery. The theme's FluentCart cart drawer and mobile filters use it.
+
+| Call | What it does |
+|---|---|
+| `StacklessFocus.trap(container, { onEscape, returnFocus })` | Moves focus to `container` (it gets `tabindex="-1"` if it has none), keeps Tab and Shift+Tab inside it, and calls `onEscape(event)` on Escape. `returnFocus` is where focus goes back on release; it defaults to the element that had focus before. Returns `release`. Trapping a container that is already trapped returns its existing `release` and moves nothing. |
+| `release(fallback)` | Ends the trap and returns focus to `returnFocus`, or to `fallback` when that element is gone or hidden. If the visitor already moved focus elsewhere on the page, focus stays put. Calling it twice does nothing. |
+| `StacklessFocus.focusables(root)` | The visible, enabled elements in `root` that Tab reaches, in document order. |
+
+Traps stack: only the newest one handles Tab and Escape, and releasing it hands them back to the one under it, so a popup can open over the cart drawer.
+
+```php
+wp_enqueue_script('my-popup', $url, ['stackless-theme-focus'], $version, ['in_footer' => true, 'strategy' => 'defer']);
+```
+
+```js
+var release = window.StacklessFocus.trap(popup, { onEscape: closePopup, returnFocus: openButton });
+function closePopup() {
+	popup.hidden = true;
+	release();
+}
+```
+
+## Dark colors
+
+`base.css` holds a second set of the color properties under `html.stackless-dark`. The theme never adds that class and has no toggle: a plugin or script sets it on `<html>` (before first paint, to avoid a flash) and removes it for light. It also sets `color-scheme: dark`, so form controls and scrollbars follow.
+
+The theme declares `add_theme_support('stackless-dark-mode')`. Check `current_theme_supports('stackless-dark-mode')` before offering a dark mode: a theme version without it has no dark tokens, and the class would do nothing.
+
+| Property | Light | Dark |
+|---|---|---|
+| `--st-bg`, `--st-surface`, `--st-surface-muted` | `#fafafa`, `#ffffff`, `#f6f6f6` | `#121212`, `#1b1b1b`, `#232323` |
+| `--st-text`, `--st-heading`, `--st-muted` | `#262626`, `#171717`, `#666666` | `#e0e0e0`, `#f5f5f5`, `#a3a3a3` |
+| `--st-border`, `--st-border-strong` | `#e5e5e5`, `#d4d4d4` | `#2e2e2e`, `#3d3d3d` |
+| `--st-gray-50` to `--st-gray-900` | `#fafafa` to `#171717` | turned over: `#1f1f1f` to `#f5f5f5` |
+| `--st-primary` | `#066fd1` or the Customizer color | unchanged: buttons keep the primary fill and white label |
+| `--st-link`, `--st-link-hover` | unset (rules fall back to `--st-primary`, `--st-primary-hover`) | primary mixed with white, 45/55 and 30/70 |
+| `--st-primary-light`, `--st-primary-text` | tint and shade of primary | primary at 22% over the dark surface, primary mixed 40/60 with white |
+| `--st-{success,warning,danger,info}-light` / `-text` | pale tints, dark text | dark tints, light text (7.5:1 or more) |
+| `--st-shadow-sm`, `--st-shadow`, `--st-shadow-lg`, `--st-shadow-input`, `--st-ring` | soft gray | black shadows; the ring is drawn from `--st-link` |
+| `--st-code-bg`, `--st-code-text` | unset (`--st-gray-900`, `--st-gray-100`) | `#0b0b0b`, `#e0e0e0` |
+| `--st-inverse-text` | unset (`#fff`) | `#121212`, the label on fills drawn in the top grays (Buy now, the store notice) |
+
+Contrast with the default colors: text on the background 14.2:1, text on surfaces 13.1:1, muted text on the background 7.4:1, links on the background 9.6:1. Because `--st-link` keeps at least 55% white, links stay above 4.5:1 on every dark surface whatever the primary is (pure black as primary still gives 4.6:1 on the lightest dark surface).
+
+The Customizer colors print on `:root`. `html.stackless-dark` is more specific, so in dark the neutral colors (background, surfaces, text, headings) are always the dark set; a custom primary carries into dark as the button fill and, mixed with white, as the link color. The block palette colors that name a role (`body`, `muted`, `line`, `surface`, `primary-light`) follow the dark set; `primary`, `dark`, `white` and the status colors are explicit picks and stay as chosen. To change a dark color, filter `stackless_theme_design_css` and append an `html.stackless-dark{...}` rule.
+
+New CSS should take text colors from `var(--st-link, var(--st-primary))` rather than `--st-primary`, and labels on gray-900 fills from `var(--st-inverse-text, #fff)`.

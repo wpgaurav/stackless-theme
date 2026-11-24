@@ -22,6 +22,9 @@ function stackless_theme_setup(): void
     add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets']);
     add_theme_support('custom-logo', ['height' => 64, 'width' => 240, 'flex-height' => true, 'flex-width' => true]);
     add_theme_support('customize-selective-refresh-widgets');
+    // base.css carries a dark set of the color tokens under html.stackless-dark; the theme never
+    // adds the class itself. current_theme_supports('stackless-dark-mode') tells a plugin it can.
+    add_theme_support('stackless-dark-mode');
 
     // Block Editor.
     add_theme_support('wp-block-styles');
@@ -132,6 +135,11 @@ function stackless_theme_assets(): void
             'searching' => __('Searching…', 'stackless-theme'),
         ],
     ]));
+
+    // The shared focus trap (window.StacklessFocus) for drawers, dialogs and popups. Registered
+    // only: it loads when a script lists stackless-theme-focus as a dependency.
+    $focus = stackless_theme_asset('assets/js/focus.js');
+    wp_register_script('stackless-theme-focus', STACKLESS_THEME_URI . '/' . $focus, [], stackless_theme_asset_version($focus), ['in_footer' => true, 'strategy' => 'defer']);
 
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');

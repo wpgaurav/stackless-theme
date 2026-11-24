@@ -216,7 +216,7 @@ p.is-style-key-point::after {
 }
 
 p:is(.is-style-spotlight, .is-style-ribbon-box, .is-style-numbered-box, .is-style-key-point) a {
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 	font-weight: 700;
 }
 

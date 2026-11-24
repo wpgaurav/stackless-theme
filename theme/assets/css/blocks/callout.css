@@ -20,13 +20,6 @@
 .callout-warning { --callout-accent: var(--color-warning); }
 .callout-error { --callout-accent: var(--color-error); }
 
-/* The block prints each preset's light hex colors inline. The semantic tint replaces them, so
-   presets follow the theme's colors; !important is the only way past an inline style. */
-.callout:is(.callout-tip, .callout-info, .callout-warning, .callout-success, .callout-error) {
-	background-color: var(--callout-bg) !important;
-	border-color: var(--callout-border) !important;
-}
-
 /* The icon disc straddles the top edge, so the box needs room above it. */
 aside.callout.has-icon[class] {
 	margin-top: calc(var(--space-double) + 40px);

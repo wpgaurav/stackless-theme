@@ -42,7 +42,7 @@
 }
 
 .wp-block-query:is(.is-style-stb-cards, .is-style-stb-magazine, .is-style-stb-list) .wp-block-post-title a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .wp-block-query:is(.is-style-stb-cards, .is-style-stb-magazine, .is-style-stb-list) .wp-block-post-excerpt {
@@ -61,7 +61,7 @@
 }
 
 .wp-block-query:is(.is-style-stb-cards, .is-style-stb-magazine, .is-style-stb-list) .wp-block-post-excerpt__more-link {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-weight: 600;
 	text-decoration: none;
 }

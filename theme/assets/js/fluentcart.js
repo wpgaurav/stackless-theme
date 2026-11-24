@@ -8,84 +8,45 @@
 
 	var config = window.stacklessFluentCart || {};
 	var i18n = config.i18n || {};
-	var FOCUSABLE = 'a[href], button:not([disabled]), input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+	var focus = window.StacklessFocus;
 	var watched = typeof WeakSet === 'function' ? new WeakSet() : null;
-	var active = null;
+	var traps = [];
 
 	function shown(el) {
 		return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 	}
 
 	function focusables(root) {
-		return Array.prototype.filter.call(root.querySelectorAll(FOCUSABLE), shown);
+		return focus ? focus.focusables(root) : [];
+	}
+
+	function trapOf(panel) {
+		for (var i = 0; i < traps.length; i++) {
+			if (traps[i].panel === panel) {
+				return traps[i];
+			}
+		}
+		return null;
 	}
 
 	/* ------------------------------------------------ Panels that cover the page */
-	// On open focus moves in and Tab stays inside; Escape closes; on close focus returns to the opener.
+	// The theme's focus helper (focus.js): on open focus moves in and Tab stays inside; Escape
+	// closes; on close focus returns to the opener.
 	function openPanel(panel, close, opener) {
-		if (active && active.panel === panel) {
+		if (!focus || trapOf(panel)) {
 			return;
 		}
-		var current = document.activeElement;
-		active = {
-			panel: panel,
-			close: close,
-			opener: opener || (current && current !== document.body && !panel.contains(current) ? current : null)
-		};
-		if (!panel.hasAttribute('tabindex')) {
-			panel.setAttribute('tabindex', '-1');
-		}
-		panel.focus({ preventScroll: true });
+		traps.push({ panel: panel, release: focus.trap(panel, { onEscape: close, returnFocus: opener }) });
 	}
 
 	function closePanel(panel, fallback) {
-		if (!active || active.panel !== panel) {
+		var trap = trapOf(panel);
+		if (!trap) {
 			return;
 		}
-		var opener = active.opener;
-		active = null;
-		var focus = document.activeElement;
-		if (focus && focus !== document.body && !panel.contains(focus)) {
-			return;
-		}
-		var target = opener && opener.isConnected && shown(opener) ? opener : fallback;
-		if (target) {
-			target.focus({ preventScroll: true });
-		}
+		traps.splice(traps.indexOf(trap), 1);
+		trap.release(fallback);
 	}
-
-	document.addEventListener('keydown', function (event) {
-		if (!active) {
-			return;
-		}
-		if (event.key === 'Escape') {
-			event.preventDefault();
-			active.close();
-			return;
-		}
-		if (event.key !== 'Tab') {
-			return;
-		}
-		var items = focusables(active.panel);
-		if (!items.length) {
-			event.preventDefault();
-			active.panel.focus();
-			return;
-		}
-		var first = items[0];
-		var last = items[items.length - 1];
-		var focus = document.activeElement;
-		if (!active.panel.contains(focus)) {
-			event.preventDefault();
-			first.focus();
-		} else if (event.shiftKey && (focus === first || focus === active.panel)) {
-			event.preventDefault();
-			last.focus();
-		} else if (!event.shiftKey && focus === last) {
-			event.preventDefault();
-			first.focus();
-		}
-	}, true);
 
 	function watch(el, callback) {
 		if (!el || !window.MutationObserver || (watched && watched.has(el)) || el.hasAttribute('data-st-watched')) {
@@ -186,7 +147,7 @@
 		};
 		if (open) {
 			panel.setAttribute('aria-modal', 'true');
-			if (active && active.panel === panel) {
+			if (trapOf(panel)) {
 				return;
 			}
 			openPanel(panel, close, filterToggle());
@@ -277,10 +238,12 @@
 		document.querySelectorAll('[data-fluent-cart-shop-app-responsive-filter-wrapper], .fluent-cart-shop-app-responsive-filter-wrapper').forEach(function (panel) {
 			watch(panel, syncFilterPanel);
 		});
-		if (active && !active.panel.isConnected) {
-			// FluentCart rebuilds the filter panel on each open; a removed panel cannot hold focus.
-			closePanel(active.panel, filterToggle());
-		}
+		traps.slice().forEach(function (trap) {
+			if (!trap.panel.isConnected) {
+				// FluentCart rebuilds the filter panel on each open; a removed panel cannot hold focus.
+				closePanel(trap.panel, filterToggle());
+			}
+		});
 		labelFilterToggles();
 		syncSummaryToggles();
 		syncDrawerCount();

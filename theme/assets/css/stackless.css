@@ -30,14 +30,14 @@ body.stackless-theme :is(.stackless-quote__field, .stackless-stock-alert-field, 
 
 /* Quiet text actions. */
 body.stackless-theme :is(.stackless-link-button, .stackless-wishlist-remove) {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-size: var(--st-text-sm);
 	font-weight: 500;
 	text-decoration: none;
 }
 
 body.stackless-theme :is(.stackless-link-button, .stackless-wishlist-remove):hover {
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 	text-decoration: underline;
 }
 
@@ -160,13 +160,13 @@ body.stackless-theme form.cart .stackless-buy-now {
 	margin: 0;
 	border-color: var(--st-gray-900);
 	background: var(--st-gray-900);
-	color: #fff;
+	color: var(--st-inverse-text, #fff);
 }
 
 body.stackless-theme form.cart .stackless-buy-now:hover {
 	border-color: var(--st-gray-700);
 	background: var(--st-gray-700);
-	color: #fff;
+	color: var(--st-inverse-text, #fff);
 }
 
 body.stackless-theme .stackless-quote {
@@ -227,7 +227,7 @@ body.stackless-theme .stackless-page-access-notice {
 }
 
 body.stackless-theme .stackless-page-access-notice__icon {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	opacity: 1;
 }
 

@@ -48,19 +48,10 @@ function stackless_theme_blocks_render_callout(array $attributes, string $conten
     $popup_data = $has_popup ? stackless_theme_blocks_popup_trigger( (string) $popup, 'callout' ) : '';
     $has_popup = $popup_data !== '';
 
-    $preset_colors = array(
-        'tip'     => array( 'border' => '#22c55e', 'bg' => '#f0fdf4' ),
-        'info'    => array( 'border' => '#3b82f6', 'bg' => '#eff6ff' ),
-        'warning' => array( 'border' => '#f59e0b', 'bg' => '#fffbeb' ),
-        'success' => array( 'border' => '#10b981', 'bg' => '#ecfdf5' ),
-        'error'   => array( 'border' => '#ef4444', 'bg' => '#fef2f2' ),
-    );
-
+    // A preset (tip, info, warning, success, error) is drawn by its callout-{preset} class in
+    // callout.css from the theme's color tokens, so it follows the site's colors and dark mode.
     $style_parts = array();
-    if ( ! empty( $preset ) && isset( $preset_colors[ $preset ] ) ) {
-        $style_parts[] = 'border-color: ' . $preset_colors[ $preset ]['border'];
-        $style_parts[] = 'background-color: ' . $preset_colors[ $preset ]['bg'];
-    } else {
+    if ( ! in_array( $preset, array( 'tip', 'info', 'warning', 'success', 'error' ), true ) ) {
         if ( empty( $bgColorClass ) && ! empty( $bgColor ) )
             $style_parts[] = 'background-color: ' . esc_attr( $bgColor );
         if ( ! empty( $borderColor ) )

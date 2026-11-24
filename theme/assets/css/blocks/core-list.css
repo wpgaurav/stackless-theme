@@ -61,7 +61,7 @@
 	height: 2rem;
 	border-radius: var(--st-radius-pill);
 	background: var(--st-primary-light);
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-size: var(--st-text-sm);
 	font-weight: 600;
 	font-variant-numeric: tabular-nums;

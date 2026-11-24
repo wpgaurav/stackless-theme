@@ -5,7 +5,9 @@
  *
  * Parts (see inc/hooks.php), shared with the FluentCart product page: product_breadcrumbs,
  * product, product_media, product_summary, product_title, product_price, product_excerpt,
- * product_purchase, product_meta, product_content, product_related. $context['store'] is 'edd'.
+ * product_purchase, product_meta, product_content, product_related, product_sale_badge (only when
+ * on sale; EDD has no sale price, so it shows when stackless_theme_product_on_sale says so).
+ * $context['store'] is 'edd'.
  *
  * @package Stackless_Theme
  */
@@ -43,13 +45,20 @@ get_header();
 
 		<?php if (stackless_theme_part_start('product', $stackless_theme_ctx)) : ?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('product', ['st-download', has_post_thumbnail() ? 'has-media' : ''], $stackless_theme_ctx)); ?>>
+			<?php $stackless_theme_badge_shown = false; ?>
 			<?php if (has_post_thumbnail() && !post_password_required() && stackless_theme_part_start('product_media', $stackless_theme_ctx)) : ?>
-				<figure class="st-download__media"><?php the_post_thumbnail('large', ['fetchpriority' => 'high']); ?></figure>
+				<figure class="st-download__media"><?php stackless_theme_sale_badge($stackless_theme_ctx + ['placement' => 'single']); $stackless_theme_badge_shown = true; ?><?php the_post_thumbnail('large', ['fetchpriority' => 'high']); ?></figure>
 			<?php stackless_theme_part_end(); endif; ?>
 
 			<?php if (stackless_theme_part_start('product_summary', $stackless_theme_ctx)) : ?>
 			<div class="st-download__summary">
 				<?php do_action('stackless_theme_product_summary_start', $stackless_theme_ctx); ?>
+				<?php
+				// Without an image the badge sits above the title.
+				if (!$stackless_theme_badge_shown) {
+					stackless_theme_sale_badge($stackless_theme_ctx + ['placement' => 'single']);
+				}
+				?>
 				<?php
 				if (stackless_theme_part_start('product_title', $stackless_theme_ctx)) {
 					the_title('<h1 class="st-download__title">', '</h1>');

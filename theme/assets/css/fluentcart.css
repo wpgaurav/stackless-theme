@@ -211,7 +211,7 @@ body.stackless-theme .fct-product-card-title a {
 }
 
 body.stackless-theme .fct-product-card-title a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 /* The page gutter already insets the grid and related products. Edge-to-edge sections keep FluentCart's inset. */
@@ -363,7 +363,7 @@ body.stackless-theme.is-fluentcart-product .st-breadcrumb a {
 }
 
 body.stackless-theme.is-fluentcart-product .st-breadcrumb a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 body.stackless-theme.is-fluentcart-product .st-fc-single {

@@ -16,6 +16,7 @@ if (!stackless_theme_part_start('product_card', $stackless_theme_ctx)) {
 }
 ?>
 <article id="download-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('product_card', ['st-download-card'], $stackless_theme_ctx)); ?>>
+	<?php stackless_theme_sale_badge($stackless_theme_ctx + ['placement' => 'card']); ?>
 	<a class="st-download-card__media" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
 		<?php if (has_post_thumbnail()) : ?>
 			<?php the_post_thumbnail('medium_large', ['loading' => 'lazy', 'alt' => '']); ?>

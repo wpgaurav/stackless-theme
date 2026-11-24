@@ -22,7 +22,7 @@
 	/* The third brand color: the blocks draw their success styles in it. */
 	--color-tertiary: var(--st-success);
 	--color-accent: var(--st-primary);
-	--color-links: var(--st-primary);
+	--color-links: var(--st-link, var(--st-primary));
 	--color-button: var(--st-primary);
 	--color-button-text: #fff;
 	--color-focus: var(--st-primary);
@@ -224,8 +224,8 @@
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).has-peach-background-color { background-color: #fbbf24; }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).has-blush-background-color { background-color: #fda4af; }
 
-:is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.has-secondary-color, .has-action-color, .has-button-sec-color) { color: var(--st-primary-hover); }
-:is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.has-accent-color, .has-links-color, .has-button-color) { color: var(--st-primary); }
+:is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.has-secondary-color, .has-action-color, .has-button-sec-color) { color: var(--st-link-hover, var(--st-primary-hover)); }
+:is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.has-accent-color, .has-links-color, .has-button-color) { color: var(--st-link, var(--st-primary)); }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).has-tertiary-color { color: var(--st-success); }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).has-offwhite-color { color: var(--st-surface-muted); }
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *).has-background-color { color: var(--st-bg); }

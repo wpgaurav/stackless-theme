@@ -146,7 +146,9 @@ add_filter('stackless_theme_search_product', static function ($product) {
 add_action('customize_register', 'stackless_theme_customize_register');
 function stackless_theme_customize_register(WP_Customize_Manager $wp_customize): void
 {
-    $description = __('Colors, type, header, store and footer options for the Stackless theme.', 'stackless-theme');
+    $description = stackless_theme_store_setup()
+        ? __('Colors, type, header, store and footer options for the Stackless theme.', 'stackless-theme')
+        : __('Colors, type, header and footer options for the Stackless theme.', 'stackless-theme');
     // One line about Pro, only while Pro is not active.
     if (!defined('STACKLESS_PRO_VERSION')) {
         $description .= '<br>' . sprintf(

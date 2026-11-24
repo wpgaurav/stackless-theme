@@ -104,6 +104,10 @@ function stackless_theme_posted_on(): void
     echo '<span class="posted-on">';
     stackless_theme_the_icon('calendar', 16);
     echo ' <a href="' . esc_url(get_permalink()) . '" rel="bookmark">' . $time . '</a></span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+    // A post with no author (imported, or its user deleted) gets no empty byline.
+    if ((string) get_the_author() === '') {
+        return;
+    }
     echo '<span class="byline">';
     stackless_theme_the_icon('user-circle', 16);
     echo ' <a class="url fn n" href="' . esc_url(get_author_posts_url((int) get_the_author_meta('ID'))) . '">' . esc_html(get_the_author()) . '</a></span>';
@@ -308,4 +312,33 @@ function stackless_theme_search_product(WP_Post $post): ?array
         return null;
     }
     return ['image' => (string) ($product['image'] ?? ''), 'price' => (string) ($product['price'] ?? '')];
+}
+
+/**
+ * Whether a FluentCart product or EDD download is on sale, through stackless_theme_product_on_sale
+ * ($on_sale, $post_id, $store). FluentCart answers from its prices; EDD has no sale price, so a
+ * download is never on sale unless a filter says so.
+ */
+function stackless_theme_product_on_sale(int $post_id, string $store): bool
+{
+    return (bool) apply_filters('stackless_theme_product_on_sale', false, $post_id, $store);
+}
+
+/**
+ * The sale badge on a store card or product page, like WooCommerce's .onsale. Part:
+ * product_sale_badge, with $context['store'], ['post_id'] and ['placement'] ('card' or 'single').
+ * Prints nothing, and fires no hooks, when the product is not on sale.
+ */
+function stackless_theme_sale_badge(array $context): void
+{
+    if (!stackless_theme_product_on_sale((int) ($context['post_id'] ?? 0), (string) ($context['store'] ?? ''))) {
+        return;
+    }
+    stackless_theme_part('product_sale_badge', static function (array $context): void {
+        printf(
+            '<span class="%1$s">%2$s</span>',
+            stackless_theme_class('product_sale_badge', ['stackless-sale-badge'], $context), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper.
+            esc_html(stackless_theme_text('sale_badge', __('Sale', 'stackless-theme'), $context))
+        );
+    }, $context);
 }

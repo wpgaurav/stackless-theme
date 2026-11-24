@@ -9,7 +9,8 @@
  *
  * Parts (see inc/hooks.php), shared with the EDD download page: product_breadcrumbs, product,
  * product_media, product_summary, product_title, product_price, product_excerpt,
- * product_purchase, product_meta, product_content, product_related. $context['store'] is
+ * product_purchase, product_meta, product_content, product_related, product_sale_badge (only when
+ * on sale). $context['store'] is
  * 'fluentcart'. Inside actions: stackless_theme_product_summary_start/_end.
  *
  * @package Stackless_Theme
@@ -53,6 +54,7 @@ get_header();
 				<?php if (stackless_theme_part_start('product_media', $stackless_theme_ctx)) : ?>
 				<div class="st-download__media st-fc-product__media">
 					<?php
+					stackless_theme_sale_badge($stackless_theme_ctx + ['placement' => 'single']);
 					if ($stackless_theme_renderer) {
 						$stackless_theme_renderer->renderGallery();
 					} elseif (has_post_thumbnail()) {

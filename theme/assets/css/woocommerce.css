@@ -263,7 +263,7 @@ p.no-comments {
 }
 
 .woocommerce .woocommerce-breadcrumb a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .breadcrumb-sep {
@@ -405,7 +405,7 @@ p.no-comments {
 }
 
 .woocommerce ul.products li.product a:hover .woocommerce-loop-product__title {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .woocommerce ul.products li.product .price {
@@ -617,6 +617,7 @@ p.no-comments {
 	border: 1px solid var(--st-border);
 	border-radius: var(--st-radius);
 	background: rgba(255, 255, 255, .92);
+	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
 	-webkit-backdrop-filter: blur(6px);
 	backdrop-filter: blur(6px);
 	box-shadow: var(--st-shadow);
@@ -642,8 +643,8 @@ p.no-comments {
 }
 
 .woocommerce div.product div.images .woocommerce-product-gallery__trigger:hover {
-	background: #fff;
-	color: var(--st-primary);
+	background: var(--st-surface);
+	color: var(--st-link, var(--st-primary));
 	transform: scale(1.05);
 }
 
@@ -836,7 +837,7 @@ p.no-comments {
 }
 
 .woocommerce div.product .product_meta a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 /* Tabs. */
@@ -1059,6 +1060,7 @@ p.no-comments {
 	padding: .5rem .75rem;
 	border-radius: var(--st-radius);
 	background: var(--st-gray-800);
+	color: var(--st-inverse-text, #fff);
 	font-size: var(--st-text-sm);
 }
 
@@ -1225,7 +1227,7 @@ p.no-comments {
 }
 
 .woocommerce table.shop_table td.product-name a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .woocommerce table.cart img {
@@ -1696,6 +1698,7 @@ mark.order-status {
 
 .woocommerce .blockUI.blockOverlay {
 	background: rgba(255, 255, 255, .7) !important;
+	background: color-mix(in srgb, var(--st-surface) 70%, transparent) !important;
 }
 
 .woocommerce .blockUI.blockOverlay::before,
@@ -1832,7 +1835,7 @@ body.stackless-theme .wc-block-components-button.outlined:not(.is-link):hover {
 body.stackless-theme .wc-block-components-button.is-link,
 body.stackless-theme .wc-block-components-totals-coupon-link,
 body.stackless-theme .wc-block-cart-item__remove-link {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 /* Block form controls. */
@@ -1929,7 +1932,7 @@ body.stackless-theme .wc-block-components-quantity-selector:has(input:not([type=
 }
 
 body.stackless-theme .wc-block-components-quantity-selector .wc-block-components-quantity-selector__button:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	opacity: 1;
 }
 

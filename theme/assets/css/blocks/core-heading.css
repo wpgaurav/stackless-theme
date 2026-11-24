@@ -30,7 +30,7 @@
 	height: 2.5rem;
 	border-radius: var(--st-radius);
 	background: var(--st-primary-light);
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-size: 1.25em;
 }
 
@@ -69,7 +69,7 @@ h3.is-style-numbered::before {
 	margin-inline-end: .75rem;
 	border-radius: var(--st-radius-pill);
 	background: var(--st-primary-light);
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-size: var(--st-text-base);
 	font-weight: 600;
 	font-variant-numeric: tabular-nums;

@@ -46,13 +46,13 @@
 	border-radius: var(--st-radius);
 	background: var(--st-primary-light);
 	box-shadow: none;
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-weight: 600;
 }
 
 .wp-block-button.is-style-secondary > .wp-block-button__link:is(:hover, :focus-visible) {
 	background: color-mix(in srgb, var(--st-primary) 16%, var(--st-surface));
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 }
 
 .wp-block-button.is-style-secondary > .wp-block-button__link:active {
@@ -66,14 +66,14 @@
 	border-color: transparent;
 	background: transparent;
 	box-shadow: none;
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-weight: 600;
 	text-decoration: none;
 }
 
 .wp-block-button.is-style-link > .wp-block-button__link:is(:hover, :focus-visible) {
 	background: transparent;
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 	text-decoration: underline;
 	text-underline-offset: .2em;
 }

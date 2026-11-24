@@ -27,15 +27,6 @@
 		stbIcons            = StacklessBlocks.icons,
 		stbPopups           = StacklessBlocks.popups;
 
-	var presets = {
-		'':        { border: '', bg: '' },
-		'tip':     { border: '#22c55e', bg: '#f0fdf4' },
-		'info':    { border: '#3b82f6', bg: '#eff6ff' },
-		'warning': { border: '#f59e0b', bg: '#fffbeb' },
-		'success': { border: '#10b981', bg: '#ecfdf5' },
-		'error':   { border: '#ef4444', bg: '#fef2f2' }
-	};
-
 	registerBlockType( 'stackless/callout', {
 		apiVersion: 3,
 		title: __( 'Callout', 'stackless-theme' ),
@@ -73,7 +64,6 @@
 		edit: function ( props ) {
 			var a = props.attributes,
 				preset       = a.preset || '',
-				p            = presets[preset] || presets[''],
 				borderColor  = a.borderColor,
 				bgColor      = a.bgColor,
 				bgColorClass = a.bgColorClass,
@@ -93,8 +83,9 @@
 				return className || '';
 			}
 
-			var effectiveBorder = preset ? p.border : borderColor;
-			var effectiveBg = preset ? p.bg : ( ! bgColorClass ? bgColor : '' );
+			// A preset is drawn by its callout-{preset} class from the theme's color tokens.
+			var effectiveBorder = preset ? '' : borderColor;
+			var effectiveBg = preset ? '' : ( ! bgColorClass ? bgColor : '' );
 
 			var blockProps = useBlockProps({
 				className: 'stb-callout ' + marginBottom + ' ' + padding

@@ -114,7 +114,7 @@ body.stackless-theme input.edd_submit_plain {
 	border: 0;
 	background: none;
 	box-shadow: none;
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	text-decoration: underline;
 }
 
@@ -124,7 +124,7 @@ body.stackless-theme .edd-add-to-cart {
 }
 
 body.stackless-theme :is(.edd-blocks__download-footer, .edd_download_buy_button, .st-download-card__action, .edd-submit.gray, .edd-submit.white) .edd-loading {
-	border-color: rgba(23, 23, 23, .15);
+	border-color: color-mix(in srgb, var(--st-heading) 15%, transparent);
 	border-left-color: var(--st-heading);
 }
 
@@ -726,7 +726,7 @@ body.stackless-theme :is(.edd-blocks__download-header h3, .edd_download_title, .
 }
 
 body.stackless-theme :is(.edd-blocks__download-header h3, .edd_download_title, .st-download-card__title) a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 body.stackless-theme :is(.edd-blocks__download-content, .edd_download_excerpt) {
@@ -859,7 +859,7 @@ body.stackless-theme .edd-blocks__term-title h3 a {
 }
 
 body.stackless-theme .edd-blocks__term:hover .edd-blocks__term-title h3 a {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 body.stackless-theme .edd-blocks__term-count {
@@ -881,7 +881,7 @@ body.stackless-theme .edd-blocks__term-count {
 }
 
 .st-breadcrumb a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .st-download {
@@ -1014,7 +1014,7 @@ body.stackless-theme .st-download__purchase .edd_purchase_submit_wrapper .edd-su
 }
 
 .st-download__meta a:hover {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .st-download__content {
@@ -2438,7 +2438,7 @@ body.stackless-theme .stackless-account__nav a:hover svg {
 }
 
 body.stackless-theme .stackless-account__nav a[aria-current="page"] svg {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 /* Log out is always last, set apart by a hairline. */
@@ -2992,10 +2992,11 @@ body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_ca
 /* ------------------------------------------------------------------ Odds and ends */
 body.stackless-theme .edd-cart-loading {
 	background: rgba(255, 255, 255, .7);
+	background: color-mix(in srgb, var(--st-surface) 70%, transparent);
 }
 
 body.stackless-theme .edd-cart-loading__spinner {
-	border-color: rgba(23, 23, 23, .15);
+	border-color: color-mix(in srgb, var(--st-heading) 15%, transparent);
 	border-left-color: var(--st-primary);
 }
 

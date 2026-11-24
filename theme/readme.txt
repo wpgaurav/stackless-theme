@@ -7,16 +7,16 @@ Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A minimal classic theme for WooCommerce, Easy Digital Downloads and FluentCart stores running Stackless.
+A minimal classic theme for blogs, sites and stores. A store plugin is optional: WooCommerce, Easy Digital Downloads and FluentCart are styled when active.
 
 == Description ==
 
-Stackless is a quiet, fast classic theme. It styles every semantic HTML element, every form control, WooCommerce's classic templates and its Cart and Checkout blocks, Easy Digital Downloads' downloads, checkout, receipts and account pages, and every Stackless for WooCommerce and Stackless for EDD module (wishlist, sold count, quotes, licenses, subscriptions, saved carts, order bumps and more).
+Stackless is a quiet, fast classic theme. It styles every semantic HTML element and every form control, and works on its own for a blog or a business site with no plugin. When a store plugin is active it also styles WooCommerce's classic templates and its Cart and Checkout blocks, Easy Digital Downloads' downloads, checkout, receipts and account pages, and every Stackless for WooCommerce and Stackless for EDD module (wishlist, sold count, quotes, licenses, subscriptions, saved carts, order bumps and more).
 
 * Classic PHP templates with full Block Editor support: theme.json palette, type scale, spacing, wide and full alignment, editor styles.
 * System font stack by default and no jQuery. Ten open-source fonts are included and load only when you pick them.
-* Header with logo, two-level primary menu, account link and live cart count.
-* Full-screen product search with live results, popular categories and best sellers.
+* Header with logo, two-level primary menu and full-screen search; with a store active, an account link and live cart count.
+* With WooCommerce or Easy Digital Downloads, the search shows live product results, popular categories and best sellers.
 * Single product pages with a sticky summary column; editorial single posts with author box, related posts, optional sidebar layouts and per-post layout choices.
 * Footer widget area and footer menu. Optional "Shop" widget area above the product grid.
 * One Customizer panel for colors, typography, widths, the header and mobile menu, blog and archives, single posts, custom post types, store elements, the footer line and header and footer code.
@@ -27,7 +27,7 @@ Stackless is a quiet, fast classic theme. It styles every semantic HTML element,
 == Installation ==
 
 1. Appearance → Themes → Add New → Upload Theme, choose stackless-theme.zip, then Activate.
-2. Appearance → Menus: assign menus to "Primary menu" and "Footer menu". Without a primary menu the header lists the shop and a few top-level pages.
+2. Appearance → Menus: assign menus to "Primary menu" and "Footer menu". Without a primary menu the header lists a few top-level pages, and the shop when a store plugin is active.
 3. Appearance → Customize → Site Identity: add a logo.
 
 == Copyright ==
@@ -64,6 +64,11 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: the Stackless Theme panel in the Customizer mentions Stackless Theme Pro in one line, which goes away once Pro is active.
 * Fixed: a post with no tags showed an empty tag after it.
 * Fixed: on store pages where a plugin loads its own .container styles (FluentCart does on some pages), the header and footer could be narrower than the page at some screen widths.
+* New: a shared focus trap for drawers, dialogs and popups (the stackless-theme-focus script, window.StacklessFocus). The FluentCart cart drawer and mobile filters now use it and behave as before.
+* New: a dark set of the theme's colors, used when the page's html element has the stackless-dark class. The theme never adds the class itself, and declares theme support for stackless-dark-mode so a plugin can tell the colors are there. Links stay at 4.5:1 or more in dark whatever the primary color, and the store layers' leftover light colors (overlays, the zoom button, loading spinners, the Buy now button and the store notice) now follow the theme's colors.
+* New: a Sale badge on FluentCart product cards and product pages when a product's compare-at price is above its price, drawn like WooCommerce's. EDD has no sale price, so its cards and download pages show the badge only when the stackless_theme_product_on_sale filter says so.
+* Changed: the Callout block's Tip, Info, Warning, Success and Error presets take their colors from the theme instead of fixed light colors in the markup, so they follow the site's colors and stay readable in dark. They look the same as before on a light page.
+* Changed: a store plugin is optional. The theme was checked with no store active (front page, blog, posts, pages, search, 404 and the Customizer), and the description and Customizer panel no longer assume a store. A post with no author no longer shows an empty byline.
 
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.

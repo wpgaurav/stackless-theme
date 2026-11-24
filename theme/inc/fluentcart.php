@@ -82,7 +82,7 @@ function stackless_theme_fluentcart_assets(): void
 
     // Keyboard and screen-reader behavior for FluentCart's cart drawer, mobile filters and checkout summary.
     $js = stackless_theme_asset('assets/js/fluentcart.js');
-    wp_enqueue_script('stackless-theme-fluentcart', STACKLESS_THEME_URI . '/' . $js, [], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
+    wp_enqueue_script('stackless-theme-fluentcart', STACKLESS_THEME_URI . '/' . $js, ['stackless-theme-focus'], stackless_theme_asset_version($js), ['in_footer' => true, 'strategy' => 'defer']);
     wp_localize_script('stackless-theme-fluentcart', 'stacklessFluentCart', [
         'i18n' => [
             'filters' => __('Filters', 'stackless-theme'),
@@ -249,6 +249,58 @@ function stackless_theme_fluentcart_related(int $product_id): void
         ['rating_context' => 'relevant']
     ))->render();
     echo '</section>';
+}
+
+/**
+ * Whether a FluentCart product has a variation priced below its compare-at price. Answers are kept
+ * per request, so a card that already holds its product model costs no second query.
+ */
+function stackless_theme_fluentcart_model_on_sale($product): bool
+{
+    static $seen = [];
+    if (!is_object($product) || empty($product->ID)) {
+        return false;
+    }
+    $id = (int) $product->ID;
+    if (!isset($seen[$id])) {
+        $seen[$id] = false;
+        // Read the relation directly: empty() on a model property that is not loaded yet is true.
+        $variants = $product->variants;
+        foreach (is_iterable($variants) ? $variants : [] as $variant) {
+            $compare = (int) ($variant->compare_price ?? 0);
+            if ($compare > 0 && $compare > (int) ($variant->item_price ?? 0)) {
+                $seen[$id] = true;
+                break;
+            }
+        }
+    }
+    return $seen[$id];
+}
+
+/** The theme's own answer for FluentCart products; plugins filter after it at the default priority. */
+add_filter('stackless_theme_product_on_sale', 'stackless_theme_fluentcart_on_sale', 5, 3);
+function stackless_theme_fluentcart_on_sale($on_sale, int $post_id, string $store): bool
+{
+    if ($store !== 'fluentcart' || $post_id < 1 || !class_exists('\FluentCart\App\Modules\Data\ProductDataSetup')) {
+        return (bool) $on_sale;
+    }
+    return stackless_theme_fluentcart_model_on_sale(\FluentCart\App\Modules\Data\ProductDataSetup::getProductModel($post_id));
+}
+
+/**
+ * The sale badge on the product cards FluentCart draws itself (product shortcodes, lists, related
+ * products), over the image. Cards built from FluentCart's blocks are left alone: those templates
+ * carry FluentCart's own Sale badge block, placed (or removed) by the site owner.
+ */
+add_action('fluent_cart/product/group/before_image_block', 'stackless_theme_fluentcart_card_sale_badge');
+function stackless_theme_fluentcart_card_sale_badge($payload): void
+{
+    $product = is_array($payload) ? ($payload['product'] ?? null) : null;
+    if (!is_object($product) || empty($product->ID) || ($payload['scope'] ?? '') !== 'product_card' || ($payload['source'] ?? '') === 'gutenberg') {
+        return;
+    }
+    stackless_theme_fluentcart_model_on_sale($product);
+    stackless_theme_sale_badge(['store' => 'fluentcart', 'post_id' => (int) $product->ID, 'placement' => 'card']);
 }
 
 /** The shop page, for the empty search state and other "browse all" links. */

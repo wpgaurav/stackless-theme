@@ -72,6 +72,75 @@
 	color-scheme: light;
 }
 
+/*
+ * Dark colors, for a page whose <html> carries the stackless-dark class. The theme never adds the
+ * class itself; a plugin or a script does. html.stackless-dark outranks :root, so these neutrals
+ * also win over the Customizer's colors, which print on :root. The primary color is kept, custom
+ * or not, as the fill of buttons with white labels; text links use --st-link, a lighter mix of it
+ * with white (45/55) that reads at 4.5:1 or more on the dark background and surfaces whatever the
+ * primary is. Light pages leave --st-link, --st-link-hover, --st-code-* and --st-inverse-text
+ * unset, so their rules fall back to the light values.
+ */
+html.stackless-dark {
+	--st-primary-light: color-mix(in srgb, var(--st-primary) 22%, #1b1b1b);
+	--st-primary-text: color-mix(in srgb, var(--st-primary) 40%, #fff);
+	--st-link: color-mix(in srgb, var(--st-primary) 45%, #fff);
+	--st-link-hover: color-mix(in srgb, var(--st-primary) 30%, #fff);
+	--st-success-light: #14301b;
+	--st-success-text: #7fd68d;
+	--st-warning-light: #33270c;
+	--st-warning-text: #f4c25e;
+	--st-danger-light: #3a1717;
+	--st-danger-text: #f29b9b;
+	--st-info-light: #12283b;
+	--st-info-text: #8ec5f2;
+
+	/* The gray scale turns over: low numbers stay near the background, high numbers near the text. */
+	--st-gray-50: #1f1f1f;
+	--st-gray-100: #262626;
+	--st-gray-200: #2e2e2e;
+	--st-gray-300: #3d3d3d;
+	--st-gray-400: #6b6b6b;
+	--st-gray-500: #8f8f8f;
+	--st-gray-600: #a8a8a8;
+	--st-gray-700: #c4c4c4;
+	--st-gray-800: #e0e0e0;
+	--st-gray-900: #f5f5f5;
+
+	--st-bg: #121212;
+	--st-surface: #1b1b1b;
+	--st-surface-muted: #232323;
+	--st-text: #e0e0e0;
+	--st-heading: #f5f5f5;
+	--st-muted: #a3a3a3;
+	--st-border: #2e2e2e;
+	--st-border-strong: #3d3d3d;
+
+	/* Code stays a dark panel; fills drawn in the top grays (now light) take a dark label. */
+	--st-code-bg: #0b0b0b;
+	--st-code-text: #e0e0e0;
+	--st-inverse-text: #121212;
+
+	--st-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, .4);
+	--st-shadow: 0 2px 4px -1px rgba(0, 0, 0, .4), 0 4px 6px -1px rgba(0, 0, 0, .45);
+	--st-shadow-lg: 0 4px 6px -2px rgba(0, 0, 0, .4), 0 10px 15px -3px rgba(0, 0, 0, .5);
+	--st-shadow-input: 0 1px 1px rgba(0, 0, 0, .25);
+	--st-ring: 0 0 0 3px color-mix(in srgb, var(--st-link) 40%, transparent);
+
+	/* Block palette colors that name a role follow it. Primary, Dark, White and the status colors are explicit picks and stay. */
+	--wp--preset--color--primary-light: var(--st-primary-light);
+	--wp--preset--color--body: var(--st-text);
+	--wp--preset--color--muted: var(--st-muted);
+	--wp--preset--color--line: var(--st-border);
+	--wp--preset--color--surface: var(--st-surface-muted);
+
+	color-scheme: dark;
+}
+
+html.stackless-dark :focus-visible {
+	outline-color: var(--st-link);
+}
+
 /* ------------------------------------------------------------------ Reset */
 *,
 *::before,
@@ -214,7 +283,7 @@ p {
 }
 
 a {
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	text-decoration: underline;
 	text-decoration-thickness: 1px;
 	text-underline-offset: .2em;
@@ -223,7 +292,7 @@ a {
 
 /* :where() keeps this at a:hover's specificity while leaving button links to their own hover colors. */
 a:where(:not(.wp-element-button, .wp-block-button__link, .button)):hover {
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 	text-decoration-thickness: 2px;
 }
 
@@ -306,8 +375,8 @@ pre {
 	overflow-x: auto;
 	padding: 1rem 1.25rem;
 	border-radius: var(--st-radius-lg);
-	background: var(--st-gray-900);
-	color: var(--st-gray-100);
+	background: var(--st-code-bg, var(--st-gray-900));
+	color: var(--st-code-text, var(--st-gray-100));
 	line-height: 1.55;
 	tab-size: 4;
 }
@@ -938,8 +1007,8 @@ input[type="reset"]:hover,
 	padding: 1rem 1.25rem;
 	border: 0;
 	border-radius: var(--st-radius-lg);
-	background: var(--st-gray-900);
-	color: var(--st-gray-100);
+	background: var(--st-code-bg, var(--st-gray-900));
+	color: var(--st-code-text, var(--st-gray-100));
 }
 
 .wp-block-preformatted {
@@ -1086,7 +1155,7 @@ input[type="reset"]:hover,
 	border-radius: var(--st-radius);
 	background: var(--st-surface);
 	box-shadow: var(--st-shadow-lg);
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 	font-size: var(--st-text-sm);
 	font-weight: 600;
 	text-decoration: none;
@@ -1143,13 +1212,13 @@ input[type="reset"],
 .is-style-outline > .wp-block-button__link.wp-block-button__link:not(.has-background) {
 	border-color: var(--st-primary);
 	background: transparent;
-	color: var(--st-primary);
+	color: var(--st-link, var(--st-primary));
 }
 
 .is-style-outline > .wp-block-button__link.wp-block-button__link:not(.has-background):hover {
 	border-color: var(--st-primary-hover);
 	background: var(--st-primary-light);
-	color: var(--st-primary-hover);
+	color: var(--st-link-hover, var(--st-primary-hover));
 }
 
 /* Labels sit above their field, whatever the field type. */
