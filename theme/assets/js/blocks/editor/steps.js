@@ -75,7 +75,7 @@
 				),
 				el( 'div', { className: 'stb-step-content-editor' },
 					el( RichText, {
-						tagName: 'h4',
+						tagName: 'h3',
 						value: props.attributes.title,
 						placeholder: __( 'Step Title', 'stackless-theme' ),
 						onChange: function( val ) { props.setAttributes({ title: val }); }

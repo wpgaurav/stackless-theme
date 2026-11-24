@@ -351,7 +351,7 @@ function stackless_theme_blocks_render_step(array $attributes, string $content =
         <div class="stb-step-number"><?php echo esc_html( $number ); ?></div>
         <div class="stb-step-content">
             <?php if ( $title ) : ?>
-                <h4 class="stb-step-title"><?php echo stackless_theme_blocks_text( $title ); ?></h4>
+                <h3 class="stb-step-title"><?php echo stackless_theme_blocks_text( $title ); ?></h3>
             <?php endif; ?>
             <?php if ( $text ) : ?>
                 <p class="stb-step-text"><?php echo stackless_theme_blocks_text( $text ); ?></p>
