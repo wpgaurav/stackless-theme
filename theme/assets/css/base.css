@@ -230,6 +230,8 @@ h6 {
 	letter-spacing: var(--st-heading-tracking, -.01em);
 	text-transform: var(--st-heading-transform, none);
 	text-wrap: balance;
+	/* A long word in a large heading wraps instead of widening the page on a phone. */
+	overflow-wrap: break-word;
 }
 
 h1 {
