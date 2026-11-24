@@ -68,6 +68,51 @@ stackless_theme_text('my_key', __('Default', 'my-plugin'), $context);  // filter
 
 Page Blocks Builder's Header and Footer regions replace the theme's header and footer when they have blocks. Filter `stackless_theme_region_mode` to `before` or `after` to keep both.
 
+#### Header layout
+
+`apply_filters('stackless_theme_header_layout', array $layout)` decides where each header part sits. `$layout` has three groups, each a list of part slugs:
+
+```php
+// The default: the same markup as the fixed header before 1.8.0, byte for byte.
+[
+    'start'  => ['branding', 'navigation'],
+    'center' => [],
+    'end'    => ['currency', 'search', 'account', 'cart', 'menu_toggle'],
+]
+```
+
+| Slug | Part | Prints when |
+|---|---|---|
+| `branding` | `header_brand` | Always |
+| `navigation` | `header_nav` (`#site-navigation`, the menu the toggle opens) | Always |
+| `currency` | The header currency switcher | Stackless for WooCommerce's currency selector is on |
+| `search` | `header_search_button` | Header and menu > Search button is on |
+| `account` | `header_account` | Store > Account button is on and there is an account URL |
+| `cart` | `header_cart` | Store > Cart button is on and a store supplies a cart link |
+| `menu_toggle` | `header_menu_toggle` | Always (shown below 1080px) |
+
+Rules:
+
+- **Unknown slugs** are skipped, and so is anything that is not a string.
+- **A slug appears once.** Placed twice, it keeps its first place.
+- **A slug left out** does not print. Keep `menu_toggle` somewhere if `navigation` is placed, or phones lose the menu.
+- **`start` parts** print straight into `.site-header__inner`, as they always have.
+- **`end` parts** print inside the `header_actions` part (`.site-header__actions`), between `header_actions_start` and `header_actions_end`. The row is skipped when `end` is empty and nothing is hooked to those actions, unless `center` has parts.
+- **A non-empty `center`** adds `site-header--has-center` to the header and wraps the groups in `.site-header__start` and `.site-header__center`. The bar becomes a three-column grid (`1fr auto 1fr`), so the center group sits in the middle of the page.
+
+```php
+// A centered logo with the menu on the left.
+add_filter('stackless_theme_header_layout', function (array $layout): array {
+    return [
+        'start'  => ['navigation'],
+        'center' => ['branding'],
+        'end'    => ['search', 'account', 'cart', 'menu_toggle'],
+    ];
+});
+```
+
+`stackless_theme_header_layout()` returns the cleaned layout and `stackless_theme_header_part_slugs()` the known slugs. Below 1080px the menu opens under the header wherever `navigation` sits.
+
 ### Single posts
 
 `$context` holds:
@@ -115,6 +160,22 @@ The `post_footer` part prints even when it has no tags or author box, as long as
 | `entry_navigation` | Previous and next links | |
 
 The Full width and Canvas templates also fire `stackless_theme_before_entry_content` and `stackless_theme_after_entry_content`.
+
+#### Layout choices on pages and custom post types
+
+The editor's Layout panel offers the post layout (centered, sidebar on the right, sidebar on the left) and header style on pages and public custom post types too. Store products (`product`, `download`, `fluent-products`) are left out, since they use their own templates.
+
+- **Without a choice** a page or custom post type item looks as it always did: centered, no sidebar, its usual title. The Customizer's Single posts options never reach them.
+- **With a sidebar** it uses the `single_layout` and `single_sidebar` parts, like a post, with `template-parts/content-single.php` inside. Related posts stay on posts only.
+- **A header style** adds `entry-header--center`, `entry-header--left`, `entry-header--image-first` or `entry-header--image-full` to its `.entry-header`. "Featured image above the title" shows the image even on types that hide it. "Full-width featured image" prints the `post_hero` part.
+- **A page template that owns its layout** (`stackless_theme_layout_owning_templates`) ignores both choices.
+
+| Filter | Use it to |
+|---|---|
+| `stackless_theme_layout_post_types` | The post types the Layout panel shows on (every public type but attachments). The layout and header style choices apply to these types, minus the store product types. |
+| `stackless_theme_layout_choices` | The choices themselves. Each has a `types` list you can narrow or widen. |
+
+`stackless_theme_single_has_sidebar()`, `stackless_theme_single_layout()` and `stackless_theme_entry_header_style()` report the result for the item being viewed.
 
 ### Blog, archives and search
 
@@ -233,7 +294,7 @@ A site layout ships its defaults through filters. A site owner's saved Customize
 | `theme_mod_{name}` (WordPress core) | Any saved setting, including colors (`stackless_color_*`), widths (`stackless_width_*`), fonts (`stackless_font_body`, `stackless_font_heading`) and footer text. |
 | `stackless_theme_option` / `stackless_theme_option_{key}` | The resolved option value at render time. |
 | `stackless_theme_cpt_option_defaults` / `stackless_theme_cpt_option` | Custom post type options. |
-| `stackless_theme_layout_choices` | The per-post Layout panel selects. |
+| `stackless_theme_layout_choices` | The per-post Layout panel selects (posts, pages and custom post types; see above). |
 | `stackless_theme_design_colors`, `stackless_theme_design_widths`, `stackless_theme_font_stacks`, `stackless_theme_bundled_fonts` | The design registries (add a color, a width or a font). |
 | `stackless_theme_design_vars` / `stackless_theme_design_css` | The CSS custom properties and the printed design CSS. In the Customizer preview the color and font properties (`stackless_theme_design_live_properties()`) print in their own `stackless-theme-live-design` style and are redrawn in the browser as those settings change, so a filter on them shows after the next preview reload. |
 | `stackless_theme_footer_text` | The footer line. |
@@ -253,6 +314,47 @@ add_filter('theme_mod_stackless_font_body', fn ($value) => $value ?: 'font-inter
 add_filter('theme_mod_stackless_font_heading', fn ($value) => $value ?: 'font-anton');
 add_filter('theme_mod_stackless_heading_case', fn ($value) => $value ?: 'uppercase');
 ```
+
+## Customizer
+
+The theme's options live in one panel, `STACKLESS_THEME_PANEL` (`stackless_theme_panel`). Once the theme has registered its own sections and controls, it fires:
+
+```php
+do_action('stackless_theme_customize_sections', WP_Customize_Manager $wp_customize, string $panel_id);
+```
+
+It runs on `customize_register` at priority 50, after the theme's own callbacks (10, 12, 15 and 20), so every theme section and setting exists by then. It also runs when the theme's settings import builds its own Customizer manager, so settings added here are sanitized on import too.
+
+Section priorities in the panel:
+
+| Priority | Section | ID |
+|---|---|---|
+| 10 | Colors | `stackless_theme_colors` |
+| 20 | Typography | `stackless_theme_typography` |
+| 30 | Layout | `stackless_theme_layout` |
+| 40 | Header and menu | `stackless_theme_header` |
+| 50 | Blog and archives | `stackless_theme` |
+| 60 | Single posts | `stackless_theme_single` |
+| 65 | Custom post types | `stackless_theme_cpt` |
+| 70 | Store (only with a store plugin) | `stackless_theme_store` |
+| 75 | Shop toolbar: WooCommerce | `stackless_theme_store_woo` |
+| 76 | Shop toolbar: EDD | `stackless_theme_store_edd` |
+| 90 (70 without a store) | Footer | `stackless_theme_footer` |
+| 100 (80 without a store) | Custom code | `stackless_theme_code` |
+
+Use a priority below 10 to sort before Colors, or one between two of these to sit between them.
+
+```php
+add_action('stackless_theme_customize_sections', function (WP_Customize_Manager $wp_customize, string $panel_id): void {
+    $wp_customize->add_section('my_styles', [
+        'title' => __('Styles', 'my-plugin'),
+        'panel' => $panel_id,
+        'priority' => 5,
+    ]);
+}, 10, 2);
+```
+
+While `STACKLESS_PRO_VERSION` is not defined, the panel's description ends with one line linking to Stackless Theme Pro. Defining the constant removes it.
 
 ## Templates
 

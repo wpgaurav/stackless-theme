@@ -22,6 +22,52 @@ function stackless_theme_site_brand(): void
     );
 }
 
+/**
+ * The header parts a layout can place, by slug. Each maps to a part in template-parts/site-header.php:
+ * branding (header_brand), navigation (header_nav), currency (the header currency switcher),
+ * search (header_search_button), account (header_account), cart (header_cart) and
+ * menu_toggle (header_menu_toggle).
+ */
+function stackless_theme_header_part_slugs(): array
+{
+    return ['branding', 'navigation', 'currency', 'search', 'account', 'cart', 'menu_toggle'];
+}
+
+/**
+ * Where each header part sits: ['start' => [...], 'center' => [...], 'end' => [...]], each a list
+ * of slugs from stackless_theme_header_part_slugs(). Filter stackless_theme_header_layout to move
+ * parts. Unknown slugs are dropped, and a slug placed twice keeps its first place. A part left out
+ * does not print. The 'end' group sits in the header actions row; a non-empty 'center' gives the
+ * header the site-header--has-center class and wraps 'start' and 'center' in their own elements.
+ *
+ * @return array{start: string[], center: string[], end: string[]}
+ */
+function stackless_theme_header_layout(): array
+{
+    $default = [
+        'start' => ['branding', 'navigation'],
+        'center' => [],
+        'end' => ['currency', 'search', 'account', 'cart', 'menu_toggle'],
+    ];
+    $layout = apply_filters('stackless_theme_header_layout', $default);
+    $layout = is_array($layout) ? $layout : $default;
+    $known = stackless_theme_header_part_slugs();
+    $placed = [];
+    $clean = [];
+    foreach (array_keys($default) as $slot) {
+        $clean[$slot] = [];
+        foreach ((array) ($layout[$slot] ?? []) as $slug) {
+            $slug = is_string($slug) ? $slug : '';
+            if (!in_array($slug, $known, true) || isset($placed[$slug])) {
+                continue;
+            }
+            $placed[$slug] = true;
+            $clean[$slot][] = $slug;
+        }
+    }
+    return $clean;
+}
+
 /** Fallback for the primary menu: the shop plus a few top-level pages, never the cart/checkout/account pages. */
 function stackless_theme_menu_fallback(): void
 {

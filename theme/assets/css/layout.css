@@ -185,6 +185,35 @@ html.search-open .has-header-on-dark .site-header,
 	margin-left: auto;
 }
 
+/*
+ * Header layouts with a center group (filter stackless_theme_header_layout): three columns with
+ * the center group in the middle of the bar, such as a centered logo or a centered menu.
+ */
+.site-header--has-center .site-header__inner {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+}
+
+.site-header__start,
+.site-header__center {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	min-width: 0;
+}
+
+.site-header__center {
+	justify-content: center;
+}
+
+.site-header--has-center .site-header__actions {
+	justify-content: flex-end;
+}
+
+.site-header--has-center .site-header__center .site-nav {
+	flex: none;
+}
+
 .header-action {
 	position: relative;
 	display: inline-flex;
@@ -748,10 +777,24 @@ body.has-page-blocks-template .site-main {
 	padding: 0;
 }
 
-/* Store pages (cart, checkout, account) use the wide container. */
+/*
+ * Store pages (cart, checkout, account) use the wide container. Full-width and wide blocks keep their
+ * own widths, as do the sections that run edge to edge on the Full width and Canvas templates.
+ */
 .is-store-page .entry .entry-header,
-.is-store-page .entry .entry-content > * {
+.is-store-page .entry .entry-content > :where(:not(.alignfull, .alignwide)) {
 	max-width: var(--st-wide);
+}
+
+.is-store-page .entry--full .entry-content > :where(section, .wp-block-cover, .wp-block-group.has-background):where(:not(.alignwide)) {
+	max-width: none;
+}
+
+/* A store shortcode's output (no block wrapper) sits in the wide frame on those templates, lined up with the header. */
+.is-store-page .entry--full .entry-content > :where(div:not([class*="wp-block-"], .alignfull, .alignwide)) {
+	max-width: calc(var(--st-wide) + var(--st-gutter) * 2);
+	margin-inline: auto;
+	padding-inline: var(--st-gutter);
 }
 
 /* Post list. */
@@ -2044,6 +2087,64 @@ html.search-open {
 	}
 }
 
+/*
+ * Below the desktop menu the header buttons never shrink or wrap; the logo or site title gives way
+ * instead, so a store with several header buttons (cart, account, currency) cannot push the bar
+ * wider than the screen. A long title ends in an ellipsis; a wide logo scales down.
+ */
+@media (max-width: 1079.98px) {
+	.site-brand {
+		flex: 0 1 auto;
+		min-width: 0;
+	}
+
+	.site-title {
+		min-width: 0;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.site-brand .custom-logo-link {
+		min-width: 0;
+	}
+
+	.site-brand .custom-logo {
+		max-width: 100%;
+		object-fit: contain;
+		object-position: left center;
+	}
+
+	.site-header__actions {
+		flex: none;
+	}
+
+	/* With a center group the logo takes the space between the start and end groups. */
+	.site-header--has-center .site-header__inner {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+	}
+
+	.site-header--has-center .site-header__center .site-brand {
+		max-width: 100%;
+	}
+
+	.site-header--has-center .site-header__center .custom-logo {
+		object-position: center;
+	}
+}
+
+/* The narrowest phones: slightly smaller header buttons. */
+@media (max-width: 359.98px) {
+	.site-header__inner {
+		gap: .375rem;
+	}
+
+	.header-action {
+		width: 2.25rem;
+		height: 2.25rem;
+	}
+}
+
 /* ------------------------------------------------------------------ Store toolbar (EDD store page and archives; WooCommerce when switched on) */
 .st-store-bar {
 	display: grid;
@@ -2313,6 +2414,15 @@ html.search-open {
 
 .post-header--left .post-standfirst {
 	margin-inline: 0;
+}
+
+/* Pages and custom post types: a centered title picked in their Layout panel. */
+.entry-header--center {
+	text-align: center;
+}
+
+.entry-header--center .entry-meta {
+	justify-content: center;
 }
 
 /* Header style: featured image above the title. */

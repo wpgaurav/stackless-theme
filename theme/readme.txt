@@ -58,6 +58,10 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * Removed: the one-off settings importer for sites moving from another theme. The theme's own settings export, import and backups are unchanged.
 * New: icons chosen in a block are drawn as Tabler icons, and each block can be hidden, replaced or filtered through the theme's hooks.
 * New: colors, fonts and heading letter case in Customize > Stackless Theme now update the preview as you change them, without reloading it. A bundled font still loads only once it is picked.
+* New: plugins can rearrange the header. A filter places the logo, menu, search, account, cart and menu button at the start, center or end of the bar, so a centered logo or a centered menu needs no template copy. The default header is unchanged.
+* New: pages and custom post types can sit beside a sidebar and pick a header style in the editor's Layout panel, like posts. Without a choice they look as before.
+* New: add-ons can add their own sections to the Stackless Theme panel in the Customizer, in a set order among the theme's.
+* New: the Stackless Theme panel in the Customizer mentions Stackless Theme Pro in one line, which goes away once Pro is active.
 * Fixed: a post with no tags showed an empty tag after it.
 * Fixed: on store pages where a plugin loads its own .container styles (FluentCart does on some pages), the header and footer could be narrower than the page at some screen widths.
 

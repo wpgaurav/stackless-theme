@@ -24,15 +24,20 @@ function stackless_theme_layout_options(): array
 
 /**
  * Per-post choices that override a Customizer setting for one post: meta key => label, the post
- * types it applies to, and its choices. An empty value follows the Customizer.
+ * types it applies to, and its choices. An empty value follows the Customizer on posts, and keeps
+ * a page or custom post type item as it is (centered, with its usual title).
+ *
+ * The layout and header style apply to posts, pages and public custom post types: the types in
+ * stackless_theme_layout_post_types() except store products, which have templates of their own.
  */
 function stackless_theme_layout_choices(): array
 {
     $default = __('Site default (Customizer)', 'stackless-theme');
+    $types = array_values(array_diff(stackless_theme_layout_post_types(), ['product', 'download', 'fluent-products']));
     return (array) apply_filters('stackless_theme_layout_choices', [
         '_stackless_single_layout' => [
             'label' => __('Post layout', 'stackless-theme'),
-            'types' => ['post'],
+            'types' => $types,
             'choices' => [
                 '' => $default,
                 'centered' => __('Centered, no sidebar', 'stackless-theme'),
@@ -42,7 +47,7 @@ function stackless_theme_layout_choices(): array
         ],
         '_stackless_single_header' => [
             'label' => __('Header style', 'stackless-theme'),
-            'types' => ['post'],
+            'types' => $types,
             'choices' => [
                 '' => $default,
                 'center' => __('Centered title', 'stackless-theme'),
@@ -52,6 +57,29 @@ function stackless_theme_layout_choices(): array
             ],
         ],
     ]);
+}
+
+/**
+ * The choices one post type's Layout panel offers. Pages and custom post types have no Customizer
+ * setting behind them, so their empty choice reads "Default" and the layout select "Sidebar".
+ */
+function stackless_theme_layout_choices_for(string $post_type): array
+{
+    $choices = array_filter(stackless_theme_layout_choices(), static function (array $choice) use ($post_type): bool {
+        return in_array($post_type, (array) ($choice['types'] ?? []), true);
+    });
+    if ($post_type === 'post') {
+        return $choices;
+    }
+    foreach ($choices as $key => $choice) {
+        if (isset($choice['choices'][''])) {
+            $choices[$key]['choices'][''] = __('Default', 'stackless-theme');
+        }
+    }
+    if (isset($choices['_stackless_single_layout']) && $choices['_stackless_single_layout']['label'] === __('Post layout', 'stackless-theme')) {
+        $choices['_stackless_single_layout']['label'] = __('Sidebar', 'stackless-theme');
+    }
+    return $choices;
 }
 
 /** A per-post choice for the post being viewed, or '' to follow the Customizer. */
@@ -223,9 +251,7 @@ function stackless_theme_layout_editor_assets(): void
                     return ['value' => (string) $value, 'label' => $label];
                 }, array_keys($choice['choices']), array_values($choice['choices'])),
             ];
-        }, array_filter(stackless_theme_layout_choices(), static function (array $choice) use ($screen): bool {
-            return in_array($screen->post_type, $choice['types'], true);
-        })),
+        }, stackless_theme_layout_choices_for($screen->post_type)),
         'owningTemplates' => stackless_theme_layout_owning_templates(),
         'owningHelp' => __('This post uses a page template with its own layout, so the post layout and header style do not apply.', 'stackless-theme'),
         'transparentHelp' => __('The header sits over the first section and turns solid once you scroll. Give the first section a background and room at the top.', 'stackless-theme'),
@@ -253,10 +279,7 @@ function stackless_theme_layout_meta_box_render(WP_Post $post): void
             esc_html($label)
         );
     }
-    foreach (stackless_theme_layout_choices() as $key => $choice) {
-        if (!in_array($post->post_type, $choice['types'], true)) {
-            continue;
-        }
+    foreach (stackless_theme_layout_choices_for($post->post_type) as $key => $choice) {
         $current = (string) get_post_meta($post->ID, $key, true);
         printf('<p><label for="%1$s">%2$s</label><br><select id="%1$s" name="%1$s" style="width:100%%">', esc_attr($key), esc_html($choice['label']));
         foreach ($choice['choices'] as $value => $label) {

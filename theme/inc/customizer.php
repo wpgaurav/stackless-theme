@@ -146,9 +146,18 @@ add_filter('stackless_theme_search_product', static function ($product) {
 add_action('customize_register', 'stackless_theme_customize_register');
 function stackless_theme_customize_register(WP_Customize_Manager $wp_customize): void
 {
+    $description = __('Colors, type, header, store and footer options for the Stackless theme.', 'stackless-theme');
+    // One line about Pro, only while Pro is not active.
+    if (!defined('STACKLESS_PRO_VERSION')) {
+        $description .= '<br>' . sprintf(
+            /* translators: %s: "Stackless Theme Pro", linked to its product page */
+            esc_html__('More header layouts, design presets and modules come with %s.', 'stackless-theme'),
+            '<a href="' . esc_url('https://gauravtiwari.org/product/stackless-theme-pro/') . '" target="_blank" rel="noopener">' . esc_html__('Stackless Theme Pro', 'stackless-theme') . '</a>'
+        );
+    }
     $wp_customize->add_panel(STACKLESS_THEME_PANEL, [
         'title' => __('Stackless Theme', 'stackless-theme'),
-        'description' => __('Colors, type, header, store and footer options for the Stackless theme.', 'stackless-theme'),
+        'description' => $description,
         'priority' => 25,
     ]);
 
@@ -260,4 +269,25 @@ function stackless_theme_customize_register(WP_Customize_Manager $wp_customize):
             'input_attrs' => ['min' => 0, 'max' => STACKLESS_THEME_RELATED_MAX, 'step' => 1],
         ]);
     }
+}
+
+/**
+ * Fires once the theme has registered its own sections and controls (here at 10, content options at
+ * 12, design at 15, the shop toolbars at 20), so an add-on's sections sort predictably among them.
+ *
+ * Section priorities in the Stackless Theme panel: Colors 10, Typography 20, Layout 30, Header and
+ * menu 40, Blog and archives 50, Single posts 60, Custom post types 65, Store 70, the shop toolbars
+ * 75 (WooCommerce) and 76 (EDD), Footer 90 and Custom code 100. Without a store plugin there is no
+ * Store section or toolbar, and Footer and Custom code move up to 70 and 80.
+ */
+add_action('customize_register', 'stackless_theme_customize_sections_action', 50);
+function stackless_theme_customize_sections_action(WP_Customize_Manager $wp_customize): void
+{
+    /**
+     * Add sections to the Stackless Theme panel, or change the theme's.
+     *
+     * @param WP_Customize_Manager $wp_customize The Customizer.
+     * @param string               $panel_id     The Stackless Theme panel ID (STACKLESS_THEME_PANEL).
+     */
+    do_action('stackless_theme_customize_sections', $wp_customize, STACKLESS_THEME_PANEL);
 }

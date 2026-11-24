@@ -46,10 +46,17 @@ function stackless_theme_is_custom_single(): bool
 
 /* ------------------------------------------------------------------ Single post layout */
 
-/** 'centered' (no sidebar), 'sidebar-right' or 'sidebar-left': the post's own choice, else the Customizer's. */
+/**
+ * 'centered' (no sidebar), 'sidebar-right' or 'sidebar-left': the post's own choice, else the
+ * Customizer's. Pages and custom post types have no Customizer layout, so without a choice of their
+ * own they stay 'centered'.
+ */
 function stackless_theme_single_layout(): string
 {
     $own = function_exists('stackless_theme_layout_choice') ? stackless_theme_layout_choice('_stackless_single_layout') : '';
+    if ($own === '' && is_singular() && !is_singular('post')) {
+        return 'centered';
+    }
     return stackless_theme_sanitize_single_layout($own !== '' ? $own : stackless_theme_option('stackless_single_layout'));
 }
 
@@ -61,16 +68,35 @@ function stackless_theme_single_header(): string
 }
 
 /**
- * Whether the post being viewed sits beside a sidebar. Never on a page template that owns its
- * layout (Full width, Canvas, Page Blocks Builder's templates).
+ * Whether the post, page or custom post type item being viewed sits beside a sidebar. Never on a
+ * page template that owns its layout (Full width, Canvas, Page Blocks Builder's templates).
  */
 function stackless_theme_single_has_sidebar(): bool
 {
-    if (!is_singular('post') || stackless_theme_single_layout() === 'centered') {
+    if (!is_singular() || stackless_theme_single_layout() === 'centered') {
         return false;
     }
+    return !stackless_theme_single_owns_layout();
+}
+
+/** Whether the single being viewed uses a page template that brings its own layout. */
+function stackless_theme_single_owns_layout(): bool
+{
     $template = (string) get_page_template_slug((int) get_queried_object_id());
-    return !($template !== '' && function_exists('stackless_theme_layout_owning_templates') && in_array($template, stackless_theme_layout_owning_templates(), true));
+    return $template !== '' && function_exists('stackless_theme_layout_owning_templates') && in_array($template, stackless_theme_layout_owning_templates(), true);
+}
+
+/**
+ * The header style a page or custom post type item picked in its Layout panel: 'center', 'left',
+ * 'image-first', 'image-full', or '' when it has no choice and keeps its usual header. Posts use
+ * stackless_theme_single_header(), which falls back to the Customizer.
+ */
+function stackless_theme_entry_header_style(): string
+{
+    if (!function_exists('stackless_theme_layout_choice') || !is_singular() || is_singular('post') || stackless_theme_single_owns_layout()) {
+        return '';
+    }
+    return stackless_theme_layout_choice('_stackless_single_header');
 }
 
 /**
@@ -110,9 +136,10 @@ add_action('widgets_init', static function (): void {
 /** Whether the post being viewed opens with a full-width featured image above the post and sidebar. */
 function stackless_theme_single_has_hero(): bool
 {
-    return is_singular('post') && stackless_theme_single_header() === 'image-full'
-        && stackless_theme_option('stackless_single_image') !== 'hidden'
-        && has_post_thumbnail((int) get_queried_object_id()) && !post_password_required((int) get_queried_object_id());
+    $chosen = is_singular('post')
+        ? stackless_theme_single_header() === 'image-full' && stackless_theme_option('stackless_single_image') !== 'hidden'
+        : stackless_theme_entry_header_style() === 'image-full';
+    return $chosen && has_post_thumbnail((int) get_queried_object_id()) && !post_password_required((int) get_queried_object_id());
 }
 
 /** Prints that image: the post_hero part. */
@@ -396,7 +423,7 @@ function stackless_theme_content_customize_register(WP_Customize_Manager $wp_cus
         'section' => $single,
         'type' => 'checkbox',
         'active_callback' => static function (): bool {
-            return stackless_theme_single_layout() !== 'centered';
+            return stackless_theme_single_layout() !== 'centered' || stackless_theme_option('stackless_single_layout') !== 'centered';
         },
     ]);
     $add('stackless_single_header', $single, [

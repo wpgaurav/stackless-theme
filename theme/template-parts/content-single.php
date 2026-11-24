@@ -22,6 +22,12 @@ $stackless_theme_show_meta = $stackless_theme_type === 'post' || ($stackless_the
 $stackless_theme_show_image = $stackless_theme_type === 'post' || ($stackless_theme_cpt && stackless_theme_cpt_option($stackless_theme_type, 'image'));
 $stackless_theme_show_nav = $stackless_theme_type === 'post' || ($stackless_theme_cpt && stackless_theme_cpt_option($stackless_theme_type, 'nav'));
 $stackless_theme_ctx = ['post_id' => (int) get_the_ID(), 'post_type' => $stackless_theme_type, 'custom_post_type' => $stackless_theme_cpt];
+
+// A header style picked in the item's own Layout panel; '' keeps the usual header. A featured image
+// above the title shows even where the type hides it, and a full-width one prints above (singular.php).
+$stackless_theme_header_style = (int) get_the_ID() === (int) get_queried_object_id() ? stackless_theme_entry_header_style() : '';
+$stackless_theme_show_image = ($stackless_theme_show_image || $stackless_theme_header_style === 'image-first') && $stackless_theme_header_style !== 'image-full';
+$stackless_theme_image_first = $stackless_theme_header_style === 'image-first' && $stackless_theme_show_image && has_post_thumbnail() && !post_password_required();
 ?>
 <?php if (stackless_theme_part_start('entry', $stackless_theme_ctx)) : ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(stackless_theme_class_list('entry', ['entry'], $stackless_theme_ctx)); ?>>
@@ -29,9 +35,13 @@ $stackless_theme_ctx = ['post_id' => (int) get_the_ID(), 'post_type' => $stackle
 	if ($stackless_theme_cpt) {
 		stackless_theme_maybe_breadcrumbs();
 	}
+	if ($stackless_theme_image_first && stackless_theme_part_start('entry_media', $stackless_theme_ctx)) {
+		echo '<figure class="entry-media alignwide">' . get_the_post_thumbnail(null, (string) apply_filters('stackless_theme_entry_media_size', 'large', $stackless_theme_ctx), ['fetchpriority' => 'high']) . '</figure>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core thumbnail markup.
+		stackless_theme_part_end();
+	}
 	?>
 	<?php if ($stackless_theme_show_title && stackless_theme_part_start('entry_header', $stackless_theme_ctx)) : ?>
-		<header class="entry-header">
+		<header class="entry-header<?php echo $stackless_theme_header_style !== '' ? ' ' . esc_attr('entry-header--' . $stackless_theme_header_style) : ''; ?>">
 			<?php if ($stackless_theme_show_meta && stackless_theme_part_start('entry_meta', $stackless_theme_ctx)) : ?>
 				<div class="entry-meta"><?php stackless_theme_posted_on(); ?></div>
 			<?php stackless_theme_part_end(); endif; ?>
@@ -44,7 +54,7 @@ $stackless_theme_ctx = ['post_id' => (int) get_the_ID(), 'post_type' => $stackle
 		</header>
 	<?php stackless_theme_part_end(); endif; ?>
 
-	<?php if (has_post_thumbnail() && !post_password_required() && $stackless_theme_show_image && stackless_theme_part_start('entry_media', $stackless_theme_ctx)) : ?>
+	<?php if (!$stackless_theme_image_first && has_post_thumbnail() && !post_password_required() && $stackless_theme_show_image && stackless_theme_part_start('entry_media', $stackless_theme_ctx)) : ?>
 		<figure class="entry-media alignwide"><?php the_post_thumbnail((string) apply_filters('stackless_theme_entry_media_size', 'large', $stackless_theme_ctx)); ?></figure>
 	<?php stackless_theme_part_end(); endif; ?>
 

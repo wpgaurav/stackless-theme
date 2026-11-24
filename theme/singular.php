@@ -2,7 +2,8 @@
 /**
  * Single posts and pages. A blog post can sit beside a sidebar and open with a full-width featured
  * image (Customize > Stackless Theme > Single posts, or the post's own Layout panel); related
- * posts then run full width below.
+ * posts then run full width below. Pages and custom post types get the same sidebar and image
+ * when their own Layout panel picks them.
  *
  * Parts (see inc/hooks.php): post_hero, single_layout, single_sidebar, related_posts, comments,
  * plus the post and entry parts in template-parts/content-post.php and content-single.php.
@@ -30,7 +31,7 @@ $stackless_theme_ctx = ['template' => 'singular', 'post_type' => (string) get_po
 			<div class="<?php echo stackless_theme_class('single_layout', ['single-layout', 'container', 'single-layout--' . stackless_theme_single_layout()], $stackless_theme_ctx); ?>">
 				<div class="single-layout__main">
 					<?php
-					stackless_theme_template_part('template-parts/content', 'post');
+					stackless_theme_template_part('template-parts/content', get_post_type() === 'post' ? 'post' : 'single');
 					if (comments_open() || get_comments_number()) {
 						comments_template();
 					}
@@ -45,9 +46,11 @@ $stackless_theme_ctx = ['template' => 'singular', 'post_type' => (string) get_po
 			</div>
 			<?php
 			stackless_theme_part_end();
-			stackless_theme_part('related_posts', static function (): void {
-				stackless_theme_template_part('template-parts/related', 'posts');
-			}, $stackless_theme_ctx);
+			if (get_post_type() === 'post') {
+				stackless_theme_part('related_posts', static function (): void {
+					stackless_theme_template_part('template-parts/related', 'posts');
+				}, $stackless_theme_ctx);
+			}
 			/** Fires after a single's content, before comments. Custom post type related items hook in here. */
 			do_action('stackless_theme_after_singular');
 			continue;
