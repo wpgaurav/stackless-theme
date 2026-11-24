@@ -58,6 +58,7 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * Removed: the one-off settings importer for sites moving from another theme. The theme's own settings export, import and backups are unchanged.
 * New: icons chosen in a block are drawn as Tabler icons, and each block can be hidden, replaced or filtered through the theme's hooks.
 * Fixed: a post with no tags showed an empty tag after it.
+* Fixed: on store pages where a plugin loads its own .container styles (FluentCart does on some pages), the header and footer could be narrower than the page at some screen widths.
 
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.
