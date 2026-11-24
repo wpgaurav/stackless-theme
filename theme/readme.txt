@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefont
 Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
 
 == Changelog ==
+
+= 1.9.1 =
+* Changed: a Step's title is an h3 instead of an h4, so steps under a section heading no longer skip a heading level. It looks the same.
 
 = 1.9.0 =
 * New: a Linked tile style for the Cover block. The cover's link opens from anywhere on it, for photo category tiles and similar cards, and the photo zooms a little on hover (not with reduced motion).
