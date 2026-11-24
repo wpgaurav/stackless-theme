@@ -33,6 +33,17 @@ body {
 }
 
 /* ------------------------------------------------------------------ Header */
+
+/*
+ * --st-header-height: the site header's height, a public token for content that has to clear it
+ * (a slider under a clear header, sticky offsets, anchor scroll margins). The bar is 4rem plus its
+ * 1px border; theme.js keeps the value exact with a ResizeObserver when the real height differs
+ * (a wrapping menu, an announcement bar in the header).
+ */
+:root {
+	--st-header-height: calc(4rem + 1px);
+}
+
 .site-header {
 	position: sticky;
 	top: 0;
@@ -77,20 +88,55 @@ html.search-open .has-transparent-header .site-header,
 	backdrop-filter: saturate(180%) blur(12px);
 }
 
-/* On a dark first section (has-header-on-dark), the clear header uses light text until it turns solid. */
+/*
+ * On a dark first section (has-header-on-dark), the clear header uses light text until it turns
+ * solid; on a light one (has-header-on-light, Header text over the first section > Dark) it uses
+ * dark text, in light and dark color schemes alike. The page's own colors are kept on the body
+ * (--st-solid-*) for the dropdowns, which sit on a solid surface even while the header is clear.
+ */
+.has-header-on-dark,
+.has-header-on-light {
+	--st-solid-heading: var(--st-heading);
+	--st-solid-gray-600: var(--st-gray-600);
+	--st-solid-surface-muted: var(--st-surface-muted);
+}
+
 .has-header-on-dark .site-header {
 	--st-heading: #fff;
 	--st-gray-600: rgba(255, 255, 255, .85);
+	--st-surface-muted: rgba(255, 255, 255, .16);
 	color: #fff;
+}
+
+.has-header-on-light .site-header {
+	--st-heading: #171717;
+	--st-gray-600: #404040;
+	--st-surface-muted: rgba(0, 0, 0, .06);
+	color: #262626;
 }
 
 html.is-scrolled .has-header-on-dark .site-header,
 html.nav-open .has-header-on-dark .site-header,
 html.search-open .has-header-on-dark .site-header,
-.has-header-on-dark .site-header:focus-within {
+.has-header-on-dark .site-header:focus-within,
+html.is-scrolled .has-header-on-light .site-header,
+html.nav-open .has-header-on-light .site-header,
+html.search-open .has-header-on-light .site-header,
+.has-header-on-light .site-header:focus-within {
 	--st-heading: inherit;
 	--st-gray-600: inherit;
+	--st-surface-muted: inherit;
 	color: inherit;
+}
+
+.has-header-on-dark .site-nav .sub-menu,
+.has-header-on-dark .site-nav .children,
+.has-header-on-light .site-nav .sub-menu,
+.has-header-on-light .site-nav .children {
+	--st-heading: var(--st-solid-heading);
+	--st-gray-600: var(--st-solid-gray-600);
+	--st-surface-muted: var(--st-solid-surface-muted);
+	color: var(--st-text);
 }
 
 /* Phones scroll the admin bar away, so the header sits below it and scrolls with the page. */
@@ -103,6 +149,11 @@ html.search-open .has-header-on-dark .site-header,
 
 .has-transparent-header .site-main {
 	padding-top: 0;
+}
+
+/* A full-width block that opens the page meets the top edge, under the clear header. */
+.has-transparent-header .entry > .entry-content:first-child > .alignfull:first-child {
+	margin-top: 0;
 }
 
 .site-header__inner {
@@ -212,6 +263,35 @@ html.search-open .has-header-on-dark .site-header,
 
 .site-header--has-center .site-header__center .site-nav {
 	flex: none;
+}
+
+/*
+ * Split layout (Header layout > Split): the primary menu sits against the centered logo and the
+ * Header right menu on its other side, with the buttons at the far end.
+ */
+.site-header--split .site-header__start {
+	justify-content: flex-end;
+}
+
+/* Each menu may shrink and wrap on narrow desktops rather than spill out of its column. */
+.site-header--split .site-header__start .site-nav,
+.site-nav--right {
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+.site-header--split .site-header__actions {
+	margin-left: 0;
+}
+
+.site-header__actions > .site-nav--right {
+	margin-right: auto;
+}
+
+@media (min-width: 1080px) {
+	.site-header--split .site-header__start .site-nav > ul {
+		justify-content: flex-end;
+	}
 }
 
 .header-action {
@@ -423,6 +503,11 @@ html.search-open .has-header-on-dark .site-header,
 		inset: -.5rem 0 auto;
 		height: .5rem;
 	}
+
+	/* The Header right menu's copy inside the primary menu is for phones and tablets only. */
+	.site-nav .site-nav__merged {
+		display: none;
+	}
 }
 
 /* Mobile navigation drawer. */
@@ -464,8 +549,14 @@ html.search-open .has-header-on-dark .site-header,
 		font-size: 1rem;
 	}
 
-	.site-nav li + li {
+	.site-nav li + li,
+	.site-nav .site-nav__merged {
 		border-top: 1px solid var(--st-gray-100);
+	}
+
+	/* Below 1080px the Header right menu's items sit in the primary menu, under the Menu button. */
+	.site-header .site-nav.site-nav--right {
+		display: none;
 	}
 
 	.site-nav .sub-menu,
@@ -519,7 +610,8 @@ html.search-open .has-header-on-dark .site-header,
 		font-weight: 500;
 	}
 
-	.has-menu-drawer .site-nav li + li {
+	.has-menu-drawer .site-nav li + li,
+	.has-menu-drawer .site-nav .site-nav__merged {
 		border-top-color: var(--st-border);
 	}
 
@@ -560,6 +652,21 @@ html.nav-open .has-static-header.has-menu-drawer .site-header {
 	top: var(--st-drawer-offset, 0px);
 	right: 0;
 	left: 0;
+}
+
+/*
+ * Header and menu > Hide the header while scrolling down: theme.js sets html.is-header-hidden on the
+ * way down and clears it on the way up. Never while the menu or search is open, or while focus is
+ * in the header. With reduced motion it hides and shows without sliding.
+ */
+html.is-header-hidden:not(.nav-open):not(.search-open) .has-header-autohide .site-header:not(:focus-within) {
+	transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.has-header-autohide .site-header {
+		transition: transform .25s ease, background-color var(--st-ease), border-color var(--st-ease);
+	}
 }
 
 /* ------------------------------------------------------------------ Content */

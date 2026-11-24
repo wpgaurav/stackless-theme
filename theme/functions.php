@@ -19,6 +19,8 @@ require STACKLESS_THEME_DIR . '/inc/customizer.php';
 require STACKLESS_THEME_DIR . '/inc/content-options.php';
 require STACKLESS_THEME_DIR . '/inc/design.php';
 require STACKLESS_THEME_DIR . '/inc/layout.php';
+require STACKLESS_THEME_DIR . '/inc/header-sidebar.php';
+require STACKLESS_THEME_DIR . '/inc/menus.php';
 require STACKLESS_THEME_DIR . '/inc/page-blocks.php';
 require STACKLESS_THEME_DIR . '/inc/blocks/blocks.php';
 

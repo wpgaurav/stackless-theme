@@ -19,7 +19,10 @@ function stackless_theme_layout_options(): array
         '_stackless_hide_header' => __('Hide the site header', 'stackless-theme'),
         '_stackless_hide_footer' => __('Hide the site footer', 'stackless-theme'),
         '_stackless_transparent_header' => __('Header over the first section', 'stackless-theme'),
-    ];
+    ] + (stackless_theme_option('stackless_header_layout') === 'sidebar' ? [
+        // Only while Header layout is Sidebar: this page uses the top header instead of the rail.
+        '_stackless_top_header' => __('Top header instead of the sidebar', 'stackless-theme'),
+    ] : []);
 }
 
 /**
@@ -166,7 +169,7 @@ function stackless_theme_register_templates(array $templates, $theme, $post, str
     return $templates;
 }
 
-/** A layout flag for the current singular view: 'hide_title', 'hide_header', 'hide_footer' or 'transparent_header'. */
+/** A layout flag for the current singular view: 'hide_title', 'hide_header', 'hide_footer', 'transparent_header' or 'top_header'. */
 function stackless_theme_layout_flag(string $flag): bool
 {
     static $flags = [];
@@ -180,6 +183,15 @@ function stackless_theme_layout_flag(string $flag): bool
         $on = (bool) get_post_meta($id, '_stackless_' . $flag, true)
             || ($template === STACKLESS_THEME_TEMPLATE_CANVAS && in_array($flag, ['hide_header', 'hide_footer'], true))
             || ($template === STACKLESS_THEME_TEMPLATE_FULL && $flag === 'hide_title');
+    }
+    if ($flag === 'transparent_header') {
+        if (stackless_theme_header_has_rail()) {
+            // The sidebar layout's top bar is never laid over the first section.
+            $on = false;
+        } elseif (!$on) {
+            // A page's own choice wins; without one, Header and menu > Header over the first section decides.
+            $on = stackless_theme_header_transparent_auto();
+        }
     }
     $flags[$flag] = (bool) apply_filters('stackless_theme_layout_flag', $on, $flag);
     return $flags[$flag];
@@ -198,7 +210,10 @@ function stackless_theme_layout_body_class(array $classes): array
         $classes[] = 'no-site-header';
     } elseif (stackless_theme_layout_flag('transparent_header')) {
         $classes[] = 'has-transparent-header';
-        if (stackless_theme_header_on_dark()) {
+        if (stackless_theme_header_transparent_auto()) {
+            // Laid over by the Customizer option: its text color choice applies.
+            $classes[] = stackless_theme_option('stackless_header_transparent_text') === 'dark' ? 'has-header-on-light' : 'has-header-on-dark';
+        } elseif (stackless_theme_header_on_dark()) {
             $classes[] = 'has-header-on-dark';
         }
     }
@@ -227,6 +242,63 @@ function stackless_theme_header_on_dark(): bool
         }
     }
     return (bool) apply_filters('stackless_theme_header_on_dark', $dark);
+}
+
+/**
+ * Whether Header and menu > Header over the first section lays the header over this view:
+ * 'front' on the front page, 'hero' and 'all' anywhere, and only where the view opens with a
+ * full-width section (stackless_theme_opens_with_hero()). A page that opens with its title keeps
+ * the solid header. Says nothing about a page's own Layout choice, which stackless_theme_layout_flag()
+ * checks first.
+ */
+function stackless_theme_header_transparent_auto(): bool
+{
+    static $auto = null;
+    if ($auto !== null) {
+        return $auto;
+    }
+    $mode = (string) stackless_theme_option('stackless_header_transparent');
+    $auto = false;
+    if (in_array($mode, ['front', 'hero', 'all'], true) && stackless_theme_shows('header') && ($mode !== 'front' || is_front_page()) && !stackless_theme_header_has_rail()) {
+        $auto = stackless_theme_opens_with_hero($mode === 'all' ? 'all' : 'hero');
+    }
+    return $auto;
+}
+
+/**
+ * Whether the view opens with a full-width section a clear header can lie over: a Page Blocks hero
+ * region, a post's full-width featured image (header style "image-full"), or, on a page whose title
+ * is hidden, content whose first block is a full-width Cover. With $mode 'all', any first block set
+ * to full width counts. Store product pages, sidebar layouts and password-protected posts never do.
+ * Filter `stackless_theme_opens_with_hero` ($opens, $mode) for other heroes.
+ */
+function stackless_theme_opens_with_hero(string $mode = 'hero'): bool
+{
+    $opens = false;
+    if (stackless_theme_has_region('hero')) {
+        $opens = true;
+    } elseif (is_singular() && !stackless_theme_has_region('before_content')) {
+        $post = get_queried_object();
+        if (function_exists('stackless_theme_single_has_hero') && stackless_theme_single_has_hero()) {
+            $opens = true;
+        } elseif (
+            $post instanceof WP_Post
+            && !stackless_theme_shows('title')
+            && !in_array($post->post_type, ['product', 'download', 'fluent-products'], true)
+            && !post_password_required($post)
+            && !(function_exists('stackless_theme_single_has_sidebar') && stackless_theme_single_has_sidebar())
+        ) {
+            foreach (parse_blocks((string) $post->post_content) as $block) {
+                if (empty($block['blockName'])) {
+                    continue;
+                }
+                $full = ($block['attrs']['align'] ?? '') === 'full';
+                $opens = $full && ($mode === 'all' || $block['blockName'] === 'core/cover');
+                break;
+            }
+        }
+    }
+    return (bool) apply_filters('stackless_theme_opens_with_hero', $opens, $mode);
 }
 
 /* ------------------------------------------------------------------ Editor controls */

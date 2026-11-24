@@ -51,6 +51,12 @@ stackless_theme_text('my_key', __('Default', 'my-plugin'), $context);  // filter
 | `header` | The site header element | yes (`header`, `header_inner`) | `header_start`, `header_end` |
 | `header_brand` | Logo or site title | yes | |
 | `header_nav` | Primary menu | yes | |
+| `header_nav_right` | Header right menu (split layout) | yes | |
+| `header_rail` | The sidebar layout's rail (`#site-rail`) | yes | `header_rail_start`, `header_rail_end` |
+| `header_search_field` | Search field in the rail | yes | |
+| `header_rail_list` | Sidebar list menu (`$context['title']`) | yes | |
+| `header_rail_toggle` | Rail collapse button | | |
+| `header_account_menu` | Avatar and account menu, or Sign in (`$context['url']`) | yes | |
 | `header_actions` | Search, account, cart and menu buttons | yes | `header_actions_start`, `header_actions_end` |
 | `header_search_button` | Search button | | |
 | `header_account` | Account link (`$context['url']`) | | |
@@ -70,7 +76,7 @@ Page Blocks Builder's Header and Footer regions replace the theme's header and f
 
 #### Header layout
 
-`apply_filters('stackless_theme_header_layout', array $layout)` decides where each header part sits. `$layout` has three groups, each a list of part slugs:
+`apply_filters('stackless_theme_header_layout', array $layout)` decides where each header part sits. `$layout` has the top header's three groups, `start`, `center` and `end`, and the sidebar layout's five, `rail_top`, `rail_nav`, `rail_list`, `rail_bottom` and `bar`. Each is a list of part slugs:
 
 ```php
 // The default: the same markup as the fixed header before 1.8.0, byte for byte.
@@ -78,8 +84,18 @@ Page Blocks Builder's Header and Footer regions replace the theme's header and f
     'start'  => ['branding', 'navigation'],
     'center' => [],
     'end'    => ['currency', 'search', 'account', 'cart', 'menu_toggle'],
+    'rail_top' => [], 'rail_nav' => [], 'rail_list' => [], 'rail_bottom' => [], 'bar' => [],
 ]
 ```
+
+The value passed in is the preset that Header and menu > Header layout (`stackless_header_layout`) stands for, from `stackless_theme_header_layout_preset($preset)`. A filter still wins over it. A filter that returns only `start`, `center` and `end` gets empty rail groups, so filters written before the sidebar layout keep working.
+
+| Preset | `start` | `center` | `end` | Rail groups and `bar` |
+|---|---|---|---|---|
+| `default` | branding, navigation | | currency, search, account, cart, menu_toggle | empty |
+| `centered` | navigation | branding | currency, search, account, cart, menu_toggle | empty |
+| `split` | navigation | branding | navigation_right, currency, search, account, cart, menu_toggle | empty |
+| `sidebar` | | | | `rail_top`: branding, rail_toggle. `rail_nav`: search_field, navigation. `rail_list`: rail_list. `rail_bottom`: account_menu. `bar`: currency, search, cart |
 
 | Slug | Part | Prints when |
 |---|---|---|
@@ -90,6 +106,11 @@ Page Blocks Builder's Header and Footer regions replace the theme's header and f
 | `account` | `header_account` | Store > Account button is on and there is an account URL |
 | `cart` | `header_cart` | Store > Cart button is on and a store supplies a cart link |
 | `menu_toggle` | `header_menu_toggle` | Always (shown below 1080px) |
+| `navigation_right` | `header_nav_right` (`#site-navigation-right`) | A menu is assigned to Header right menu (`header-right`) |
+| `search_field` | `header_search_field` | Header and menu > Search field in the sidebar is on |
+| `rail_list` | `header_rail_list` | A menu is assigned to Sidebar list (`sidebar-list`) |
+| `rail_toggle` | `header_rail_toggle` | The header is the sidebar layout |
+| `account_menu` | `header_account_menu` | Always: avatar and menu when signed in, Sign in otherwise |
 
 Rules:
 
@@ -111,7 +132,82 @@ add_filter('stackless_theme_header_layout', function (array $layout): array {
 });
 ```
 
-`stackless_theme_header_layout()` returns the cleaned layout and `stackless_theme_header_part_slugs()` the known slugs. Below 1080px the menu opens under the header wherever `navigation` sits.
+`stackless_theme_header_layout()` returns the cleaned layout, with all eight groups. `stackless_theme_header_part_slugs()` returns the known slugs and `stackless_theme_header_layout_slots()` the groups. Below 1080px the menu opens under the header wherever `navigation` sits.
+
+**Split.** When `navigation_right` is placed and the Header right menu has a menu, the header gets `site-header--split`. That menu prints twice:
+
+- as `#site-navigation-right` beside the logo, from 1080px
+- inside `#site-navigation` as `ul.site-nav__merged` below 1080px, so the Menu button opens both menus
+
+Its `wp_nav_menu()` arguments pass through `stackless_theme_header_right_menu_args`.
+
+**Sidebar.** The header is the rail and top bar when a rail group (`rail_top`, `rail_nav`, `rail_list`, `rail_bottom`) has parts. All of these must also hold:
+
+- the site header shows
+- no Page Blocks header region replaces it
+- the page did not tick "Top header instead of the sidebar"
+
+`stackless_theme_header_has_rail()` reports it. Then:
+
+- **Markup.** `<header class="site-header site-header--sidebar">` holds the top bar (`.site-header__inner.site-bar`, with a Menu button, a compact brand for phones, and the `bar` parts in `.site-header__actions`). It also holds `#site-rail` (the `header_rail` part), with `.site-rail__top`, `.site-rail__body` (`rail_nav`, then `rail_list`, scrolling on its own) and `.site-rail__bottom`.
+- **Assets.** `assets/css/header-sidebar.css` (handle `stackless-theme-header-sidebar`) and the `stackless-theme-focus` script load only in this layout. A small inline script after `<body>` restores the visitor's collapsed state before paint.
+- **Body classes.** `has-rail`, `rail-collapse-icons`, `rail-collapse-hidden` or `rail-collapse-off`, and `rail-collapsed` (added by script). Also `has-bar-autohide` when hide-on-scroll is on.
+- **Desktop.** From 1080px the rail is fixed at `--st-rail` (280px, or the width setting) and the body is padded by `--st-rail-current`, so full-width blocks span the content area only. Collapsed to icons it is `--st-rail-icons` (72px). Labels (`.menu-item-label`) are hidden and show as a tooltip on hover and keyboard focus. Items without an icon show their first letter.
+- **Phones and tablets.** Below 1080px the rail is a drawer. The bar's Menu button opens it (`html.rail-open`) and `StacklessFocus` traps focus. Escape, the close button or a click outside closes it, and focus goes back to Menu.
+- **State.** Both toggles (`[data-st-rail-toggle]`) carry `aria-controls="site-rail"` and `aria-expanded`. The visitor's choice is kept in `localStorage` under `stacklessRail`. Without JavaScript the rail stays expanded, and on phones it sits in the page.
+- **Header over the first section** is off in this layout, and Keep the header in view does not apply. Hide-on-scroll moves only the top bar.
+- **Menu arguments.** The primary menu gets `'stackless_rail' => true` in its `wp_nav_menu()` arguments. The list and account menus pass through `stackless_theme_rail_list_menu_args` and `stackless_theme_account_menu_args`. Without an Account menu, signed-in visitors get My account (when there is an account URL) and Log out.
+
+#### Header options
+
+All are theme mods in Customize > Stackless Theme > Header and menu. Each has a default in `stackless_theme_core_option_defaults()`, so a site layout can ship its own through `stackless_theme_option_defaults`. Each has a sanitizer, so settings imports and `stackless_theme_sanitize_mods()` accept them. At their defaults the front end prints the same HTML as before these options existed.
+
+| Setting | Values (default first) | What it does |
+|---|---|---|
+| `stackless_header_layout` | `default`, `centered`, `split`, `sidebar` | The preset passed to `stackless_theme_header_layout`. |
+| `stackless_header_transparent` | `off`, `front`, `hero`, `all` | Lays the header over the first section. `front`: the front page. `hero`: views that open with a full-width Cover block (title hidden), a post's full-width featured image, or a Page Blocks hero region. `all`: those, plus any other first block set to full width. A view that opens with a title stays solid. |
+| `stackless_header_transparent_text` | `light`, `dark` | Text over the first section while the header is clear: body class `has-header-on-dark` or `has-header-on-light`. The preview updates without reloading. |
+| `stackless_header_sticky` | `true`, `false` | Unchanged. Not used by the sidebar layout. |
+| `stackless_header_hide_on_scroll` | `false`, `true` | Body class `has-header-autohide` (with sticky on), or `has-bar-autohide` in the sidebar layout. theme.js sets `html.is-header-hidden` on the way down and clears it on the way up, near the top, and when focus enters the header. CSS never hides the header while `nav-open`, `search-open`, `rail-open` or focus is inside it. It hides and shows without sliding under reduced motion. |
+| `stackless_header_rail_width` | `280`, 240 to 320 | Rail width in pixels (`--st-rail`). |
+| `stackless_header_rail_collapse` | `icons`, `hidden`, `off` | What the rail's collapse button does from 1080px. |
+| `stackless_header_rail_default` | `expanded`, `collapsed` | The rail on a first visit, before the visitor chooses. |
+| `stackless_header_rail_search` | `true`, `false` | The `search_field` part. |
+| `stackless_header_rail_list_title` | `''`, any text | Heading over the Sidebar list menu, and its label. |
+
+How the clear header is decided:
+
+- **A page's own choice wins.** "Header over the first section" in the page's Layout panel (`_stackless_transparent_header`) turns it on, with its automatic text color.
+- **Without a page choice**, `stackless_theme_header_transparent_auto()` applies the site option.
+- **Where the view starts.** `stackless_theme_opens_with_hero($mode)` decides whether the view opens with a full-width section. Filter it with `stackless_theme_opens_with_hero` (`bool $opens, string $mode`).
+- **Last word.** `stackless_theme_layout_flag` (flag `transparent_header`) still has it.
+
+Theme support: the theme declares `add_theme_support('stackless-header-options')`. Check `current_theme_supports('stackless-header-options')` before adding header layout, clear header or hide-on-scroll options of your own (Stackless Theme Pro defers to these).
+
+Menu locations: `primary`, `header-right` (split layout), `sidebar-list` (sidebar layout's list), `account` (sidebar layout, signed-in visitors) and `footer`.
+
+The page Layout panel has "Top header instead of the sidebar" (meta `_stackless_top_header`, layout flag `top_header`). It shows only while Header layout is Sidebar.
+
+#### Menu item icons
+
+Appearance > Menus gives every menu item an Icon field. Its choices are the theme's bundled Tabler icons in `assets/icons/`, filterable with `stackless_theme_menu_icons` (a list of icon names). The icon is saved as `_stackless_menu_icon` on the item and prints before the label in any menu, through `nav_menu_item_title`:
+
+- the label is wrapped in `<span class="menu-item-label">`
+- the `<li>` gets `menu-item-has-icon`
+
+The Customizer's menu editor does not show the field. Use Appearance > Menus. In the sidebar layout's rail every label is wrapped, and a top-level item without an icon gets a `.menu-item-initial` letter. A list item with the CSS class `has-dot` shows a small dot.
+
+#### Header height token
+
+`--st-header-height` is a public CSS custom property on `:root`: the site header's height, for anything that has to clear it, such as a slider under a clear header, a sticky offset or `scroll-margin-top`.
+
+- **CSS value.** `calc(4rem + 1px)` for the top header, and `calc(3.5rem + 1px)` for the sidebar layout's top bar.
+- **When it changes.** theme.js watches the header with a `ResizeObserver`. When the real height differs from the CSS value (a menu wrapping to two rows, an announcement bar printed into the header), it writes the measured height inline on `<html>`. It removes it again once they agree.
+- **No header.** Without JavaScript, or on a page with no site header, the CSS value applies.
+
+```css
+.my-slider { padding-top: var(--st-header-height, 4rem); }
+```
 
 ### Single posts
 
@@ -293,7 +389,7 @@ Filter `stackless_theme_text_{key}` (or `stackless_theme_text` with the key as t
 
 | Area | Keys |
 |---|---|
-| Header and menus | `menu`, `search`, `my_account`, `sign_in`, `primary_menu_label`, `footer_menu_label` |
+| Header and menus | `menu`, `search`, `my_account`, `sign_in`, `log_out`, `primary_menu_label`, `header_right_menu_label`, `rail_list_label`, `sidebar`, `footer_menu_label` |
 | Search | `search_store_title`, `search_for`, `search_placeholder`, `search_results_title`, `popular_categories`, `best_sellers` |
 | Posts | `previous`, `next`, `read_more`, `filed_under`, `written_by`, `about_author`, `related_posts_title`, `page_links_label`, `blog_sidebar_label` |
 | Empty states | `empty_title`, `empty_text`, `empty_search_text`, `browse_all_products`, `not_found_title`, `not_found_text`, `back_home` |

@@ -168,6 +168,171 @@
 		onScroll();
 	}
 
+	// --st-header-height follows the header's real height when it differs from the CSS value
+	// (a wrapping menu, an announcement bar). Nothing is written while they agree.
+	var siteHeader = document.querySelector('.site-header');
+	if (siteHeader && window.ResizeObserver && document.body) {
+		var probe = document.createElement('div');
+		probe.style.cssText = 'position:absolute;visibility:hidden;height:var(--st-header-height)';
+		document.body.appendChild(probe);
+		var cssHeight = probe.offsetHeight;
+		probe.remove();
+		new window.ResizeObserver(function () {
+			var height = siteHeader.offsetHeight;
+			if (height && Math.abs(height - cssHeight) > 0.5) {
+				html.style.setProperty('--st-header-height', height + 'px');
+			} else {
+				html.style.removeProperty('--st-header-height');
+			}
+		}).observe(siteHeader);
+	}
+
+	// Header and menu > Hide the header while scrolling down: it comes back on any scroll up, near
+	// the top, and whenever focus enters it. CSS also keeps it while the menu or search is open.
+	var autohide = document.body && (document.body.classList.contains('has-header-autohide') ? document.querySelector('.site-header') : document.body.classList.contains('has-bar-autohide') && document.querySelector('.site-bar'));
+	if (autohide) {
+		var lastY = window.scrollY;
+		var hidePending = false;
+		var updateHidden = function () {
+			hidePending = false;
+			var y = Math.max(window.scrollY, 0);
+			if (Math.abs(y - lastY) < 6) {
+				return;
+			}
+			var down = y > lastY;
+			lastY = y;
+			var keep = y <= autohide.offsetHeight || html.classList.contains('nav-open') || html.classList.contains('search-open') || autohide.contains(document.activeElement);
+			html.classList.toggle('is-header-hidden', down && !keep);
+		};
+		window.addEventListener('scroll', function () {
+			if (!hidePending) {
+				hidePending = true;
+				window.requestAnimationFrame(updateHidden);
+			}
+		}, { passive: true });
+		autohide.addEventListener('focusin', function () {
+			html.classList.remove('is-header-hidden');
+		});
+	}
+
+	/* ---------------------------------------------------------------- Sidebar layout */
+	// The rail collapses on desktops (remembered per browser) and is a focus-trapped drawer below 1080px.
+	var rail = document.getElementById('site-rail');
+	// Set by the account menu below: closes it and returns true when it was open.
+	var closeAccount = function () {
+		return false;
+	};
+	if (rail) {
+		var body = document.body;
+		var railToggles = document.querySelectorAll('[data-st-rail-toggle]');
+		var railRelease = null;
+		var railSync = function () {
+			var open = wide.matches ? !body.classList.contains('rail-collapsed') : html.classList.contains('rail-open');
+			railToggles.forEach(function (button) {
+				button.setAttribute('aria-expanded', open ? 'true' : 'false');
+			});
+		};
+		var railDrawer = function (open, from) {
+			html.classList.toggle('rail-open', open);
+			if (open && window.StacklessFocus) {
+				railRelease = window.StacklessFocus.trap(rail, { returnFocus: from, onEscape: function () {
+					// Escape closes an open account menu first, then the drawer.
+					if (!closeAccount()) {
+						railDrawer(false);
+					}
+				} });
+			} else if (!open && railRelease) {
+				var release = railRelease;
+				railRelease = null;
+				release(railToggles[0]);
+			}
+			railSync();
+		};
+		document.addEventListener('click', function (event) {
+			var button = event.target.closest('[data-st-rail-toggle]');
+			if (button && wide.matches) {
+				var collapsed = !body.classList.contains('rail-collapsed');
+				body.classList.toggle('rail-collapsed', collapsed);
+				try {
+					window.localStorage.setItem('stacklessRail', collapsed ? 'collapsed' : 'expanded');
+				} catch (e) {}
+				railSync();
+				// The pressed button can vanish with the hidden rail, or the bar's button once it is
+				// back; focus moves to the toggle that stays in view.
+				if (collapsed && body.classList.contains('rail-collapse-hidden')) {
+					document.querySelector('.site-rail-open').focus();
+				} else if (!collapsed && !rail.contains(button)) {
+					// The rail turns visible a frame later (its visibility transition).
+					window.requestAnimationFrame(function () {
+						window.requestAnimationFrame(function () {
+							rail.querySelector('[data-st-rail-toggle]').focus();
+						});
+					});
+				}
+			} else if (button) {
+				railDrawer(!html.classList.contains('rail-open'), button);
+			} else if (html.classList.contains('rail-open') && !rail.contains(event.target)) {
+				railDrawer(false);
+			}
+		});
+		wide.addEventListener('change', function () {
+			if (html.classList.contains('rail-open')) {
+				railDrawer(false);
+			}
+			railSync();
+		});
+		railSync();
+
+		// The rail's search field hands a product search to the live results overlay, when there is one.
+		var railSearch = rail.querySelector('[data-st-rail-search]');
+		var overlayToggle = document.querySelector('[data-st-toggle="search"]');
+		var overlayField = document.querySelector('[data-st-search] input[type="search"]');
+		if (railSearch && overlayToggle && overlayField && config.productsApi) {
+			railSearch.addEventListener('input', function () {
+				if (railSearch.value.trim().length < 2) {
+					return;
+				}
+				if (html.classList.contains('rail-open')) {
+					railDrawer(false);
+				}
+				setOpen(overlayToggle, true);
+				overlayField.value = railSearch.value;
+				railSearch.value = '';
+				overlayField.dispatchEvent(new Event('input'));
+			});
+		}
+	}
+
+	// Account menu (sidebar layout): opens above its button, closes on Escape or a click elsewhere.
+	var account = document.querySelector('[data-st-account]');
+	if (account) {
+		var accountMenu = document.getElementById(account.getAttribute('aria-controls'));
+		var accountOpen = function (open) {
+			account.setAttribute('aria-expanded', open ? 'true' : 'false');
+			accountMenu.hidden = !open;
+		};
+		document.addEventListener('click', function (event) {
+			if (account.contains(event.target)) {
+				accountOpen(accountMenu.hidden);
+			} else if (!accountMenu.hidden && !accountMenu.contains(event.target)) {
+				accountOpen(false);
+			}
+		});
+		closeAccount = function () {
+			if (accountMenu.hidden) {
+				return false;
+			}
+			accountOpen(false);
+			account.focus();
+			return true;
+		};
+		account.parentNode.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape' && closeAccount()) {
+				event.stopPropagation();
+			}
+		});
+	}
+
 	/* ---------------------------------------------------------------- Live product search */
 	var overlay = document.querySelector('[data-st-search]');
 	if (!overlay || !config.productsApi || !window.fetch) {

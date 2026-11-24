@@ -1,0 +1,604 @@
+/*
+ * Stackless theme: the sidebar header layout (Customize > Stackless Theme > Header and menu >
+ * Header layout > Sidebar). Loads only with that layout. A slim top bar and a rail (#site-rail):
+ * fixed at the left from 1080px, with the page offset by its width; an off-canvas drawer below.
+ * Collapse modes come from body classes: rail-collapse-icons, -hidden or -off, and rail-collapsed.
+ */
+
+:root {
+	--st-rail: 280px;
+	/* The top bar is the header that content has to clear in this layout. */
+	--st-header-height: calc(3.5rem + 1px);
+}
+
+.has-rail {
+	--st-rail-icons: 72px;
+	--st-rail-current: 0px;
+	--st-bar-h: 3.5rem;
+}
+
+/* ------------------------------------------------------------------ Top bar */
+
+/*
+ * The bar keeps the header's sticky place, without the backdrop filter: a filter on the header
+ * would make it the containing block of the fixed rail inside it. The frosted background sits
+ * on a pseudo-element instead.
+ */
+.site-header--sidebar {
+	border-bottom: 0;
+	background: transparent;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+}
+
+.site-header--sidebar::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-bottom: 1px solid var(--st-border);
+	background: rgba(255, 255, 255, .92);
+	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
+	-webkit-backdrop-filter: saturate(180%) blur(12px);
+	backdrop-filter: saturate(180%) blur(12px);
+}
+
+.site-header--sidebar .container.site-bar {
+	max-width: none;
+	min-height: var(--st-bar-h);
+	gap: .5rem;
+}
+
+.site-bar__brand {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+
+.site-bar__title {
+	overflow: hidden;
+	color: var(--st-heading);
+	font-size: 1.0625rem;
+	font-weight: 700;
+	letter-spacing: -.02em;
+	text-decoration: none;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.site-bar__brand .custom-logo {
+	max-height: 2rem;
+}
+
+/* Hide on scroll (has-bar-autohide) moves only the bar; the rail stays. */
+html.is-header-hidden:not(.rail-open):not(.search-open) .has-bar-autohide .site-header--sidebar:not(:has(.site-bar:focus-within)) {
+	top: calc(-1 * var(--st-bar-h) - 1px);
+}
+
+/* ------------------------------------------------------------------ Rail */
+.site-rail {
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid var(--st-border);
+	background: var(--st-surface);
+}
+
+.site-rail__top {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: space-between;
+	gap: .5rem;
+	min-height: var(--st-bar-h);
+	padding: 0 .5rem 0 1rem;
+}
+
+.site-rail__top .site-brand {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.site-rail__top .site-rail-toggle {
+	flex: none;
+}
+
+.site-rail__top .site-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.site-rail__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 1.25rem;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: .25rem .75rem 1rem;
+}
+
+.site-rail__bottom {
+	flex: none;
+	padding: .5rem .75rem;
+	border-top: 1px solid var(--st-border);
+}
+
+.site-rail-toggle__expand,
+.site-rail-toggle__close {
+	display: none;
+}
+
+/* Search field */
+.site-rail-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.site-rail-search .st-icon {
+	position: absolute;
+	left: .7rem;
+	color: var(--st-muted);
+	pointer-events: none;
+}
+
+.site-rail .site-rail-search__field {
+	width: 100%;
+	min-height: 2.5rem;
+	padding: .45rem .75rem .45rem 2.25rem;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius);
+	background: var(--st-surface-muted);
+	color: var(--st-text);
+	font-size: .9375rem;
+}
+
+.site-rail .site-rail-search__field:focus {
+	border-color: var(--st-primary);
+	background: var(--st-surface);
+	box-shadow: var(--st-ring);
+	outline: 0;
+}
+
+/* Primary menu, vertical, and the list menu. */
+.site-rail .site-nav {
+	position: static;
+	display: block;
+	flex: none;
+	max-height: none;
+	overflow: visible;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	animation: none;
+}
+
+.site-rail .site-nav > ul,
+.site-rail .site-nav > div > ul,
+.site-rail-list ul {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.site-rail .site-nav li + li {
+	border-top: 0;
+}
+
+.site-rail .site-nav a,
+.site-rail-list a {
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+	padding: .5rem .65rem;
+	border-radius: var(--st-radius);
+	color: var(--st-gray-600);
+	font-size: .9375rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.site-rail .site-nav a:hover,
+.site-rail-list a:hover {
+	background: var(--st-surface-muted);
+	color: var(--st-heading);
+}
+
+.site-rail .site-nav .current-menu-item > a,
+.site-rail .site-nav .current_page_item > a,
+.site-rail .site-nav a[aria-current="page"],
+.site-rail-list .current-menu-item > a {
+	background: var(--st-primary-light);
+	color: var(--st-primary-text);
+}
+
+.site-rail .site-nav .sub-menu,
+.site-rail .site-nav .children {
+	position: static;
+	min-width: 0;
+	margin: 2px 0 0;
+	padding: 0 0 0 1.25rem;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+}
+
+.site-rail .site-nav .sub-menu a,
+.site-rail .site-nav .children a {
+	font-size: .875rem;
+	font-weight: 500;
+}
+
+.site-rail .site-nav .sub-menu::before,
+.site-rail .site-nav .children::before,
+.site-rail .site-nav .menu-item-has-children > a::after,
+.site-rail .site-nav .page_item_has_children > a::after {
+	display: none;
+}
+
+.site-rail .menu-item-label {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.site-rail .menu-item .st-icon {
+	flex: none;
+}
+
+/* A rail item without an icon shows its first letter, only while the rail is collapsed to icons. */
+.menu-item-initial {
+	display: none;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 1.375rem;
+	height: 1.375rem;
+	border-radius: var(--st-radius-sm, 4px);
+	background: var(--st-surface-muted);
+	font-size: .75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.site-rail-list__title {
+	margin: 0 0 .35rem;
+	padding: 0 .65rem;
+	color: var(--st-muted);
+	font-size: .75rem;
+	font-weight: 600;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.site-rail-list a {
+	font-size: .875rem;
+}
+
+/* A list item with the CSS class has-dot gets a small dot after its label. */
+.site-rail-list .has-dot > a::after {
+	content: "";
+	flex: none;
+	width: .5rem;
+	height: .5rem;
+	margin-left: auto;
+	border-radius: 50%;
+	background: var(--st-primary);
+}
+
+/* Account */
+.site-account {
+	position: relative;
+}
+
+.site-account__toggle,
+.site-account__signin {
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+	width: 100%;
+	padding: .45rem .5rem;
+	border: 0;
+	border-radius: var(--st-radius);
+	background: transparent;
+	color: var(--st-heading);
+	font: inherit;
+	font-size: .9375rem;
+	font-weight: 500;
+	text-align: left;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.site-account__toggle:hover,
+.site-account__toggle[aria-expanded="true"],
+.site-account__signin:hover {
+	background: var(--st-surface-muted);
+}
+
+.site-account__avatar {
+	flex: none;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+}
+
+.site-account__name {
+	flex: 1;
+	white-space: nowrap;
+}
+
+.site-account__toggle .st-icon--chevron-up {
+	flex: none;
+	color: var(--st-muted);
+}
+
+.site-account__toggle[aria-expanded="true"] .st-icon--chevron-up {
+	transform: rotate(180deg);
+}
+
+.site-account__menu {
+	position: absolute;
+	bottom: calc(100% + .35rem);
+	left: 0;
+	z-index: 5;
+	min-width: 100%;
+	padding: .35rem;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-lg);
+}
+
+.site-account__menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.site-account__menu a {
+	display: block;
+	padding: .5rem .65rem;
+	border-radius: var(--st-radius);
+	color: var(--st-text);
+	font-size: .9375rem;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.site-account__menu a:hover {
+	background: var(--st-surface-muted);
+	color: var(--st-heading);
+}
+
+.site-rail a:focus-visible,
+.site-rail button:focus-visible,
+.site-account__menu a:focus-visible {
+	outline: 0;
+	box-shadow: var(--st-ring);
+}
+
+/* ------------------------------------------------------------------ Desktop: fixed rail */
+@media (min-width: 1080px) {
+	.has-rail {
+		--st-rail-current: var(--st-rail);
+		padding-left: var(--st-rail-current);
+	}
+
+	.rail-collapse-icons.rail-collapsed {
+		--st-rail-current: var(--st-rail-icons);
+	}
+
+	.rail-collapse-hidden.rail-collapsed {
+		--st-rail-current: 0px;
+	}
+
+	.site-rail {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: var(--st-rail-current);
+	}
+
+	.admin-bar .site-rail {
+		top: var(--wp-admin--admin-bar--height, 32px);
+	}
+
+	.site-rail-open,
+	.site-bar__brand {
+		display: none;
+	}
+
+	/* Hidden rail: the bar's Menu button brings it back. */
+	.rail-collapse-hidden.rail-collapsed .site-rail-open {
+		display: inline-flex;
+	}
+
+	.rail-collapse-hidden.rail-collapsed .site-rail {
+		width: var(--st-rail);
+		transform: translateX(-100%);
+		visibility: hidden;
+	}
+
+	.rail-collapse-off .site-rail-toggle {
+		display: none;
+	}
+
+	.rail-collapsed .site-rail-toggle__collapse {
+		display: none;
+	}
+
+	.rail-collapsed .site-rail-toggle__expand {
+		display: inline-flex;
+	}
+
+	/*
+	 * Collapsed to icons: labels are visually hidden and come back as a tooltip on hover or
+	 * keyboard focus. The tooltip is fixed at its static place, so the rail's scroll box
+	 * does not clip it.
+	 */
+	.rail-collapse-icons.rail-collapsed .site-rail__top {
+		justify-content: center;
+		padding: 0;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail__body,
+	.rail-collapse-icons.rail-collapsed .site-rail__bottom {
+		padding-inline: .5rem;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail .site-brand,
+	.rail-collapse-icons.rail-collapsed .site-rail-search,
+	.rail-collapse-icons.rail-collapsed .site-rail-list__title,
+	.rail-collapse-icons.rail-collapsed .site-rail .sub-menu,
+	.rail-collapse-icons.rail-collapsed .site-rail .children,
+	.rail-collapse-icons.rail-collapsed .site-account__toggle .st-icon--chevron-up,
+	.rail-collapse-icons.rail-collapsed .site-rail .st-currency {
+		display: none;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail .site-nav a,
+	.rail-collapse-icons.rail-collapsed .site-rail-list a,
+	.rail-collapse-icons.rail-collapsed .site-account__toggle,
+	.rail-collapse-icons.rail-collapsed .site-account__signin {
+		justify-content: center;
+		padding-inline: 0;
+	}
+
+	.rail-collapse-icons.rail-collapsed .menu-item-initial {
+		display: inline-flex;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail-list .has-dot > a::after {
+		position: absolute;
+		margin: -1.1rem 0 0 1.1rem;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail .menu-item-label {
+		position: fixed;
+		left: calc(var(--st-rail-icons) + .375rem);
+		z-index: 70;
+		padding: .3rem .55rem;
+		border-radius: var(--st-radius);
+		background: var(--st-gray-900);
+		color: var(--st-inverse-text, #fff);
+		font-size: .8125rem;
+		font-weight: 500;
+		pointer-events: none;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-rail a:hover .menu-item-label,
+	.rail-collapse-icons.rail-collapsed .site-rail a:focus-visible .menu-item-label,
+	.rail-collapse-icons.rail-collapsed .site-rail button:hover .menu-item-label,
+	.rail-collapse-icons.rail-collapsed .site-rail button:focus-visible .menu-item-label {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.rail-collapse-icons.rail-collapsed .site-account__menu {
+		left: .25rem;
+		min-width: 12rem;
+	}
+}
+
+/* ------------------------------------------------------------------ Phones and tablets: drawer */
+@media (max-width: 1079.98px) {
+	.site-rail {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: min(85vw, var(--st-rail));
+		transform: translateX(-100%);
+		visibility: hidden;
+	}
+
+	.admin-bar .site-rail {
+		top: var(--wp-admin--admin-bar--height, 46px);
+	}
+
+	html.rail-open .site-rail {
+		transform: none;
+		visibility: visible;
+		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .45);
+	}
+
+	html.rail-open body {
+		overflow: hidden;
+	}
+
+	.site-rail-toggle__collapse,
+	.site-rail-toggle__expand {
+		display: none;
+	}
+
+	.site-rail-toggle__close {
+		display: inline-flex;
+	}
+
+	.site-header--sidebar .site-header__actions {
+		margin-left: auto;
+	}
+
+	/* Without JavaScript the rail sits in the page under the bar, expanded. */
+	html:not(.js) .site-rail {
+		position: static;
+		width: auto;
+		transform: none;
+		visibility: visible;
+		border-right: 0;
+		border-bottom: 1px solid var(--st-border);
+	}
+
+	html:not(.js) .site-rail-open {
+		display: none;
+	}
+}
+
+html:not(.js) .site-rail-toggle {
+	display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.site-header--sidebar {
+		transition: top .25s ease;
+	}
+
+	/* The rail turns visible at once when it opens, and hidden only after it has slid away. */
+	.site-rail {
+		transition: width .2s ease, transform .2s ease, visibility 0s;
+	}
+
+	@media (min-width: 1080px) {
+		.rail-collapse-hidden.rail-collapsed .site-rail {
+			transition: width .2s ease, transform .2s ease, visibility 0s .2s;
+		}
+	}
+
+	@media (max-width: 1079.98px) {
+		html:not(.rail-open) .site-rail {
+			transition: width .2s ease, transform .2s ease, visibility 0s .2s;
+		}
+	}
+
+	.has-rail {
+		transition: padding-left .2s ease;
+	}
+}

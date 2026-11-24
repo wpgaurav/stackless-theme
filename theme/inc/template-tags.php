@@ -24,37 +24,97 @@ function stackless_theme_site_brand(): void
 
 /**
  * The header parts a layout can place, by slug. Each maps to a part in template-parts/site-header.php:
- * branding (header_brand), navigation (header_nav), currency (the header currency switcher),
- * search (header_search_button), account (header_account), cart (header_cart) and
- * menu_toggle (header_menu_toggle).
+ * branding (header_brand), navigation (header_nav), navigation_right (header_nav_right, the Header
+ * right menu), currency (the header currency switcher), search (header_search_button),
+ * account (header_account), cart (header_cart), menu_toggle (header_menu_toggle), and for the
+ * sidebar layout search_field (header_search_field), rail_list (header_rail_list),
+ * rail_toggle (header_rail_toggle) and account_menu (header_account_menu).
  */
 function stackless_theme_header_part_slugs(): array
 {
-    return ['branding', 'navigation', 'currency', 'search', 'account', 'cart', 'menu_toggle'];
+    return ['branding', 'navigation', 'navigation_right', 'currency', 'search', 'account', 'cart', 'menu_toggle', 'search_field', 'rail_list', 'rail_toggle', 'account_menu'];
+}
+
+/** The groups a header layout has: the top header's start, center and end, and the sidebar layout's rail and bar. */
+function stackless_theme_header_layout_slots(): array
+{
+    return ['start', 'center', 'end', 'rail_top', 'rail_nav', 'rail_list', 'rail_bottom', 'bar'];
 }
 
 /**
- * Where each header part sits: ['start' => [...], 'center' => [...], 'end' => [...]], each a list
- * of slugs from stackless_theme_header_part_slugs(). Filter stackless_theme_header_layout to move
- * parts. Unknown slugs are dropped, and a slug placed twice keeps its first place. A part left out
- * does not print. The 'end' group sits in the header actions row; a non-empty 'center' gives the
- * header the site-header--has-center class and wraps 'start' and 'center' in their own elements.
+ * The layout a Header and menu > Header layout preset stands for: 'default' (logo and menu on the
+ * left), 'centered' (menu left, logo centered, buttons right), 'split' (primary menu left, logo
+ * centered, the Header right menu and the buttons right) or 'sidebar' (a fixed rail with the logo,
+ * search, primary menu, list menu and account menu, and a slim top bar with the buttons).
  *
- * @return array{start: string[], center: string[], end: string[]}
+ * @return array<string, string[]>
+ */
+function stackless_theme_header_layout_preset(string $preset): array
+{
+    $end = ['currency', 'search', 'account', 'cart', 'menu_toggle'];
+    $rail = ['rail_top' => [], 'rail_nav' => [], 'rail_list' => [], 'rail_bottom' => [], 'bar' => []];
+    switch ($preset) {
+        case 'centered':
+            return ['start' => ['navigation'], 'center' => ['branding'], 'end' => $end] + $rail;
+        case 'split':
+            return ['start' => ['navigation'], 'center' => ['branding'], 'end' => array_merge(['navigation_right'], $end)] + $rail;
+        case 'sidebar':
+            return [
+                'start' => [],
+                'center' => [],
+                'end' => [],
+                'rail_top' => ['branding', 'rail_toggle'],
+                'rail_nav' => ['search_field', 'navigation'],
+                'rail_list' => ['rail_list'],
+                'rail_bottom' => ['account_menu'],
+                'bar' => ['currency', 'search', 'cart'],
+            ];
+        default:
+            return ['start' => ['branding', 'navigation'], 'center' => [], 'end' => $end] + $rail;
+    }
+}
+
+/**
+ * Whether the header is the sidebar layout's rail and top bar: some part sits in a rail group,
+ * the site header shows, no Page Blocks header region replaces it, and the page did not pick
+ * "Top header" in its Layout panel.
+ */
+function stackless_theme_header_has_rail(): bool
+{
+    if (!stackless_theme_shows('header') || (function_exists('stackless_theme_has_region') && stackless_theme_has_region('header'))) {
+        return false;
+    }
+    $layout = stackless_theme_header_layout();
+    return (bool) array_merge($layout['rail_top'], $layout['rail_nav'], $layout['rail_list'], $layout['rail_bottom']);
+}
+
+/**
+ * Where each header part sits: ['start' => [...], 'center' => [...], 'end' => [...]], plus the
+ * sidebar layout's 'rail_top', 'rail_nav', 'rail_list', 'rail_bottom' and 'bar', each a list of
+ * slugs from stackless_theme_header_part_slugs(). A filter that returns only start, center and end
+ * gets empty rail groups, so it keeps the top header. The Header layout option picks the starting
+ * layout (stackless_theme_header_layout_preset()); filter stackless_theme_header_layout to move
+ * parts, and the filter wins. Unknown slugs are dropped, and a slug placed twice keeps its first
+ * place. A part left out does not print. The 'end' group sits in the header actions row; a
+ * non-empty 'center' gives the header the site-header--has-center class and wraps 'start' and
+ * 'center' in their own elements.
+ *
+ * @return array{start: string[], center: string[], end: string[], rail_top: string[], rail_nav: string[], rail_list: string[], rail_bottom: string[], bar: string[]}
  */
 function stackless_theme_header_layout(): array
 {
-    $default = [
-        'start' => ['branding', 'navigation'],
-        'center' => [],
-        'end' => ['currency', 'search', 'account', 'cart', 'menu_toggle'],
-    ];
+    $preset = (string) stackless_theme_option('stackless_header_layout');
+    // A page's "Top header" Layout choice drops the sidebar layout's rail for that page.
+    if ($preset === 'sidebar' && stackless_theme_layout_flag('top_header')) {
+        $preset = 'default';
+    }
+    $default = stackless_theme_header_layout_preset($preset);
     $layout = apply_filters('stackless_theme_header_layout', $default);
     $layout = is_array($layout) ? $layout : $default;
     $known = stackless_theme_header_part_slugs();
     $placed = [];
     $clean = [];
-    foreach (array_keys($default) as $slot) {
+    foreach (stackless_theme_header_layout_slots() as $slot) {
         $clean[$slot] = [];
         foreach ((array) ($layout[$slot] ?? []) as $slug) {
             $slug = is_string($slug) ? $slug : '';

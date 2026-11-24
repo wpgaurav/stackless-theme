@@ -69,6 +69,14 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: a Sale badge on FluentCart product cards and product pages when a product's compare-at price is above its price, drawn like WooCommerce's. EDD has no sale price, so its cards and download pages show the badge only when the stackless_theme_product_on_sale filter says so.
 * Changed: the Callout block's Tip, Info, Warning, Success and Error presets take their colors from the theme instead of fixed light colors in the markup, so they follow the site's colors and stay readable in dark. They look the same as before on a light page.
 * Changed: a store plugin is optional. The theme was checked with no store active (front page, blog, posts, pages, search, 404 and the Customizer), and the description and Customizer panel no longer assume a store. A post with no author no longer shows an empty byline.
+* New: Header layout in Customize > Stackless Theme > Header and menu. Centered puts the logo in the middle with the menu on the left. Split puts the primary menu on the left of a centered logo and a new Header right menu on its right. On phones and tablets both menus open from the Menu button. Default looks as before.
+* New: a Sidebar header layout for app-style sites. A fixed side rail holds the logo, a search field, the primary menu, a Sidebar list menu and an account menu, with a slim top bar for search and cart. Visitors can collapse it to icons or hide it, and the choice is remembered in their browser. Below 1080px the rail is a drawer. A page can switch back to the top header from its Layout panel. The stylesheet loads only with this layout.
+* New: menu items can have an icon, picked from the theme's icons in Appearance > Menus. It shows before the label in any menu.
+* New: Header over the first section, for the whole site. Choose the front page, pages that open with a Cover block or hero, or every page that opens with a full-width section, and light or dark header text. Pages that open with a title keep the solid header, and a page's own Layout choice still works.
+* New: Hide the header while scrolling down. It comes back on any scroll up, and never hides while the menu or search is open or keyboard focus is in it.
+* New: the --st-header-height CSS property holds the header's real height, for blocks that have to clear it.
+* Fixed: with the header over the first section, a dropdown menu could show white text on a white panel, and menu hover backgrounds were too light to see.
+* Fixed: a Cover block at the top of a page with the header over it started 32px down, leaving a strip of page background under the header.
 
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.

@@ -30,8 +30,17 @@ function stackless_theme_core_option_defaults(): array
 {
     return [
         'stackless_mobile_menu' => 'dropdown',
+        'stackless_header_layout' => 'default',
         'stackless_header_sticky' => true,
+        'stackless_header_hide_on_scroll' => false,
         'stackless_header_search' => true,
+        'stackless_header_transparent' => 'off',
+        'stackless_header_transparent_text' => 'light',
+        'stackless_header_rail_width' => 280,
+        'stackless_header_rail_collapse' => 'icons',
+        'stackless_header_rail_default' => 'expanded',
+        'stackless_header_rail_search' => true,
+        'stackless_header_rail_list_title' => '',
         'stackless_blog_sidebar' => true,
         'stackless_archive_layout' => 'list',
         'stackless_archive_image' => true,
@@ -112,6 +121,50 @@ function stackless_theme_sanitize_mobile_menu($value): string
     return in_array($value, ['dropdown', 'drawer'], true) ? $value : 'dropdown';
 }
 
+/** Header layout presets: 'default', 'centered' or 'split'. See stackless_theme_header_layout(). */
+function stackless_theme_header_layout_choices(): array
+{
+    return [
+        'default' => __('Logo and menu on the left, buttons on the right', 'stackless-theme'),
+        'centered' => __('Centered logo, menu on the left, buttons on the right', 'stackless-theme'),
+        'split' => __('Menu split around a centered logo (primary left, Header right menu right)', 'stackless-theme'),
+        'sidebar' => __('Sidebar: a fixed side rail with the menus, and a slim top bar', 'stackless-theme'),
+    ];
+}
+
+/** Sidebar layout rail width in pixels, 240 to 320. */
+function stackless_theme_sanitize_rail_width($value): int
+{
+    return max(240, min(320, (int) $value ?: 280));
+}
+
+/** How the sidebar layout's rail collapses on desktops: to 'icons', 'hidden', or 'off' (never). */
+function stackless_theme_sanitize_rail_collapse($value): string
+{
+    return in_array($value, ['icons', 'hidden', 'off'], true) ? $value : 'icons';
+}
+
+function stackless_theme_sanitize_rail_default($value): string
+{
+    return in_array($value, ['expanded', 'collapsed'], true) ? $value : 'expanded';
+}
+
+function stackless_theme_sanitize_header_layout($value): string
+{
+    return is_string($value) && array_key_exists($value, stackless_theme_header_layout_choices()) ? $value : 'default';
+}
+
+/** Where the header sits over the first section: 'off', 'front', 'hero' or 'all'. */
+function stackless_theme_sanitize_header_transparent($value): string
+{
+    return in_array($value, ['off', 'front', 'hero', 'all'], true) ? $value : 'off';
+}
+
+function stackless_theme_sanitize_header_transparent_text($value): string
+{
+    return in_array($value, ['light', 'dark'], true) ? $value : 'light';
+}
+
 /** Body classes for the header options. */
 add_filter('body_class', 'stackless_theme_option_body_class');
 function stackless_theme_option_body_class(array $classes): array
@@ -119,8 +172,19 @@ function stackless_theme_option_body_class(array $classes): array
     if (stackless_theme_option('stackless_mobile_menu') === 'drawer') {
         $classes[] = 'has-menu-drawer';
     }
-    if (!stackless_theme_option('stackless_header_sticky')) {
+    if (function_exists('stackless_theme_header_has_rail') && stackless_theme_header_has_rail()) {
+        // Sidebar layout: the rail and top bar are always in view, so Keep the header in view does
+        // not apply; hide-on-scroll moves only the top bar.
+        $classes[] = 'has-rail';
+        $classes[] = 'rail-collapse-' . stackless_theme_sanitize_rail_collapse(stackless_theme_option('stackless_header_rail_collapse'));
+        if (stackless_theme_option('stackless_header_hide_on_scroll')) {
+            $classes[] = 'has-bar-autohide';
+        }
+    } elseif (!stackless_theme_option('stackless_header_sticky')) {
         $classes[] = 'has-static-header';
+    } elseif (stackless_theme_option('stackless_header_hide_on_scroll')) {
+        // theme.js hides the sticky header on the way down and brings it back on the way up.
+        $classes[] = 'has-header-autohide';
     }
     return $classes;
 }
@@ -142,6 +206,15 @@ add_filter('stackless_theme_search_config', static function (array $config): arr
 add_filter('stackless_theme_search_product', static function ($product) {
     return stackless_theme_option('stackless_store_search_results') ? $product : null;
 }, 99);
+
+/** Tells the Customizer preview whether Header over the first section laid this view's header over it. */
+add_action('wp_enqueue_scripts', 'stackless_theme_header_preview_data', 20);
+function stackless_theme_header_preview_data(): void
+{
+    if (is_customize_preview() && function_exists('stackless_theme_header_transparent_auto')) {
+        wp_add_inline_script('stackless-theme-customize-preview', 'window.stacklessThemeHeaderAuto = ' . wp_json_encode(stackless_theme_header_transparent_auto()) . ';', 'before');
+    }
+}
 
 add_action('customize_register', 'stackless_theme_customize_register');
 function stackless_theme_customize_register(WP_Customize_Manager $wp_customize): void
@@ -206,6 +279,14 @@ function stackless_theme_customize_register(WP_Customize_Manager $wp_customize):
     };
 
     /* Header and menu */
+    $wp_customize->add_setting('stackless_header_layout', ['default' => stackless_theme_option_defaults()['stackless_header_layout'], 'sanitize_callback' => 'stackless_theme_sanitize_header_layout']);
+    $wp_customize->add_control('stackless_header_layout', [
+        'label' => __('Header layout', 'stackless-theme'),
+        'description' => __('Split needs a menu in the Header right menu location. On phones and tablets both menus open from the Menu button.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'radio',
+        'choices' => stackless_theme_header_layout_choices(),
+    ]);
     $wp_customize->add_setting('stackless_mobile_menu', ['default' => 'dropdown', 'sanitize_callback' => 'stackless_theme_sanitize_mobile_menu']);
     $wp_customize->add_control('stackless_mobile_menu', [
         'label' => __('Mobile menu style', 'stackless-theme'),
@@ -217,8 +298,92 @@ function stackless_theme_customize_register(WP_Customize_Manager $wp_customize):
             'drawer' => __('Full-screen drawer', 'stackless-theme'),
         ],
     ]);
-    $checkbox('stackless_header_sticky', 'stackless_theme_header', __('Keep the header in view while scrolling', 'stackless-theme'), __('Off, the header scrolls away with the page.', 'stackless-theme'));
+    $checkbox('stackless_header_sticky', 'stackless_theme_header', __('Keep the header in view while scrolling', 'stackless-theme'), __('Off, the header scrolls away with the page.', 'stackless-theme'), static function () use ($wp_customize): bool {
+        return $wp_customize->get_setting('stackless_header_layout')->value() !== 'sidebar';
+    });
+    $checkbox('stackless_header_hide_on_scroll', 'stackless_theme_header', __('Hide the header while scrolling down', 'stackless-theme'), __('It slides back as soon as the visitor scrolls up, and stays while the menu or search is open. In the sidebar layout it hides only the top bar.', 'stackless-theme'), static function () use ($wp_customize): bool {
+        $sticky = $wp_customize->get_setting('stackless_header_sticky');
+        return !$sticky || (bool) $sticky->value() || $wp_customize->get_setting('stackless_header_layout')->value() === 'sidebar';
+    });
     $checkbox('stackless_header_search', 'stackless_theme_header', __('Search button', 'stackless-theme'), __('Opens full-screen search from the header.', 'stackless-theme'));
+    $rail = static function () use ($wp_customize): bool {
+        return $wp_customize->get_setting('stackless_header_layout')->value() === 'sidebar';
+    };
+    $wp_customize->add_setting('stackless_header_rail_width', ['default' => stackless_theme_option_defaults()['stackless_header_rail_width'], 'sanitize_callback' => 'stackless_theme_sanitize_rail_width']);
+    $wp_customize->add_control('stackless_header_rail_width', [
+        'label' => __('Sidebar width', 'stackless-theme'),
+        'description' => __('In pixels, 240 to 320.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'number',
+        'input_attrs' => ['min' => 240, 'max' => 320, 'step' => 4],
+        'active_callback' => $rail,
+    ]);
+    $wp_customize->add_setting('stackless_header_rail_collapse', ['default' => stackless_theme_option_defaults()['stackless_header_rail_collapse'], 'sanitize_callback' => 'stackless_theme_sanitize_rail_collapse']);
+    $wp_customize->add_control('stackless_header_rail_collapse', [
+        'label' => __('Sidebar collapse button', 'stackless-theme'),
+        'description' => __('On screens 1080px and wider. Each visitor\'s choice is remembered in their browser.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'radio',
+        'choices' => [
+            'icons' => __('Collapse to icons', 'stackless-theme'),
+            'hidden' => __('Hide the sidebar', 'stackless-theme'),
+            'off' => __('No collapse button', 'stackless-theme'),
+        ],
+        'active_callback' => $rail,
+    ]);
+    $wp_customize->add_setting('stackless_header_rail_default', ['default' => stackless_theme_option_defaults()['stackless_header_rail_default'], 'sanitize_callback' => 'stackless_theme_sanitize_rail_default']);
+    $wp_customize->add_control('stackless_header_rail_default', [
+        'label' => __('Sidebar on a first visit', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'radio',
+        'choices' => [
+            'expanded' => __('Expanded', 'stackless-theme'),
+            'collapsed' => __('Collapsed', 'stackless-theme'),
+        ],
+        'active_callback' => static function () use ($wp_customize, $rail): bool {
+            return $rail() && $wp_customize->get_setting('stackless_header_rail_collapse')->value() !== 'off';
+        },
+    ]);
+    $checkbox('stackless_header_rail_search', 'stackless_theme_header', __('Search field in the sidebar', 'stackless-theme'), '', $rail);
+    $wp_customize->add_setting('stackless_header_rail_list_title', ['default' => stackless_theme_option_defaults()['stackless_header_rail_list_title'], 'sanitize_callback' => 'sanitize_text_field']);
+    $wp_customize->add_control('stackless_header_rail_list_title', [
+        'label' => __('Sidebar list title', 'stackless-theme'),
+        'description' => __('A heading over the Sidebar list menu. Give a menu item the CSS class has-dot for a small dot beside it.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'text',
+        'active_callback' => $rail,
+    ]);
+    $wp_customize->add_setting('stackless_header_transparent', ['default' => stackless_theme_option_defaults()['stackless_header_transparent'], 'sanitize_callback' => 'stackless_theme_sanitize_header_transparent']);
+    $wp_customize->add_control('stackless_header_transparent', [
+        'label' => __('Header over the first section', 'stackless-theme'),
+        'description' => __('A clear header over a full-width Cover block, featured image or hero. Pages that open with a title keep the solid header. A page can also turn it on from its own Layout panel.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'select',
+        'choices' => [
+            'off' => __('Off', 'stackless-theme'),
+            'front' => __('Front page only', 'stackless-theme'),
+            'hero' => __('Pages that open with a Cover block or hero', 'stackless-theme'),
+            'all' => __('Every page that opens with a full-width section', 'stackless-theme'),
+        ],
+        'active_callback' => static function () use ($rail): bool {
+            return !$rail();
+        },
+    ]);
+    $wp_customize->add_setting('stackless_header_transparent_text', ['default' => stackless_theme_option_defaults()['stackless_header_transparent_text'], 'sanitize_callback' => 'stackless_theme_sanitize_header_transparent_text', 'transport' => 'postMessage']);
+    $wp_customize->add_control('stackless_header_transparent_text', [
+        'label' => __('Header text over the first section', 'stackless-theme'),
+        'description' => __('Logo text, menu and buttons while the header is clear. They take the usual colors once it turns solid.', 'stackless-theme'),
+        'section' => 'stackless_theme_header',
+        'type' => 'radio',
+        'choices' => [
+            'light' => __('Light, for dark images', 'stackless-theme'),
+            'dark' => __('Dark, for light images', 'stackless-theme'),
+        ],
+        'active_callback' => static function () use ($wp_customize, $rail): bool {
+            $mode = $wp_customize->get_setting('stackless_header_transparent');
+            return $mode && $mode->value() !== 'off' && !$rail();
+        },
+    ]);
 
     /* Blog */
     $checkbox('stackless_blog_sidebar', 'stackless_theme', __('Sidebar on the blog, archives and search', 'stackless-theme'), __('Shows the Blog widget area, or search, recent posts and categories until widgets are added.', 'stackless-theme'));

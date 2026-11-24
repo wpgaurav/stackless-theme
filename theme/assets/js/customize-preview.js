@@ -1,6 +1,6 @@
 /**
  * Customizer preview: redraws the color and font custom properties as their settings change, so
- * those settings skip the preview reload. Mirrors stackless_theme_design_vars() in inc/design.php
+ * those settings skip the preview reload, and swaps the clear header's text color the same way. Mirrors stackless_theme_design_vars() in inc/design.php
  * for the properties in stackless_theme_design_live_properties(). Bundled fonts get their
  * @font-face rules only once picked, so nothing loads that is not in use.
  */
@@ -159,6 +159,18 @@
 	ids.forEach(function (id) {
 		api(id, function (setting) {
 			setting.bind(render);
+		});
+	});
+
+	// Header text over the first section: swaps the clear header's text color on views that
+	// Header over the first section lays the header over (window.stacklessThemeHeaderAuto).
+	api('stackless_header_transparent_text', function (setting) {
+		setting.bind(function (text) {
+			if (!window.stacklessThemeHeaderAuto || !document.body.classList.contains('has-transparent-header')) {
+				return;
+			}
+			document.body.classList.toggle('has-header-on-light', text === 'dark');
+			document.body.classList.toggle('has-header-on-dark', text !== 'dark');
 		});
 	});
 })(window.wp && window.wp.customize, window.stacklessThemePreview);

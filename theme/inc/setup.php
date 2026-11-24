@@ -25,6 +25,9 @@ function stackless_theme_setup(): void
     // base.css carries a dark set of the color tokens under html.stackless-dark; the theme never
     // adds the class itself. current_theme_supports('stackless-dark-mode') tells a plugin it can.
     add_theme_support('stackless-dark-mode');
+    // Header and menu has the header layout, clear header and hide-on-scroll options (theme mods
+    // stackless_header_*). current_theme_supports('stackless-header-options') lets Pro defer to them.
+    add_theme_support('stackless-header-options');
 
     // Block Editor.
     add_theme_support('wp-block-styles');
@@ -38,6 +41,9 @@ function stackless_theme_setup(): void
 
     register_nav_menus([
         'primary' => __('Primary menu', 'stackless-theme'),
+        'header-right' => __('Header right menu (split header layout)', 'stackless-theme'),
+        'sidebar-list' => __('Sidebar list (sidebar header layout)', 'stackless-theme'),
+        'account' => __('Account menu (sidebar header layout, signed-in visitors)', 'stackless-theme'),
         'footer' => __('Footer menu', 'stackless-theme'),
     ]);
 }
