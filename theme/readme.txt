@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,17 @@ Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefont
 Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
 
 == Changelog ==
+
+= 1.8.1 =
+* Fixed: a long word in a large heading wrapped onto the next line only after widening the page on phones.
+* Fixed: Carousel arrows could sit off the page edge beside a post sidebar or on narrower screens; they now sit outside the items only from 1280px and never beside a sidebar.
+* Fixed: a Carousel whose items all fit showed dots, a progress bar and a pause button that did nothing.
+* Fixed: Play on an autoplaying Slider or Carousel waited until the pointer left the button.
+* Fixed: a Carousel list with its own anchor lost the link between it and its arrows for screen readers.
+* Fixed: in the icons-only sidebar header, screen readers could not read the menu labels.
+* Fixed: the Header right menu was printed twice with the same ids in the split layout.
+* Fixed: a Slider opening a page did not count as a hero for the see-through header unless its alignment was saved.
+* Fixed: Side Promotion panels did not line up with the text column and could widen the page.
 
 = 1.8.0 =
 * New: Stackless blocks. Callout, Content Upgrade, FAQ, Steps, Key Takeaway, Pull Quote, Quote, Related Content, Share Notice, Spoiler, Section, Query Loop, Side Promotion, Arrow and Table of Contents are in the editor under Stackless. Each block loads its own small stylesheet only on pages that use it, and only the FAQ, Spoiler, Table of Contents, Slider and Carousel have a script.
