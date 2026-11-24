@@ -57,6 +57,7 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: style variations for core blocks: paragraphs, headings, lists, buttons, images, tables, groups, covers, videos, separators and the query loop. A variation's stylesheet loads only on pages that use it.
 * Removed: the one-off settings importer for sites moving from another theme. The theme's own settings export, import and backups are unchanged.
 * New: icons chosen in a block are drawn as Tabler icons, and each block can be hidden, replaced or filtered through the theme's hooks.
+* New: colors, fonts and heading letter case in Customize > Stackless Theme now update the preview as you change them, without reloading it. A bundled font still loads only once it is picked.
 * Fixed: a post with no tags showed an empty tag after it.
 * Fixed: on store pages where a plugin loads its own .container styles (FluentCart does on some pages), the header and footer could be narrower than the page at some screen widths.
 

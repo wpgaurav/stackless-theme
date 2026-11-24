@@ -304,17 +304,41 @@ function stackless_theme_design_vars(): array
     return (array) apply_filters('stackless_theme_design_vars', $vars);
 }
 
+/**
+ * Custom properties the Customizer preview redraws live, without reloading, as the color and font
+ * settings change (assets/js/customize-preview.js). In the preview they print on their own.
+ */
+function stackless_theme_design_live_properties(): array
+{
+    $properties = ['--st-primary-hover', '--st-primary-light', '--st-primary-text', '--st-ring', '--st-surface-muted', '--st-font', '--st-font-heading', '--st-heading-weight', '--st-heading-tracking', '--st-heading-transform'];
+    foreach (stackless_theme_design_colors() as [, $property]) {
+        $properties[] = $property;
+    }
+    return $properties;
+}
+
+/** A :root rule for [property => value], or '' when there is nothing to set. */
+function stackless_theme_design_root_css(array $vars): string
+{
+    if (!$vars) {
+        return '';
+    }
+    $css = ':root{';
+    foreach ($vars as $property => $value) {
+        $css .= $property . ':' . $value . ';';
+    }
+    return $css . '}';
+}
+
 /** The design overrides as CSS, or '' when nothing is customized. */
 function stackless_theme_design_css(): string
 {
-    $css = stackless_theme_font_face_css();
     $vars = stackless_theme_design_vars();
-    if ($vars) {
-        $css .= ':root{';
-        foreach ($vars as $property => $value) {
-            $css .= $property . ':' . $value . ';';
-        }
-        $css .= '}';
+    if (is_customize_preview()) {
+        // The font faces and live properties print in stackless-theme-live-design instead.
+        $css = stackless_theme_design_root_css(array_diff_key($vars, array_flip(stackless_theme_design_live_properties())));
+    } else {
+        $css = stackless_theme_font_face_css() . stackless_theme_design_root_css($vars);
     }
     $logo = stackless_theme_sanitize_logo_width(get_theme_mod('stackless_logo_width', 0));
     if ($logo > 0) {
@@ -332,6 +356,73 @@ function stackless_theme_design_inline_css(): void
     if ($css !== '') {
         wp_add_inline_style('stackless-theme-base', $css);
     }
+    if (is_customize_preview()) {
+        // Redrawn by customize-preview.js; holds the live properties and the font faces in use.
+        wp_register_style('stackless-theme-live-design', false, ['stackless-theme-base'], STACKLESS_THEME_VERSION);
+        wp_enqueue_style('stackless-theme-live-design');
+        wp_add_inline_style('stackless-theme-live-design', stackless_theme_design_live_css());
+    }
+}
+
+/**
+ * The live part of the design CSS in the Customizer preview: the font faces in use, the live
+ * properties, and the block palette pointed at them so palette colors follow along.
+ */
+function stackless_theme_design_live_css(): string
+{
+    $vars = array_intersect_key(stackless_theme_design_vars(), array_flip(stackless_theme_design_live_properties()));
+    $palette = [];
+    foreach (stackless_theme_design_palette_map() as $property => $slug) {
+        $palette['--wp--preset--color--' . $slug] = 'var(' . $property . ')';
+    }
+    return str_replace(['<', '>'], '', stackless_theme_font_face_css() . stackless_theme_design_root_css($vars) . stackless_theme_design_root_css($palette));
+}
+
+/** Design properties that set a theme.json palette color: property => palette slug. */
+function stackless_theme_design_palette_map(): array
+{
+    return ['--st-primary' => 'primary', '--st-primary-light' => 'primary-light', '--st-heading' => 'dark', '--st-text' => 'body', '--st-surface-muted' => 'surface'];
+}
+
+/** Redraws the colors and fonts in the preview as they change, so those settings skip the reload. */
+add_action('customize_preview_init', 'stackless_theme_design_preview_script');
+function stackless_theme_design_preview_script(): void
+{
+    $js = stackless_theme_asset('assets/js/customize-preview.js');
+    wp_enqueue_script('stackless-theme-customize-preview', STACKLESS_THEME_URI . '/' . $js, ['customize-preview'], stackless_theme_asset_version($js), ['in_footer' => true]);
+
+    $fonts = [];
+    foreach (stackless_theme_bundled_fonts() as $slug => $font) {
+        $fonts[$slug] = [
+            'name' => $font['name'],
+            'use' => $font['use'],
+            'faces' => array_map(static function (array $face) use ($slug): array {
+                return [esc_url_raw(STACKLESS_THEME_URI . '/assets/fonts/' . $slug . '/' . $face[0]), $face[1], $face[2]];
+            }, $font['faces']),
+            'heading' => $font['heading'] ?? (object) [],
+        ];
+    }
+    $colors = [];
+    foreach (stackless_theme_design_colors() as $key => [, $property, $default]) {
+        $colors[$key] = [$property, strtolower($default)];
+    }
+    $data = [
+        'colors' => $colors,
+        'stacks' => array_map(static function (array $stack): string {
+            return $stack[1];
+        }, stackless_theme_font_stacks()),
+        'fonts' => $fonts,
+        'palette' => stackless_theme_design_palette_map(),
+    ];
+    wp_add_inline_script('stackless-theme-customize-preview', 'window.stacklessThemePreview = ' . wp_json_encode($data) . ';', 'before');
+}
+
+/** Shows the custom stack fields as soon as "Custom stack" is picked, without waiting on the preview. */
+add_action('customize_controls_enqueue_scripts', 'stackless_theme_design_controls_script');
+function stackless_theme_design_controls_script(): void
+{
+    $js = stackless_theme_asset('assets/js/customize-controls.js');
+    wp_enqueue_script('stackless-theme-customize-controls', STACKLESS_THEME_URI . '/' . $js, ['customize-controls'], stackless_theme_asset_version($js), ['in_footer' => true]);
 }
 
 /** The editor gets the same overrides, so blocks preview in the site's colors, fonts and widths. */
@@ -350,7 +441,7 @@ add_filter('wp_theme_json_data_theme', 'stackless_theme_design_theme_json');
 function stackless_theme_design_theme_json($theme_json)
 {
     $vars = stackless_theme_design_vars();
-    $map = ['--st-primary' => 'primary', '--st-primary-light' => 'primary-light', '--st-heading' => 'dark', '--st-text' => 'body', '--st-surface-muted' => 'surface'];
+    $map = stackless_theme_design_palette_map();
     $data = $theme_json->get_data();
     $palette = $data['settings']['color']['palette']['theme'] ?? $data['settings']['color']['palette'] ?? [];
     $changed = false;
@@ -427,7 +518,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
 {
     foreach (stackless_theme_design_colors() as $key => [$label, , $default]) {
         $id = 'stackless_color_' . $key;
-        $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'sanitize_hex_color']);
+        $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'postMessage']);
         $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, $id, [
             'label' => $label,
             /* translators: %s: default hex color */
@@ -458,7 +549,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
     $fonts = stackless_theme_bundled_fonts();
     foreach (['body' => __('Body font', 'stackless-theme'), 'heading' => __('Heading font', 'stackless-theme')] as $where => $label) {
         $id = 'stackless_font_' . $where;
-        $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_choice']);
+        $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_choice', 'transport' => 'postMessage']);
         $wp_customize->add_control($id, [
             'label' => $label,
             'description' => $where === 'heading'
@@ -471,7 +562,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
                 return strpos((string) $key, 'font-') !== 0 || ($fonts[substr((string) $key, 5)]['use'] ?? '') === 'both';
             }, ARRAY_FILTER_USE_KEY),
         ]);
-        $wp_customize->add_setting($id . '_custom', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_stack']);
+        $wp_customize->add_setting($id . '_custom', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_font_stack', 'transport' => 'postMessage']);
         $wp_customize->add_control($id . '_custom', [
             /* translators: %s: Body font or Heading font */
             'label' => sprintf(__('%s: custom stack', 'stackless-theme'), $label),
@@ -488,7 +579,7 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
         ]);
     }
 
-    $wp_customize->add_setting('stackless_heading_case', ['default' => 'none', 'sanitize_callback' => 'stackless_theme_sanitize_heading_case']);
+    $wp_customize->add_setting('stackless_heading_case', ['default' => 'none', 'sanitize_callback' => 'stackless_theme_sanitize_heading_case', 'transport' => 'postMessage']);
     $wp_customize->add_control('stackless_heading_case', [
         'label' => __('Heading letter case', 'stackless-theme'),
         'description' => __('Capitals suit the condensed display faces.', 'stackless-theme'),

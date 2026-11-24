@@ -235,7 +235,7 @@ A site layout ships its defaults through filters. A site owner's saved Customize
 | `stackless_theme_cpt_option_defaults` / `stackless_theme_cpt_option` | Custom post type options. |
 | `stackless_theme_layout_choices` | The per-post Layout panel selects. |
 | `stackless_theme_design_colors`, `stackless_theme_design_widths`, `stackless_theme_font_stacks`, `stackless_theme_bundled_fonts` | The design registries (add a color, a width or a font). |
-| `stackless_theme_design_vars` / `stackless_theme_design_css` | The CSS custom properties and the printed design CSS. |
+| `stackless_theme_design_vars` / `stackless_theme_design_css` | The CSS custom properties and the printed design CSS. In the Customizer preview the color and font properties (`stackless_theme_design_live_properties()`) print in their own `stackless-theme-live-design` style and are redrawn in the browser as those settings change, so a filter on them shows after the next preview reload. |
 | `stackless_theme_footer_text` | The footer line. |
 
 ```php
