@@ -11,7 +11,10 @@ function stackless_theme_site_brand(): void
 {
     if (has_custom_logo()) {
         the_custom_logo();
-        return;
+        // Logo and name together, for a mark that is not a full wordmark (Site Identity setting).
+        if (!get_theme_mod('stackless_logo_title', false)) {
+            return;
+        }
     }
     $tag = is_front_page() && is_home() ? 'h1' : 'p';
     printf(
@@ -401,4 +404,53 @@ function stackless_theme_sale_badge(array $context): void
             esc_html(stackless_theme_text('sale_badge', __('Sale', 'stackless-theme'), $context))
         );
     }, $context);
+}
+
+/**
+ * An SVG logo drawn with `currentColor` takes the color of the text around it only when it is
+ * inline: as an <img> it renders black and disappears on a dark header. Such a logo is printed
+ * inline, so it follows the header's text color and dark mode. Other logos stay as images.
+ */
+add_filter('get_custom_logo', 'stackless_theme_inline_svg_logo', 10, 2);
+function stackless_theme_inline_svg_logo(string $html, $blog_id = 0): string
+{
+    $id = (int) get_theme_mod('custom_logo');
+    if ($html === '' || !$id || get_post_mime_type($id) !== 'image/svg+xml') {
+        return $html;
+    }
+    $svg = stackless_theme_logo_svg_markup($id);
+    if ($svg === '') {
+        return $html;
+    }
+    $inline = preg_replace('/<img\b[^>]*>/i', $svg, $html, 1);
+    if (!is_string($inline)) {
+        return $html;
+    }
+    if (stripos($inline, 'aria-label=') === false) {
+        $inline = preg_replace('/<a\b/i', '<a aria-label="' . esc_attr(get_bloginfo('name')) . '"', $inline, 1);
+    }
+    return (string) $inline;
+}
+
+/** The logo file as safe inline SVG, or '' when it is unreadable, too large or not drawn with currentColor. */
+function stackless_theme_logo_svg_markup(int $id): string
+{
+    $file = (string) get_attached_file($id);
+    if ($file === '' || !is_readable($file) || filesize($file) > 51200) {
+        return '';
+    }
+    $svg = (string) file_get_contents($file);
+    if (stripos($svg, 'currentcolor') === false || !preg_match('/<svg\b.*<\/svg>/is', $svg, $m)) {
+        return '';
+    }
+    $allowed = [];
+    foreach (['svg', 'g', 'path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon', 'title', 'desc', 'defs', 'lineargradient', 'radialgradient', 'stop', 'use', 'clippath', 'mask', 'symbol', 'text', 'tspan'] as $tag) {
+        $allowed[$tag] = array_fill_keys(['id', 'class', 'viewbox', 'xmlns', 'fill', 'fill-rule', 'clip-rule', 'clip-path', 'mask', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'opacity', 'fill-opacity', 'stroke-opacity', 'd', 'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'width', 'height', 'points', 'transform', 'offset', 'stop-color', 'stop-opacity', 'gradientunits', 'gradienttransform', 'href', 'xlink:href', 'preserveaspectratio', 'role', 'aria-labelledby', 'aria-hidden', 'focusable', 'font-size', 'font-family', 'font-weight', 'text-anchor'], true);
+    }
+    $svg = wp_kses($m[0], $allowed);
+    // The link carries the accessible name, as the <img> alt did: the graphic itself is decorative here.
+    $svg = preg_replace('/\s(role|aria-labelledby|aria-hidden|class|width|height)="[^"]*"/i', '', $svg);
+    $svg = preg_replace('/<(title|desc)\b[^>]*>.*?<\/\1>/is', '', (string) $svg);
+    $svg = preg_replace('/^<svg\b/i', '<svg class="custom-logo" aria-hidden="true" focusable="false"', (string) $svg, 1);
+    return (string) $svg;
 }

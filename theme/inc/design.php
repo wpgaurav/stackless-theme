@@ -449,7 +449,9 @@ function stackless_theme_design_css(): string
     }
     $logo = stackless_theme_sanitize_logo_width(get_theme_mod('stackless_logo_width', 0));
     if ($logo > 0) {
-        $css .= '.custom-logo{width:min(' . $logo . 'px,60vw);max-height:none;height:auto}';
+        // Two classes, so the rule beats layout.css's `.custom-logo{width:auto}`, which prints after
+        // this inline CSS. Without it an SVG logo that has only a viewBox collapses to 0px.
+        $css .= '.custom-logo-link .custom-logo{width:min(' . $logo . 'px,60vw);max-height:none;height:auto}';
     }
     $css = (string) apply_filters('stackless_theme_design_css', $css);
     // Strip anything that could close the style element; values are sanitized above.
@@ -749,6 +751,15 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
         'type' => 'number',
         'priority' => 9,
         'input_attrs' => ['min' => 0, 'max' => 400, 'step' => 1],
+    ]);
+
+    $wp_customize->add_setting('stackless_logo_title', ['default' => false, 'sanitize_callback' => 'rest_sanitize_boolean']);
+    $wp_customize->add_control('stackless_logo_title', [
+        'label' => __('Show the site title next to the logo', 'stackless-theme'),
+        'description' => __('For a logo that is a mark or icon rather than the full name.', 'stackless-theme'),
+        'section' => 'title_tagline',
+        'type' => 'checkbox',
+        'priority' => 9,
     ]);
 
     $wp_customize->add_setting('stackless_view_transitions', ['default' => false, 'sanitize_callback' => 'rest_sanitize_boolean']);

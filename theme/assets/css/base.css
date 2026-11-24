@@ -196,6 +196,13 @@ video {
 	height: auto;
 }
 
+/* Avatars are drawn square and cropped, so a portrait or landscape photo uploaded as a custom
+   avatar stays round instead of stretching into an oval. */
+img.avatar {
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
 img {
 	border-style: none;
 	vertical-align: middle;

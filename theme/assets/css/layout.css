@@ -195,6 +195,21 @@ html.search-open .has-header-on-light .site-header,
 
 .custom-logo-link {
 	display: block;
+	color: var(--st-heading);
+}
+
+/* An inline SVG logo (one drawn with currentColor) sizes like the image version. */
+svg.custom-logo {
+	display: block;
+	height: auto;
+	aspect-ratio: auto;
+}
+
+/* Logo and site title side by side (Site Identity > Show the site title next to the logo). */
+.custom-logo-link + .site-title {
+	margin-inline-start: .6rem;
+	font-size: 1.375rem;
+	letter-spacing: -.035em;
 }
 
 .custom-logo {
@@ -238,6 +253,35 @@ html.search-open .has-header-on-light .site-header,
 .site-nav .current_page_item > a,
 .site-nav a[aria-current="page"] {
 	color: var(--st-link, var(--st-primary));
+}
+
+/*
+ * A menu item given the CSS class "button" (Menus > CSS classes, a common convention from other
+ * themes) is drawn as a call-to-action button. The class sits on the <li>, so the base .button
+ * look is cleared from the item and moved onto its link.
+ */
+.site-nav li.button {
+	display: list-item;
+	min-height: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: inherit;
+}
+
+.site-nav li.button > a,
+.site-nav li.button > a:hover {
+	margin-left: .35rem;
+	padding-inline: .9rem;
+	border: 1px solid var(--st-primary);
+	background: var(--st-primary);
+	color: #fff;
+}
+
+.site-nav li.button > a:hover {
+	border-color: var(--st-primary-hover);
+	background: var(--st-primary-hover);
 }
 
 .site-header__actions {
@@ -553,6 +597,11 @@ html.search-open .has-header-on-light .site-header,
 	.nav-open .site-nav,
 	html:not(.js) .site-nav:target {
 		display: block;
+	}
+
+	.site-nav li.button > a {
+		margin: .5rem 0 0;
+		text-align: center;
 	}
 
 	.site-nav a {
