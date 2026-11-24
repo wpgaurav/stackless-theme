@@ -14,6 +14,15 @@ body {
 
 .container {
 	width: 100%;
+}
+
+/*
+ * The frame every header, footer and page shares. The class is doubled so a plugin's own
+ * .container can't resize it: FluentCart ships Tailwind's, which steps the width down to
+ * 640, 768 and 1024px and left the header narrower than the page on store pages.
+ */
+.container.container {
+	width: 100%;
 	max-width: calc(var(--st-wide) + var(--st-gutter) * 2);
 	margin-inline: auto;
 	padding-inline: var(--st-gutter);
@@ -1790,9 +1799,12 @@ html.search-open {
 }
 
 .search-overlay__inner {
-	max-width: calc(52rem + var(--st-gutter) * 2);
 	padding-block: clamp(1.5rem, 5vh, 3.5rem) 4rem;
 	animation: st-rise .22s ease-out;
+}
+
+.search-overlay__inner.container {
+	max-width: calc(52rem + var(--st-gutter) * 2);
 }
 
 @keyframes st-rise {
@@ -2356,6 +2368,9 @@ html.search-open {
 	--st-sidebar-gap: 4rem;
 	display: grid;
 	gap: 3rem;
+}
+
+.single-layout.container {
 	max-width: calc(var(--st-content) + var(--st-sidebar) + var(--st-sidebar-gap) + var(--st-gutter) * 2);
 }
 
