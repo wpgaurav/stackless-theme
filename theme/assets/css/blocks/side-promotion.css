@@ -79,7 +79,26 @@ div.stb-side-promotion[class] {
 	.entry-content:has(> .stb-side-promotion) {
 		position: relative;
 	}
-	.stb-side-promotion-right,
-	.stb-side-promotion-left {
+	/*
+	 * .entry-content spans the wide width and centers its text column, so the panels line up
+	 * with the text column's edge, not the box's. They never grow past the free margin, so the
+	 * page cannot scroll sideways; div and [class] lift that limit above the theme's 720px cap on
+	 * blocks in the text column.
+	 */
+	div.stb-side-promotion-right[class],
+	div.stb-side-promotion-left[class] {
 		display: block;
-	}}
+		max-width: calc((100vw - var(--st-content, 720px)) / 2 - var(--space-single) - var(--st-gutter, 2rem) - 1rem);
+	}
+	.stb-side-promotion-right {
+		right: calc((100% - min(100%, var(--st-content, 720px))) / 2);
+	}
+	.stb-side-promotion-left {
+		left: calc((100% - min(100%, var(--st-content, 720px))) / 2);
+	}
+	/* Beside a sidebar there is no free margin, so the panels stay hidden. */
+	.single-layout div.stb-side-promotion-right[class],
+	.single-layout div.stb-side-promotion-left[class] {
+		display: none;
+	}
+}

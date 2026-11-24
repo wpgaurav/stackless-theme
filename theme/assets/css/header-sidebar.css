@@ -501,7 +501,9 @@ html.is-header-hidden:not(.rail-open):not(.search-open) .has-bar-autohide .site-
 		font-weight: 500;
 		pointer-events: none;
 		opacity: 0;
-		visibility: hidden;
+		/* Clipped, not visibility: hidden, so the label still names the link for screen readers
+		   while the rail shows only icons. */
+		clip-path: inset(50%);
 	}
 
 	.rail-collapse-icons.rail-collapsed .site-rail a:hover .menu-item-label,
@@ -509,7 +511,7 @@ html.is-header-hidden:not(.rail-open):not(.search-open) .has-bar-autohide .site-
 	.rail-collapse-icons.rail-collapsed .site-rail button:hover .menu-item-label,
 	.rail-collapse-icons.rail-collapsed .site-rail button:focus-visible .menu-item-label {
 		opacity: 1;
-		visibility: visible;
+		clip-path: none;
 	}
 
 	.rail-collapse-icons.rail-collapsed .site-account__menu {

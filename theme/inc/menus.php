@@ -82,6 +82,13 @@ function stackless_theme_menu_icon_class(array $classes, $item): array
     return $classes;
 }
 
+/** A second copy of a menu on the page (the merged Header right menu) prints no item ids. */
+add_filter('nav_menu_item_id', 'stackless_theme_menu_item_id', 10, 3);
+function stackless_theme_menu_item_id($id, $item, $args)
+{
+    return is_object($args) && !empty($args->stackless_no_item_ids) ? '' : $id;
+}
+
 add_filter('nav_menu_item_title', 'stackless_theme_menu_icon_title', 10, 4);
 function stackless_theme_menu_icon_title(string $title, $item, $args, int $depth): string
 {

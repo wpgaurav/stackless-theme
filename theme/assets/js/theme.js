@@ -260,12 +260,18 @@
 				// The pressed button can vanish with the hidden rail, or the bar's button once it is
 				// back; focus moves to the toggle that stays in view.
 				if (collapsed && body.classList.contains('rail-collapse-hidden')) {
-					document.querySelector('.site-rail-open').focus();
+					var opener = document.querySelector('.site-rail-open');
+					if (opener) {
+						opener.focus();
+					}
 				} else if (!collapsed && !rail.contains(button)) {
 					// The rail turns visible a frame later (its visibility transition).
 					window.requestAnimationFrame(function () {
 						window.requestAnimationFrame(function () {
-							rail.querySelector('[data-st-rail-toggle]').focus();
+							var toggle = rail.querySelector('[data-st-rail-toggle]');
+							if (toggle) {
+								toggle.focus();
+							}
 						});
 					});
 				}

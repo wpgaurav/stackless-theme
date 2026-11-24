@@ -61,7 +61,7 @@ $stackless_theme_header_part = static function (string $slug) use ($stackless_th
 			] + ($stackless_theme_rail ? ['stackless_rail' => true] : [])));
 			if ($stackless_theme_right_menu) {
 				// The Header right menu again, shown only in the phone and tablet menu.
-				wp_nav_menu($stackless_theme_right_menu_args(['menu_id' => 'header-right-menu-merged', 'menu_class' => 'menu site-nav__merged']));
+				wp_nav_menu($stackless_theme_right_menu_args(['menu_id' => 'header-right-menu-merged', 'menu_class' => 'menu site-nav__merged', 'stackless_no_item_ids' => true]));
 			}
 			stackless_theme_currency_switcher('menu');
 			?>

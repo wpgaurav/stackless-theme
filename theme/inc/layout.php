@@ -292,7 +292,11 @@ function stackless_theme_opens_with_hero(string $mode = 'hero'): bool
                 if (empty($block['blockName'])) {
                     continue;
                 }
-                $full = ($block['attrs']['align'] ?? '') === 'full';
+                // A default value is not saved in the block comment, so fall back to the block's
+                // registered default (the Slider is full width by default).
+                $type = WP_Block_Type_Registry::get_instance()->get_registered($block['blockName']);
+                $align = $block['attrs']['align'] ?? ($type && isset($type->attributes['align']['default']) ? (string) $type->attributes['align']['default'] : '');
+                $full = $align === 'full';
                 $opens = $full && ($mode === 'all' || $block['blockName'] === 'core/cover');
                 break;
             }
