@@ -201,6 +201,8 @@ The Customizer's menu editor does not show the field. Use Appearance > Menus. In
 
 `--st-header-height` is a public CSS custom property on `:root`: the site header's height, for anything that has to clear it, such as a slider under a clear header, a sticky offset or `scroll-margin-top`.
 
+`--st-header-offset` (default `0px`) moves a header that sits over the first section down from the top of the window, for a bar printed above the header such as an announcement bar. Set it on `:root` to the bar's visible height and back to `0px` once the bar scrolls away or closes. The admin bar is added on top of it, so leave it out.
+
 - **CSS value.** `calc(4rem + 1px)` for the top header, and `calc(3.5rem + 1px)` for the sidebar layout's top bar.
 - **When it changes.** theme.js watches the header with a `ResizeObserver`. When the real height differs from the CSS value (a menu wrapping to two rows, an announcement bar printed into the header), it writes the measured height inline on `<html>`. It removes it again once they agree.
 - **No header.** Without JavaScript, or on a page with no site header, the CSS value applies.

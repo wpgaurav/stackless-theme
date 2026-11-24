@@ -80,6 +80,10 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: the Slider and Carousel move with CSS scroll snap and share one small script for the arrows, dots, arrow keys and autoplay, loaded only on pages that use them. Without the script they are plain horizontal scrollers. Both are labelled for screen readers ("2 of 5"), follow the site's colors and dark colors, keep their space while loading, and lazy-load every photo but the first slide's.
 * Fixed: with the header over the first section, a dropdown menu could show white text on a white panel, and menu hover backgrounds were too light to see.
 * Fixed: a Cover block at the top of a page with the header over it started 32px down, leaving a strip of page background under the header.
+* Changed: the "Built with Stackless" footer link points to wpstackless.com.
+* New: the --st-header-offset CSS property moves the header over the first section down, so a bar printed above the header (Pro's announcement bar, for one) stays visible.
+* Fixed: a full-width Group with its own content or wide size kept the theme's reading width instead.
+* Fixed: on phones, pages jumped about 78px on first load while the menu switched from its no-JavaScript state. The page is now marked as scripted before it draws.
 
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.

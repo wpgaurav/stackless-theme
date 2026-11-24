@@ -65,9 +65,15 @@ body {
 	}
 }
 
-/* Header over the first section (per-page option): clear until the page scrolls or a panel opens. */
+/*
+ * Header over the first section (per-page option): clear until the page scrolls or a panel opens.
+ * --st-header-offset: how far below the top of the window the clear header sits, for content
+ * printed above it in the page flow (an announcement bar). 0 by default; whatever prints that
+ * content sets it. The admin bar is added separately below, so the token never includes it.
+ */
 .has-transparent-header .site-header {
 	position: fixed;
+	top: var(--st-header-offset, 0px);
 	right: 0;
 	left: 0;
 	border-bottom-color: transparent;
@@ -86,6 +92,11 @@ html.search-open .has-transparent-header .site-header,
 	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
 	-webkit-backdrop-filter: saturate(180%) blur(12px);
 	backdrop-filter: saturate(180%) blur(12px);
+}
+
+/* The admin bar rule above is less specific than the clear header's top, so it is repeated with the offset. */
+.admin-bar.has-transparent-header .site-header {
+	top: calc(var(--wp-admin--admin-bar--height, 32px) + var(--st-header-offset, 0px));
 }
 
 /*
@@ -143,7 +154,7 @@ html.search-open .has-header-on-light .site-header,
 @media (max-width: 600px) {
 	.admin-bar.has-transparent-header .site-header {
 		position: absolute;
-		top: var(--wp-admin--admin-bar--height, 46px);
+		top: calc(var(--wp-admin--admin-bar--height, 46px) + var(--st-header-offset, 0px));
 	}
 }
 
@@ -752,14 +763,17 @@ html.is-header-hidden:not(.nav-open):not(.search-open) .has-header-autohide .sit
 	clear: both;
 }
 
-/* Blocks inside full-width groups keep the content width. */
+/*
+ * Blocks inside full-width groups keep the content width. A group with its own content or wide
+ * size gets a wp-container-* class from core, whose per-group rule then sets the widths instead.
+ */
 .entry-content .alignfull > .wp-block-group__inner-container > :not(.alignfull):not(.alignwide),
-.entry-content .alignfull.is-layout-constrained > :not(.alignfull):not(.alignwide) {
+.entry-content .alignfull.is-layout-constrained:not([class*="wp-container-"]) > :not(.alignfull):not(.alignwide) {
 	max-width: var(--st-content);
 	margin-inline: auto;
 }
 
-.entry-content .alignfull.is-layout-constrained > .alignwide {
+.entry-content .alignfull.is-layout-constrained:not([class*="wp-container-"]) > .alignwide {
 	max-width: var(--st-wide);
 	margin-inline: auto;
 }

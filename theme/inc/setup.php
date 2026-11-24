@@ -213,3 +213,13 @@ function stackless_theme_menu_link_attributes(array $atts, $item): array
 add_filter('excerpt_more', static function (): string {
     return '&hellip;';
 });
+
+/**
+ * Marks the page as scripted before it draws. theme.js loads deferred, and the menus show their
+ * no-JS state until the `js` class is on <html>, which made pages jump on phones.
+ */
+add_action('wp_head', 'stackless_theme_js_class', 1);
+function stackless_theme_js_class(): void
+{
+    wp_print_inline_script_tag("document.documentElement.classList.add('js');");
+}
