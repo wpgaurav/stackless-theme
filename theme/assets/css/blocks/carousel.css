@@ -71,13 +71,15 @@
 }
 
 /* A carousel at the content width has room beside it: the arrows sit outside the row, clear of
-   the items' text. Wide and full carousels keep them inside, over the edges of the items. */
-@media (min-width: 1024px) {
-	.stb-carousel:not(.alignfull, .alignwide) .stb-scroller-prev {
+   the items' text. Wide and full carousels keep them inside, over the edges of the items. 1280px
+   leaves room for the widest content setting and the sidebar header; beside a post sidebar there
+   is no such room, so the arrows stay inside there. */
+@media (min-width: 1280px) {
+	.stb-carousel:not(.alignfull, .alignwide, .single-layout__main .stb-carousel) .stb-scroller-prev {
 		inset-inline-start: calc((var(--stb-control-size) + .75rem) * -1);
 	}
 
-	.stb-carousel:not(.alignfull, .alignwide) .stb-scroller-next {
+	.stb-carousel:not(.alignfull, .alignwide, .single-layout__main .stb-carousel) .stb-scroller-next {
 		inset-inline-end: calc((var(--stb-control-size) + .75rem) * -1);
 	}
 }

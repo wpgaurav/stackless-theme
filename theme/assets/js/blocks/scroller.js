@@ -46,6 +46,13 @@
 		var rtl = getComputedStyle(track).direction === 'rtl';
 		var pages = [0];
 		var perView = 1;
+		// The dots, progress bar and pause button are only shown while there is more than one page.
+		var navBox = own(root, '.stb-scroller-nav');
+		var showControls = function (on) {
+			if (navBox) {
+				navBox.hidden = !on;
+			}
+		};
 		var current = 0;
 		var dots = [];
 		var ticking = false;
@@ -80,8 +87,10 @@
 			if (list.length < 2 || max < 1) {
 				perView = list.length || 1;
 				pages = [0];
+				showControls(false);
 				return;
 			}
+			showControls(true);
 			// The distance from one item to the next is its width plus the gap; the row's width
 			// holds one gap fewer than items.
 			var step = Math.abs(offsetOf(list[1], base) - offsetOf(list[0], base)) || track.clientWidth;
@@ -317,6 +326,12 @@
 
 		if (pauseButton && delay > 0) {
 			pauseButton.addEventListener('click', function () {
+				// Play restarts rotation at once, even with the pointer or focus on the button,
+				// as the carousel pattern asks. Moving onto the slides again pauses it.
+				if (!playing) {
+					held.hover = false;
+					held.focus = false;
+				}
 				setPlaying(!playing);
 			});
 			root.addEventListener('mouseenter', function () {

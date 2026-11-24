@@ -359,8 +359,9 @@ function stackless_theme_blocks_carousel_item($block_content, $parsed_block)
  * Marks the list inside a Carousel's only block as the row that scrolls. Returns the markup with
  * the list marked, or '' when no known list is found.
  */
-function stackless_theme_blocks_carousel_list(string $content, string $track_id, string $extra_class = ''): string
+function stackless_theme_blocks_carousel_list(string $content, string $track_id, string $extra_class = '', ?string &$used_id = null): string
 {
+    $used_id = $track_id;
     if (!class_exists('WP_HTML_Tag_Processor')) {
         return '';
     }
@@ -373,7 +374,9 @@ function stackless_theme_blocks_carousel_list(string $content, string $track_id,
         while ($tags->next_tag()) {
             if ($tags->has_class((string) $class)) {
                 $tags->add_class('stb-scroller-track');
-                $tags->set_attribute('id', $tags->get_attribute('id') ? $tags->get_attribute('id') : $track_id);
+                // A list that already has an id (an anchor) keeps it; the controls are pointed at it.
+                $used_id = $tags->get_attribute('id') ? (string) $tags->get_attribute('id') : $track_id;
+                $tags->set_attribute('id', $used_id);
                 $tags->set_attribute('data-stb-track', true);
                 $tags->set_attribute('tabindex', '0');
                 return $tags->get_updated_html();
@@ -409,7 +412,13 @@ function stackless_theme_blocks_render_carousel(array $attributes, string $conte
     $count = $block instanceof WP_Block ? count($block->inner_blocks) : 2;
     $body = '';
     if ($count === 1) {
-        $list = stackless_theme_blocks_carousel_list($content, $track_id, (string) ($attributes['listClass'] ?? ''));
+        $list_id = $track_id;
+        $list = stackless_theme_blocks_carousel_list($content, $track_id, (string) ($attributes['listClass'] ?? ''), $list_id);
+        if ($list !== '' && $list_id !== $track_id) {
+            foreach (['arrows', 'nav'] as $part) {
+                $controls[$part] = str_replace('aria-controls="' . esc_attr($track_id) . '"', 'aria-controls="' . esc_attr($list_id) . '"', $controls[$part]);
+            }
+        }
         if ($list !== '') {
             $classes[] = 'is-list';
             $body = '<div class="stb-carousel-body">' . $list . '</div>';
