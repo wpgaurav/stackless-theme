@@ -424,7 +424,7 @@ function stackless_theme_blocks_render_key_takeaway(array $attributes, string $c
         return '';
     }
 
-    // Map icon values to MD icon font classes
+    // Map icon values to the blocks' icon classes
     $icon_map = array(
         'bolt'    => 'stb-icon-bolt',
         'fire'    => 'stb-icon-fire',

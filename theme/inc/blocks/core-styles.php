@@ -54,9 +54,9 @@ function stackless_theme_blocks_core_styles(): array
             'browser-shot' => __('Browser Shot', 'stackless-theme'),
         ],
         'core/query' => [
-            'stb-cards' => __('MD Cards', 'stackless-theme'),
-            'stb-magazine' => __('MD Magazine', 'stackless-theme'),
-            'stb-list' => __('MD List', 'stackless-theme'),
+            'stb-cards' => __('Cards', 'stackless-theme'),
+            'stb-magazine' => __('Magazine', 'stackless-theme'),
+            'stb-list' => __('List', 'stackless-theme'),
         ],
         'core/group' => [
             'aside' => __('Aside L', 'stackless-theme'),
@@ -81,6 +81,8 @@ function stackless_theme_blocks_core_styles(): array
         ],
         'core/cover' => [
             'rounded-cover' => __('Rounded', 'stackless-theme'),
+            // The cover's link opens from anywhere on it: photo category tiles, audience cards.
+            'tile' => __('Linked tile', 'stackless-theme'),
         ],
         'core/video' => [
             'media-boxed' => __('Boxed', 'stackless-theme'),

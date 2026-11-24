@@ -50,6 +50,10 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 
 == Changelog ==
 
+= 1.9.0 =
+* New: a Linked tile style for the Cover block. The cover's link opens from anywhere on it, for photo category tiles and similar cards, and the photo zooms a little on hover (not with reduced motion).
+* Changed: the Query Loop styles are named Cards, Magazine and List.
+
 = 1.8.1 =
 * Fixed: a long word in a large heading wrapped onto the next line only after widening the page on phones.
 * Fixed: Carousel arrows could sit off the page edge beside a post sidebar or on narrower screens; they now sit outside the items only from 1280px and never beside a sidebar.

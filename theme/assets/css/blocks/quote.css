@@ -12,7 +12,7 @@
 	/* Serif variants follow Blockquote settings, including editor previews. */
 	--font-serif: var(--font-quote, ui-serif, Georgia, serif);
 	position: relative;
-	/* No top margin: every other MD block starts flush and spaces itself with
+	/* No top margin: every other Stackless block starts flush and spaces itself with
 	   its mb-* class, so a quote sat a third of a line lower than its
 	   neighbours and nearly two lines below a heading. */
 	margin: 0;
