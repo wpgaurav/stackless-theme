@@ -7,8 +7,6 @@
  * the <nav>. Reading the rendered content means the list and the anchors always match, and that
  * headings printed by other blocks are included. Posts without the block are never touched.
  *
- * The markup and class names follow Marketers Delight's table of contents.
- *
  * @package Stackless_Theme
  */
 
@@ -51,20 +49,20 @@ function stackless_theme_blocks_render_table_of_contents(array $attributes, stri
         $args[$key] = isset($attributes[$key]) ? (bool) $attributes[$key] : (bool) $defaults[$key];
     }
 
-    $classes = ['md-toc'];
+    $classes = ['stb-toc'];
     if ($args['collapsible']) {
-        $classes[] = 'md-toc-collapsible';
+        $classes[] = 'stb-toc-collapsible';
     }
     if ($args['collapsible'] && $args['collapsed']) {
         $classes[] = 'is-collapsed';
     }
     if ($args['numbering'] !== 'none') {
-        $classes[] = 'md-toc-numbered';
+        $classes[] = 'stb-toc-numbered';
     }
 
     stackless_theme_blocks_toc_pending(true);
 
-    return '<nav class="' . esc_attr(implode(' ', $classes)) . '" data-md-toc data-numbering="' . esc_attr($args['numbering']) . '" data-st-toc="' . esc_attr(base64_encode((string) wp_json_encode($args))) . '"></nav>';
+    return '<nav class="' . esc_attr(implode(' ', $classes)) . '" data-stb-toc data-numbering="' . esc_attr($args['numbering']) . '" data-st-toc="' . esc_attr(base64_encode((string) wp_json_encode($args))) . '"></nav>';
 }
 
 /** Whether a table of contents is waiting to be filled in the content being rendered. */
@@ -133,7 +131,7 @@ function stackless_theme_blocks_toc_fill($content)
         // Unique when a post holds more than one table of contents.
         static $count = 0;
         $count++;
-        $id = 'md-toc-' . substr(md5($list[0]['id']), 0, 8) . ($count > 1 ? '-' . $count : '');
+        $id = 'stb-toc-' . substr(md5($list[0]['id']), 0, 8) . ($count > 1 ? '-' . $count : '');
         $inner = (string) apply_filters('stackless_theme_blocks_toc_markup', stackless_theme_blocks_toc_inner($list, $args, $id), $list, $args);
         return '<nav' . $match[1] . $match[3] . ' aria-labelledby="' . esc_attr($id) . '-title">' . $inner . '</nav>';
     }, $content);
@@ -142,24 +140,24 @@ function stackless_theme_blocks_toc_fill($content)
 /** The title row and the list. */
 function stackless_theme_blocks_toc_inner(array $headings, array $args, string $id): string
 {
-    $out = '<div class="md-toc-head">';
+    $out = '<div class="stb-toc-head">';
     // A paragraph, not a heading, so the title stays out of the document outline and the list.
-    $out .= '<p class="md-toc-title" id="' . esc_attr($id) . '-title">' . esc_html((string) $args['title']) . '</p>';
+    $out .= '<p class="stb-toc-title" id="' . esc_attr($id) . '-title">' . esc_html((string) $args['title']) . '</p>';
     if (!empty($args['collapsible'])) {
-        $out .= '<button type="button" class="md-toc-toggle" aria-expanded="' . (!empty($args['collapsed']) ? 'false' : 'true') . '" aria-controls="' . esc_attr($id) . '">';
+        $out .= '<button type="button" class="stb-toc-toggle" aria-expanded="' . (!empty($args['collapsed']) ? 'false' : 'true') . '" aria-controls="' . esc_attr($id) . '">';
         $out .= '<span class="screen-reader-text">' . esc_html__('Toggle table of contents', 'stackless-theme') . '</span>';
-        $out .= '<span class="md-toc-chevron" aria-hidden="true"></span></button>';
+        $out .= '<span class="stb-toc-chevron" aria-hidden="true"></span></button>';
     }
-    $out .= '</div><div class="md-toc-body" id="' . esc_attr($id) . '"' . (!empty($args['collapsible']) && !empty($args['collapsed']) ? ' hidden' : '') . '>';
+    $out .= '</div><div class="stb-toc-body" id="' . esc_attr($id) . '"' . (!empty($args['collapsible']) && !empty($args['collapsed']) ? ' hidden' : '') . '>';
 
     $tag = ($args['numbering'] ?? 'none') === 'none' ? 'ul' : 'ol';
     $base = min(array_column($headings, 'level'));
     $item = static function (array $heading, ?int $depth = null): string {
-        return '<li class="md-toc-item"' . ($depth !== null ? ' data-depth="' . $depth . '"' : '') . '><a class="md-toc-link" href="#' . esc_attr($heading['id']) . '" data-level="' . (int) $heading['level'] . '">' . esc_html($heading['text']) . '</a>';
+        return '<li class="stb-toc-item"' . ($depth !== null ? ' data-depth="' . $depth . '"' : '') . '><a class="stb-toc-link" href="#' . esc_attr($heading['id']) . '" data-level="' . (int) $heading['level'] . '">' . esc_html($heading['text']) . '</a>';
     };
 
     if (empty($args['hierarchical'])) {
-        $out .= '<' . $tag . ' class="md-toc-list md-toc-flat">';
+        $out .= '<' . $tag . ' class="stb-toc-list stb-toc-flat">';
         foreach ($headings as $heading) {
             $out .= $item($heading, $heading['level'] - $base) . '</li>';
         }
@@ -167,13 +165,13 @@ function stackless_theme_blocks_toc_inner(array $headings, array $args, string $
     }
 
     // Nested: descend one level at a time, however far a heading jumps.
-    $out .= '<' . $tag . ' class="md-toc-list">';
+    $out .= '<' . $tag . ' class="stb-toc-list">';
     $depth = 0;
     $open = false;
     foreach ($headings as $heading) {
         $level = min($heading['level'] - $base, $depth + 1);
         if ($level > $depth && $open) {
-            $out .= '<' . $tag . ' class="md-toc-sublist">';
+            $out .= '<' . $tag . ' class="stb-toc-sublist">';
             $depth++;
         } elseif ($level < $depth) {
             $out .= $open ? '</li>' : '';

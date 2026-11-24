@@ -24,13 +24,13 @@
 	/**
 	 * Build an icon element for an editor preview.
 	 *
-	 * Stored icon values are icon-font class names such as `md-icon-bolt`.
+	 * Stored icon values are icon-font class names such as `stb-icon-bolt`.
 	 * There is no icon font here, so the matching inline SVG is printed inside
 	 * the element that carries the class. An unknown value still returns the
 	 * element with its classes, only empty.
 	 *
 	 * @param {string} tag        Element tag, e.g. 'i' or 'span'.
-	 * @param {string} value      Icon class, e.g. 'md-icon-bolt'.
+	 * @param {string} value      Icon class, e.g. 'stb-icon-bolt'.
 	 * @param {string} className  Optional extra classes, printed before the icon class.
 	 * @param {Object} extraProps Optional extra props, e.g. { style: { color: '#000' } }.
 	 * @return {Object} Element.
@@ -67,12 +67,12 @@
 	 * localized cardIcons list; an unknown name returns an empty element.
 	 *
 	 * @param {string} name      Key in StacklessBlocks.cardIcons, e.g. 'tag'.
-	 * @param {string} className Class for the wrapper. Defaults to 'md-card-icon'.
+	 * @param {string} className Class for the wrapper. Defaults to 'stb-card-icon'.
 	 * @return {Object} Element.
 	 */
 	SB.cardIcon = function ( name, className ) {
 		return el( 'span', {
-			className: className === undefined ? 'md-card-icon' : className,
+			className: className === undefined ? 'stb-card-icon' : className,
 			'aria-hidden': 'true',
 			dangerouslySetInnerHTML: { __html: SB.cardIcons[ name ] || '' }
 		} );

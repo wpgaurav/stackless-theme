@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Book Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -147,7 +147,7 @@
 				setError = _errorState[1];
 
 			var blockProps = useBlockProps({
-				className: 'md-book-card md-book-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-book-card stb-book-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -233,30 +233,30 @@
 					)
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-book-card-layout' },
-					el('div', { className: 'md-book-card-cover' },
+					el('div', { className: 'stb-book-card-layout' },
+					el('div', { className: 'stb-book-card-cover' },
 						attributes.coverImage
 							? el('img', { src: attributes.coverImage, alt: attributes.title })
-							: StacklessBlocks.icon( 'span', 'md-icon-book', 'md-book-card-cover-placeholder' )
+							: StacklessBlocks.icon( 'span', 'stb-icon-book', 'stb-book-card-cover-placeholder' )
 					),
-					el('div', { className: 'md-book-card-body' },
-						el('h3', { className: 'md-book-card-title' }, attributes.title || __( 'Book Title', 'stackless-theme' )),
-						attributes.authors && attributes.authors.length > 0 && el('div', { className: 'md-book-card-authors' },
+					el('div', { className: 'stb-book-card-body' },
+						el('h3', { className: 'stb-book-card-title' }, attributes.title || __( 'Book Title', 'stackless-theme' )),
+						attributes.authors && attributes.authors.length > 0 && el('div', { className: 'stb-book-card-authors' },
 							StacklessBlocks.cardIcon( 'user' ),
 							' ' + attributes.authors.join(', ')
 						),
-						el('div', { className: 'md-book-card-meta' },
-							attributes.publisher && el('span', { className: 'md-book-card-publisher' }, attributes.publisher),
-							attributes.publishYear && el('span', { className: 'md-book-card-year' }, StacklessBlocks.cardIcon( 'calendar' ), ' ' + attributes.publishYear),
-							attributes.pageCount > 0 && el('span', { className: 'md-book-card-pages' }, StacklessBlocks.icon( 'span', 'md-icon-file' ), ' ' + attributes.pageCount + ' ' + __( 'pages', 'stackless-theme' ))
+						el('div', { className: 'stb-book-card-meta' },
+							attributes.publisher && el('span', { className: 'stb-book-card-publisher' }, attributes.publisher),
+							attributes.publishYear && el('span', { className: 'stb-book-card-year' }, StacklessBlocks.cardIcon( 'calendar' ), ' ' + attributes.publishYear),
+							attributes.pageCount > 0 && el('span', { className: 'stb-book-card-pages' }, StacklessBlocks.icon( 'span', 'stb-icon-file' ), ' ' + attributes.pageCount + ' ' + __( 'pages', 'stackless-theme' ))
 						),
-						attributes.description && el('p', { className: 'md-book-card-desc' }, attributes.description),
-						attributes.subjects && attributes.subjects.length > 0 && el('div', { className: 'md-book-card-subjects' },
+						attributes.description && el('p', { className: 'stb-book-card-desc' }, attributes.description),
+						attributes.subjects && attributes.subjects.length > 0 && el('div', { className: 'stb-book-card-subjects' },
 							attributes.subjects.map(function (subject, i) {
-								return el('span', { key: 'subject-' + i, className: 'md-book-card-subject' }, subject);
+								return el('span', { key: 'subject-' + i, className: 'stb-book-card-subject' }, subject);
 							})
 						),
-						el('div', { className: 'md-book-card-actions' },
+						el('div', { className: 'stb-book-card-actions' },
 							attributes.openLibraryUrl && el('a', { href: '#', className: 'button' }, __( 'View on Open Library', 'stackless-theme' ))
 						)
 					)

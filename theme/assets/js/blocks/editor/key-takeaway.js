@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Key Takeaway.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -19,18 +19,18 @@
 		__ = wp.i18n.__;
 
 	var iconMap = {
-		'bolt': 'md-icon-bolt',
-		'fire': 'md-icon-fire',
-		'star': 'md-icon-star',
-		'info': 'md-icon-info',
-		'warning': 'md-icon-warning',
-		'ok': 'md-icon-ok',
-		'gift': 'md-icon-gift',
-		'trophy': 'md-icon-trophy',
-		'rocket': 'md-icon-rocket',
-		'heart': 'md-icon-heart',
-		'bell': 'md-icon-bell',
-		'gem': 'md-icon-gem'
+		'bolt': 'stb-icon-bolt',
+		'fire': 'stb-icon-fire',
+		'star': 'stb-icon-star',
+		'info': 'stb-icon-info',
+		'warning': 'stb-icon-warning',
+		'ok': 'stb-icon-ok',
+		'gift': 'stb-icon-gift',
+		'trophy': 'stb-icon-trophy',
+		'rocket': 'stb-icon-rocket',
+		'heart': 'stb-icon-heart',
+		'bell': 'stb-icon-bell',
+		'gem': 'stb-icon-gem'
 	};
 
 	registerBlockType('stackless/key-takeaway', {
@@ -91,7 +91,7 @@
 			if (attributes.textColor) inlineStyle.color = attributes.textColor;
 
 			var blockProps = useBlockProps({
-				className: 'md-key-takeaway md-key-takeaway-' + attributes.blockStyle + ' ' + attributes.marginBottom,
+				className: 'stb-key-takeaway stb-key-takeaway-' + attributes.blockStyle + ' ' + attributes.marginBottom,
 				style: inlineStyle
 			});
 
@@ -177,15 +177,15 @@
 					)
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-key-takeaway-header' },
-						attributes.icon !== 'none' && iconClass && StacklessBlocks.icon('span', iconClass, 'md-key-takeaway-icon', {
+					el('div', { className: 'stb-key-takeaway-header' },
+						attributes.icon !== 'none' && iconClass && StacklessBlocks.icon('span', iconClass, 'stb-key-takeaway-icon', {
 							style: attributes.iconColor ? { color: attributes.iconColor } : {}
 						}),
-						el('span', { className: 'md-key-takeaway-label' }, attributes.label)
+						el('span', { className: 'stb-key-takeaway-label' }, attributes.label)
 					),
 					el(RichText, {
 						tagName: 'div',
-						className: 'md-key-takeaway-content',
+						className: 'stb-key-takeaway-content',
 						value: attributes.content,
 						placeholder: __( 'Write your key takeaway or summary here...', 'stackless-theme' ),
 						onChange: function (val) { props.setAttributes({ content: val }); }

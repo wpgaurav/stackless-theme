@@ -30,7 +30,7 @@ function stackless_theme_blocks_card_style(array $attributes): string
 /** The class attribute value of a card's root element. */
 function stackless_theme_blocks_card_classes(string $card, array $attributes): string
 {
-    $classes = ['md-' . $card . '-card', 'md-' . $card . '-card-' . stackless_theme_blocks_card_style($attributes)];
+    $classes = ['stb-' . $card . '-card', 'stb-' . $card . '-card-' . stackless_theme_blocks_card_style($attributes)];
     return esc_attr(implode(' ', array_merge($classes, stackless_theme_blocks_classes($attributes['marginBottom'] ?? 'mb-double'))));
 }
 
@@ -59,10 +59,10 @@ function stackless_theme_blocks_card_list(array $attributes, string $field): arr
 }
 
 /**
- * One of the cards' small inline icons, as an <svg> carrying Marketers Delight's class.
- * Marketers Delight inlines its own paths here; Stackless draws the matching Tabler icon.
+ * One of the cards' small inline icons: the matching Tabler icon as an <svg> carrying the
+ * card's icon class.
  */
-function stackless_theme_blocks_card_icon(string $name, int $size = 14, string $class = 'md-card-icon'): string
+function stackless_theme_blocks_card_icon(string $name, int $size = 14, string $class = 'stb-card-icon'): string
 {
     $svg = stackless_theme_icon($name, $size);
     return $svg === '' || $class === '' ? $svg : str_replace('class="st-icon ', 'class="' . esc_attr($class) . ' st-icon ', $svg);
@@ -160,16 +160,16 @@ function stackless_theme_blocks_card_stars($rating): float
     return max(0.0, min(5.0, $rating));
 }
 
-/** The star icons for a rating, as empty md-icon elements the render wrapper fills. */
+/** The star icons for a rating, as empty stb-icon elements the render wrapper fills. */
 function stackless_theme_blocks_card_star_icons(float $rating): string
 {
     if ($rating <= 0) {
         return '';
     }
     $full = (int) floor($rating);
-    $stars = str_repeat('<span class="md-icon-star-full text-warning"></span>', $full);
+    $stars = str_repeat('<span class="stb-icon-star-full text-warning"></span>', $full);
     if ($rating - $full >= 0.5) {
-        $stars .= '<span class="md-icon-star-half text-warning"></span>';
+        $stars .= '<span class="stb-icon-star-half text-warning"></span>';
     }
     return $stars;
 }
@@ -181,7 +181,7 @@ function stackless_theme_blocks_card_price(array $schema): string
         return '';
     }
     $label = (float) $schema['offers']['price'] === 0.0 ? __('Free', 'stackless-theme') : $schema['offers']['price'] . ' ' . $schema['offers']['priceCurrency'];
-    return '<span class="md-software-price">' . esc_html($label) . '</span>';
+    return '<span class="stb-software-price">' . esc_html($label) . '</span>';
 }
 
 /**
@@ -238,47 +238,47 @@ function stackless_theme_blocks_render_plugin_card(array $attributes, string $co
     <div class="<?php echo stackless_theme_blocks_card_classes('plugin', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'plugin-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
         <?php if ($show_banner) : ?>
-            <div class="md-plugin-card-banner">
+            <div class="stb-plugin-card-banner">
                 <?php echo stackless_theme_blocks_image($banner, 'large', ['alt' => $name, 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
         <?php endif; ?>
-        <div class="md-plugin-card-body">
-            <div class="md-plugin-card-header">
+        <div class="stb-plugin-card-body">
+            <div class="stb-plugin-card-header">
                 <?php if ($icon !== '') : ?>
-                    <?php echo stackless_theme_blocks_image($icon, 'large', ['alt' => $name, 'class' => 'md-plugin-card-icon', 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php echo stackless_theme_blocks_image($icon, 'large', ['alt' => $name, 'class' => 'stb-plugin-card-icon', 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <?php else : ?>
-                    <span class="md-plugin-card-icon-placeholder md-icon-plugin"></span>
+                    <span class="stb-plugin-card-icon-placeholder stb-icon-plugin"></span>
                 <?php endif; ?>
-                <div class="md-plugin-card-info">
-                    <h3 class="md-plugin-card-name mb-none"><?php echo esc_html($name); ?></h3>
+                <div class="stb-plugin-card-info">
+                    <h3 class="stb-plugin-card-name mb-none"><?php echo esc_html($name); ?></h3>
                     <?php if ($author !== '') : ?>
                         <?php /* translators: %s: the plugin's author. */ ?>
-                        <span class="md-plugin-card-author text-sec small"><?php echo esc_html(sprintf(__('by %s', 'stackless-theme'), $author)); ?></span>
+                        <span class="stb-plugin-card-author text-sec small"><?php echo esc_html(sprintf(__('by %s', 'stackless-theme'), $author)); ?></span>
                     <?php endif; ?>
                 </div>
             </div>
             <?php if ($description !== '') : ?>
-                <p class="md-plugin-card-desc"><?php echo esc_html($description); ?></p>
+                <p class="stb-plugin-card-desc"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
-            <div class="md-plugin-card-meta">
+            <div class="stb-plugin-card-meta">
                 <?php echo stackless_theme_blocks_card_price($schema); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>
                 <?php if ($stars !== '') : ?>
-                    <span class="md-plugin-card-rating">
+                    <span class="stb-plugin-card-rating">
                         <?php echo $stars; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup. ?>
                         <?php if ($rating_count > 0) : ?>
-                            <span class="md-plugin-card-rating-count">(<?php echo esc_html(number_format_i18n($rating_count)); ?>)</span>
+                            <span class="stb-plugin-card-rating-count">(<?php echo esc_html(number_format_i18n($rating_count)); ?>)</span>
                         <?php endif; ?>
                     </span>
                 <?php endif; ?>
                 <?php if ($installs !== '') : ?>
-                    <span class="md-plugin-card-installs"><span class="md-icon-download"></span> <?php echo esc_html($installs); ?>+</span>
+                    <span class="stb-plugin-card-installs"><span class="stb-icon-download"></span> <?php echo esc_html($installs); ?>+</span>
                 <?php endif; ?>
                 <?php if ($version !== '') : ?>
-                    <span class="md-plugin-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
+                    <span class="stb-plugin-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
                 <?php endif; ?>
             </div>
             <?php if ($show_requirements) : ?>
-                <div class="md-plugin-card-requirements">
+                <div class="stb-plugin-card-requirements">
                     <?php if ($tested !== '') : ?>
                         <span><?php echo esc_html(__('Tested up to:', 'stackless-theme') . ' ' . $tested); ?></span>
                     <?php endif; ?>
@@ -290,7 +290,7 @@ function stackless_theme_blocks_render_plugin_card(array $attributes, string $co
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            <div class="md-plugin-card-actions">
+            <div class="stb-plugin-card-actions">
                 <?php if ($wp_url !== '') : ?>
                     <a href="<?php echo esc_url($wp_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('View on WordPress.org', 'stackless-theme'); ?></a>
                 <?php endif; ?>
@@ -331,43 +331,43 @@ function stackless_theme_blocks_render_theme_card(array $attributes, string $con
     <div class="<?php echo stackless_theme_blocks_card_classes('theme', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'theme-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
         <?php if ($screenshot !== '') : ?>
-            <div class="md-theme-card-screenshot">
+            <div class="stb-theme-card-screenshot">
                 <?php echo stackless_theme_blocks_image($screenshot, 'large', ['alt' => $name, 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <?php if ($preview_url !== '') : ?>
-                    <a href="<?php echo esc_url($preview_url); ?>" class="md-theme-card-preview-overlay" target="_blank" rel="noopener">
-                        <span class="md-icon-eye"></span> <?php esc_html_e('Preview', 'stackless-theme'); ?>
+                    <a href="<?php echo esc_url($preview_url); ?>" class="stb-theme-card-preview-overlay" target="_blank" rel="noopener">
+                        <span class="stb-icon-eye"></span> <?php esc_html_e('Preview', 'stackless-theme'); ?>
                     </a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
-        <div class="md-theme-card-content">
-            <h3 class="md-theme-card-name mb-none"><?php echo esc_html($name); ?></h3>
+        <div class="stb-theme-card-content">
+            <h3 class="stb-theme-card-name mb-none"><?php echo esc_html($name); ?></h3>
             <?php if ($author !== '') : ?>
                 <?php /* translators: %s: the theme's author. */ ?>
-                <span class="md-theme-card-author text-sec small"><?php echo esc_html(sprintf(__('by %s', 'stackless-theme'), $author)); ?></span>
+                <span class="stb-theme-card-author text-sec small"><?php echo esc_html(sprintf(__('by %s', 'stackless-theme'), $author)); ?></span>
             <?php endif; ?>
             <?php if ($description !== '') : ?>
-                <p class="md-theme-card-desc"><?php echo esc_html($description); ?></p>
+                <p class="stb-theme-card-desc"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
-            <div class="md-theme-card-meta">
+            <div class="stb-theme-card-meta">
                 <?php echo stackless_theme_blocks_card_price($schema); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>
                 <?php if ($stars !== '') : ?>
-                    <span class="md-theme-card-rating">
+                    <span class="stb-theme-card-rating">
                         <?php echo $stars; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup. ?>
                         <?php if ($rating_count > 0) : ?>
-                            <span class="md-theme-card-rating-count">(<?php echo esc_html(number_format_i18n($rating_count)); ?>)</span>
+                            <span class="stb-theme-card-rating-count">(<?php echo esc_html(number_format_i18n($rating_count)); ?>)</span>
                         <?php endif; ?>
                     </span>
                 <?php endif; ?>
                 <?php if ($installs !== '') : ?>
-                    <span class="md-theme-card-installs"><span class="md-icon-download"></span> <?php echo esc_html($installs); ?>+</span>
+                    <span class="stb-theme-card-installs"><span class="stb-icon-download"></span> <?php echo esc_html($installs); ?>+</span>
                 <?php endif; ?>
                 <?php if ($version !== '') : ?>
-                    <span class="md-theme-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
+                    <span class="stb-theme-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
                 <?php endif; ?>
             </div>
             <?php if ($show_requirements) : ?>
-                <div class="md-theme-card-requirements">
+                <div class="stb-theme-card-requirements">
                     <?php if ($requires_wp !== '') : ?>
                         <span><?php echo esc_html(__('Requires WP:', 'stackless-theme') . ' ' . $requires_wp); ?></span>
                     <?php endif; ?>
@@ -376,7 +376,7 @@ function stackless_theme_blocks_render_theme_card(array $attributes, string $con
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            <div class="md-theme-card-actions">
+            <div class="stb-theme-card-actions">
                 <?php if ($wp_url !== '') : ?>
                     <a href="<?php echo esc_url($wp_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('View on WordPress.org', 'stackless-theme'); ?></a>
                 <?php endif; ?>
@@ -431,49 +431,49 @@ function stackless_theme_blocks_render_github_card(array $attributes, string $co
     ?>
     <div class="<?php echo stackless_theme_blocks_card_classes('github', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'github-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
-        <div class="md-github-card-header">
+        <div class="stb-github-card-header">
             <?php if ($avatar !== '') : ?>
-                <?php echo stackless_theme_blocks_image($avatar, 'large', ['alt' => $owner, 'class' => 'md-github-card-avatar', 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php echo stackless_theme_blocks_image($avatar, 'large', ['alt' => $owner, 'class' => 'stb-github-card-avatar', 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php endif; ?>
-            <div class="md-github-card-identity">
-                <h3 class="md-github-card-name mb-none"><?php echo esc_html($name); ?></h3>
+            <div class="stb-github-card-identity">
+                <h3 class="stb-github-card-name mb-none"><?php echo esc_html($name); ?></h3>
                 <?php if ($owner !== '') : ?>
-                    <span class="md-github-card-owner text-sec small"><?php echo esc_html($owner); ?></span>
+                    <span class="stb-github-card-owner text-sec small"><?php echo esc_html($owner); ?></span>
                 <?php endif; ?>
             </div>
         </div>
         <?php if ($description !== '') : ?>
-            <p class="md-github-card-desc"><?php echo esc_html($description); ?></p>
+            <p class="stb-github-card-desc"><?php echo esc_html($description); ?></p>
         <?php endif; ?>
-        <div class="md-github-card-meta">
+        <div class="stb-github-card-meta">
             <?php if ($stars > 0) : ?>
-                <span class="md-github-card-stat md-github-card-stars"><span class="md-icon-star-full"></span> <?php echo esc_html(number_format_i18n($stars)); ?></span>
+                <span class="stb-github-card-stat stb-github-card-stars"><span class="stb-icon-star-full"></span> <?php echo esc_html(number_format_i18n($stars)); ?></span>
             <?php endif; ?>
             <?php if ($forks > 0) : ?>
-                <span class="md-github-card-stat md-github-card-forks"><?php echo stackless_theme_blocks_card_icon('git-fork', 14, 'md-github-card-icon'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html(number_format_i18n($forks)); ?></span>
+                <span class="stb-github-card-stat stb-github-card-forks"><?php echo stackless_theme_blocks_card_icon('git-fork', 14, 'stb-github-card-icon'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html(number_format_i18n($forks)); ?></span>
             <?php endif; ?>
             <?php if ($language !== '') : ?>
-                <span class="md-github-card-language">
-                    <span class="md-github-card-language-dot"<?php echo $language_color ? ' style="background-color: ' . esc_attr($language_color) . '"' : ''; ?>></span>
+                <span class="stb-github-card-language">
+                    <span class="stb-github-card-language-dot"<?php echo $language_color ? ' style="background-color: ' . esc_attr($language_color) . '"' : ''; ?>></span>
                     <?php echo esc_html($language); ?>
                 </span>
             <?php endif; ?>
             <?php if ($license !== '') : ?>
-                <span class="md-github-card-stat md-github-card-license"><span class="md-icon-shield-check"></span> <?php echo esc_html($license); ?></span>
+                <span class="stb-github-card-stat stb-github-card-license"><span class="stb-icon-shield-check"></span> <?php echo esc_html($license); ?></span>
             <?php endif; ?>
             <?php if ($updated) : ?>
                 <?php /* translators: %s: a time span such as "3 days". */ ?>
-                <span class="md-github-card-stat"><span class="md-icon-clock"></span> <?php echo esc_html(sprintf(__('%s ago', 'stackless-theme'), human_time_diff($updated))); ?></span>
+                <span class="stb-github-card-stat"><span class="stb-icon-clock"></span> <?php echo esc_html(sprintf(__('%s ago', 'stackless-theme'), human_time_diff($updated))); ?></span>
             <?php endif; ?>
         </div>
         <?php if ($topics) : ?>
-            <div class="md-github-card-topics">
+            <div class="stb-github-card-topics">
                 <?php foreach ($topics as $topic) : ?>
-                    <span class="md-github-card-topic"><?php echo esc_html($topic); ?></span>
+                    <span class="stb-github-card-topic"><?php echo esc_html($topic); ?></span>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <div class="md-github-card-actions">
+        <div class="stb-github-card-actions">
             <?php if ($url !== '') : ?>
                 <a href="<?php echo esc_url($url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('View on GitHub', 'stackless-theme'); ?></a>
             <?php endif; ?>
@@ -521,41 +521,41 @@ function stackless_theme_blocks_render_npm_card(array $attributes, string $conte
     ?>
     <div class="<?php echo stackless_theme_blocks_card_classes('npm', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'npm-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
-        <div class="md-npm-card-header">
-            <span class="md-npm-card-icon"><?php echo stackless_theme_blocks_card_icon('package', 20, ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?></span>
-            <div class="md-npm-card-identity">
-                <h3 class="md-npm-card-name mb-none"><code><?php echo esc_html($package); ?></code></h3>
+        <div class="stb-npm-card-header">
+            <span class="stb-npm-card-icon"><?php echo stackless_theme_blocks_card_icon('package', 20, ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?></span>
+            <div class="stb-npm-card-identity">
+                <h3 class="stb-npm-card-name mb-none"><code><?php echo esc_html($package); ?></code></h3>
                 <?php if ($author !== '') : ?>
-                    <span class="md-npm-card-author text-sec small"><?php echo esc_html($author); ?></span>
+                    <span class="stb-npm-card-author text-sec small"><?php echo esc_html($author); ?></span>
                 <?php endif; ?>
             </div>
         </div>
         <?php if ($description !== '') : ?>
-            <p class="md-npm-card-desc"><?php echo esc_html($description); ?></p>
+            <p class="stb-npm-card-desc"><?php echo esc_html($description); ?></p>
         <?php endif; ?>
-        <div class="md-npm-card-meta">
+        <div class="stb-npm-card-meta">
             <?php if ($version !== '') : ?>
-                <span class="md-npm-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
+                <span class="stb-npm-card-version"><?php echo stackless_theme_blocks_card_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> v<?php echo esc_html($version); ?></span>
             <?php endif; ?>
             <?php if ($downloads !== '') : ?>
                 <?php /* translators: %s: a download count such as "1.2M". */ ?>
-                <span class="md-npm-card-downloads"><span class="md-icon-download"></span> <?php echo esc_html(sprintf(__('%s/wk', 'stackless-theme'), $downloads)); ?></span>
+                <span class="stb-npm-card-downloads"><span class="stb-icon-download"></span> <?php echo esc_html(sprintf(__('%s/wk', 'stackless-theme'), $downloads)); ?></span>
             <?php endif; ?>
             <?php if ($license !== '') : ?>
-                <span class="md-npm-card-license"><?php echo stackless_theme_blocks_card_icon('scale'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($license); ?></span>
+                <span class="stb-npm-card-license"><?php echo stackless_theme_blocks_card_icon('scale'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($license); ?></span>
             <?php endif; ?>
             <?php if ($published !== '') : ?>
-                <span class="md-npm-card-published"><span class="md-icon-clock"></span> <?php echo esc_html($published); ?></span>
+                <span class="stb-npm-card-published"><span class="stb-icon-clock"></span> <?php echo esc_html($published); ?></span>
             <?php endif; ?>
         </div>
         <?php if ($keywords) : ?>
-            <div class="md-npm-card-keywords">
+            <div class="stb-npm-card-keywords">
                 <?php foreach ($keywords as $keyword) : ?>
-                    <span class="md-npm-card-keyword"><?php echo esc_html($keyword); ?></span>
+                    <span class="stb-npm-card-keyword"><?php echo esc_html($keyword); ?></span>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <div class="md-npm-card-actions">
+        <div class="stb-npm-card-actions">
             <?php if ($npm_url !== '') : ?>
                 <a href="<?php echo esc_url($npm_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('View on npm', 'stackless-theme'); ?></a>
             <?php endif; ?>
@@ -611,40 +611,40 @@ function stackless_theme_blocks_render_book_card(array $attributes, string $cont
     ?>
     <div class="<?php echo stackless_theme_blocks_card_classes('book', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'book-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
-        <div class="md-book-card-layout">
+        <div class="stb-book-card-layout">
             <?php if ($cover !== '') : ?>
-                <div class="md-book-card-cover">
+                <div class="stb-book-card-cover">
                     <?php echo stackless_theme_blocks_image($cover, 'large', ['alt' => $title, 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 </div>
             <?php endif; ?>
-            <div class="md-book-card-body">
-                <h3 class="md-book-card-title mb-none"><?php echo esc_html($title); ?></h3>
+            <div class="stb-book-card-body">
+                <h3 class="stb-book-card-title mb-none"><?php echo esc_html($title); ?></h3>
                 <?php if ($authors) : ?>
-                    <span class="md-book-card-authors text-sec"><?php echo stackless_theme_blocks_card_icon('user'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html(implode(', ', $authors)); ?></span>
+                    <span class="stb-book-card-authors text-sec"><?php echo stackless_theme_blocks_card_icon('user'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html(implode(', ', $authors)); ?></span>
                 <?php endif; ?>
-                <div class="md-book-card-meta">
+                <div class="stb-book-card-meta">
                     <?php if ($publisher !== '') : ?>
-                        <span class="md-book-card-publisher"><?php echo esc_html($publisher); ?></span>
+                        <span class="stb-book-card-publisher"><?php echo esc_html($publisher); ?></span>
                     <?php endif; ?>
                     <?php if ($year !== '') : ?>
-                        <span class="md-book-card-year"><?php echo stackless_theme_blocks_card_icon('calendar'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($year); ?></span>
+                        <span class="stb-book-card-year"><?php echo stackless_theme_blocks_card_icon('calendar'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($year); ?></span>
                     <?php endif; ?>
                     <?php if ($pages > 0) : ?>
                         <?php /* translators: %s: a number of pages. */ ?>
-                        <span class="md-book-card-pages"><span class="md-icon-file"></span> <?php echo esc_html(sprintf(_n('%s page', '%s pages', $pages, 'stackless-theme'), number_format_i18n($pages))); ?></span>
+                        <span class="stb-book-card-pages"><span class="stb-icon-file"></span> <?php echo esc_html(sprintf(_n('%s page', '%s pages', $pages, 'stackless-theme'), number_format_i18n($pages))); ?></span>
                     <?php endif; ?>
                 </div>
                 <?php if ($description !== '') : ?>
-                    <p class="md-book-card-desc"><?php echo esc_html($description); ?></p>
+                    <p class="stb-book-card-desc"><?php echo esc_html($description); ?></p>
                 <?php endif; ?>
                 <?php if ($subjects) : ?>
-                    <div class="md-book-card-subjects">
+                    <div class="stb-book-card-subjects">
                         <?php foreach ($subjects as $subject) : ?>
-                            <span class="md-book-card-subject"><?php echo esc_html($subject); ?></span>
+                            <span class="stb-book-card-subject"><?php echo esc_html($subject); ?></span>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-                <div class="md-book-card-actions">
+                <div class="stb-book-card-actions">
                     <?php if ($library_url !== '') : ?>
                         <a href="<?php echo esc_url($library_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('View on Open Library', 'stackless-theme'); ?></a>
                     <?php endif; ?>
@@ -668,23 +668,23 @@ function stackless_theme_blocks_render_youtube_card(array $attributes, string $c
     $channel = stackless_theme_blocks_card_text($attributes, 'channelName');
     $thumbnail = stackless_theme_blocks_card_url($attributes, 'thumbnailUrl');
     $watch_url = $video_url !== '' ? $video_url : ($video_id !== '' ? 'https://www.youtube.com/watch?v=' . rawurlencode($video_id) : '');
-    $image = $thumbnail !== '' ? stackless_theme_blocks_image($thumbnail, 'large', ['alt' => $title, 'loading' => 'lazy']) . '<span class="md-youtube-card-play" aria-hidden="true">&#9654;</span>' : '';
+    $image = $thumbnail !== '' ? stackless_theme_blocks_image($thumbnail, 'large', ['alt' => $title, 'loading' => 'lazy']) . '<span class="stb-youtube-card-play" aria-hidden="true">&#9654;</span>' : '';
 
     ob_start();
     ?>
     <div class="<?php echo stackless_theme_blocks_card_classes('youtube', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php if ($image !== '' && $watch_url !== '') : ?>
-            <a href="<?php echo esc_url($watch_url); ?>" class="md-youtube-card-thumbnail" target="_blank" rel="noopener"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></a>
+            <a href="<?php echo esc_url($watch_url); ?>" class="stb-youtube-card-thumbnail" target="_blank" rel="noopener"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></a>
         <?php elseif ($image !== '') : ?>
-            <div class="md-youtube-card-thumbnail"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></div>
+            <div class="stb-youtube-card-thumbnail"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></div>
         <?php endif; ?>
-        <div class="md-youtube-card-body">
-            <h3 class="md-youtube-card-title mb-none"><?php echo esc_html($title); ?></h3>
+        <div class="stb-youtube-card-body">
+            <h3 class="stb-youtube-card-title mb-none"><?php echo esc_html($title); ?></h3>
             <?php if ($channel !== '') : ?>
-                <span class="md-youtube-card-channel text-sec small"><span class="md-icon-youtube"></span> <?php echo esc_html($channel); ?></span>
+                <span class="stb-youtube-card-channel text-sec small"><span class="stb-icon-youtube"></span> <?php echo esc_html($channel); ?></span>
             <?php endif; ?>
             <?php if ($watch_url !== '') : ?>
-                <div class="md-youtube-card-actions">
+                <div class="stb-youtube-card-actions">
                     <a href="<?php echo esc_url($watch_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('Watch on YouTube', 'stackless-theme'); ?></a>
                 </div>
             <?php endif; ?>
@@ -729,29 +729,29 @@ function stackless_theme_blocks_render_podcast_card(array $attributes, string $c
     ?>
     <div class="<?php echo stackless_theme_blocks_card_classes('podcast', $attributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>">
         <?php echo stackless_theme_blocks_card_schema($schema, 'podcast-card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-encoded in the helper. ?>
-        <div class="md-podcast-card-layout">
+        <div class="stb-podcast-card-layout">
             <?php if ($artwork !== '') : ?>
-                <div class="md-podcast-card-artwork">
+                <div class="stb-podcast-card-artwork">
                     <?php echo stackless_theme_blocks_image($artwork, 'large', ['alt' => $podcast, 'loading' => 'lazy']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 </div>
             <?php endif; ?>
-            <div class="md-podcast-card-body">
+            <div class="stb-podcast-card-body">
                 <?php if ($podcast !== '') : ?>
-                    <span class="md-podcast-card-show small"><?php echo esc_html($podcast); ?></span>
+                    <span class="stb-podcast-card-show small"><?php echo esc_html($podcast); ?></span>
                 <?php endif; ?>
-                <h3 class="md-podcast-card-title mb-none"><?php echo esc_html($episode); ?></h3>
-                <div class="md-podcast-card-meta">
+                <h3 class="stb-podcast-card-title mb-none"><?php echo esc_html($episode); ?></h3>
+                <div class="stb-podcast-card-meta">
                     <?php if ($duration !== '') : ?>
-                        <span class="md-podcast-card-duration"><span class="md-icon-clock"></span> <?php echo esc_html($duration); ?></span>
+                        <span class="stb-podcast-card-duration"><span class="stb-icon-clock"></span> <?php echo esc_html($duration); ?></span>
                     <?php endif; ?>
                     <?php if ($date !== '') : ?>
-                        <span class="md-podcast-card-date"><?php echo stackless_theme_blocks_card_icon('calendar'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($date); ?></span>
+                        <span class="stb-podcast-card-date"><?php echo stackless_theme_blocks_card_icon('calendar'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted local SVG. ?> <?php echo esc_html($date); ?></span>
                     <?php endif; ?>
                 </div>
                 <?php if ($description !== '') : ?>
-                    <p class="md-podcast-card-desc"><?php echo esc_html($description); ?></p>
+                    <p class="stb-podcast-card-desc"><?php echo esc_html($description); ?></p>
                 <?php endif; ?>
-                <div class="md-podcast-card-actions">
+                <div class="stb-podcast-card-actions">
                     <?php if ($audio_url !== '') : ?>
                         <a href="<?php echo esc_url($audio_url); ?>" class="button" target="_blank" rel="noopener"><?php esc_html_e('Listen', 'stackless-theme'); ?></a>
                     <?php endif; ?>
@@ -980,8 +980,7 @@ function stackless_theme_blocks_card_image_uid(): string
 }
 
 /**
- * The attachment a card image was imported as, or 0. Images Marketers Delight imported are
- * found too, so a site that switches themes does not download them a second time.
+ * The attachment a card image was imported as, or 0, so the same image is not downloaded twice.
  */
 function stackless_theme_blocks_card_image_id(string $uid): int
 {
@@ -992,9 +991,7 @@ function stackless_theme_blocks_card_image_id(string $uid): int
         'fields' => 'ids',
         'no_found_rows' => true,
         'meta_query' => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- editor-only lookup.
-            'relation' => 'OR',
             ['key' => '_stackless_card_uid', 'value' => $uid],
-            ['key' => '_md_card_uid', 'value' => $uid],
         ],
     ]);
     return $found ? (int) $found[0] : 0;

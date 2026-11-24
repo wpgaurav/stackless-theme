@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Content Upgrade.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType  = wp.blocks.registerBlockType,
@@ -23,9 +23,9 @@
 		SelectControl      = wp.components.SelectControl,
 		CheckboxControl    = wp.components.CheckboxControl,
 		wpButton           = wp.components.Button,
-		mdColors           = StacklessBlocks.colors,
-		mdIcons            = StacklessBlocks.icons,
-		mdPopups           = StacklessBlocks.popups;
+		stbColors           = StacklessBlocks.colors,
+		stbIcons            = StacklessBlocks.icons,
+		stbPopups           = StacklessBlocks.popups;
 	registerBlockType( 'stackless/content-upgrade', {
 		apiVersion: 3,
 		title: __( 'Content Upgrade', 'stackless-theme' ),
@@ -77,20 +77,20 @@
 				boxLeftRight         = attributes.boxLeftRight,
 				marginBottom         = attributes.marginBottom ? attributes.marginBottom : 'mb-mid',
 				padding              = attributes.padding ? attributes.padding : 'block-single',
-				popups               = mdPopups ? mdPopups : [];
+				popups               = stbPopups ? stbPopups : [];
 
-			function mdGetColor( property, val ) {
-				var className = getColorClassName( property, mdColors.hex[val] ),
+			function stbGetColor( property, val ) {
+				var className = getColorClassName( property, stbColors.hex[val] ),
 					saved = className ? className : '';
 				return className ? className : saved;
 			}
 
-			function mdShowColor( property, val ) {
-				return ' ' + mdGetColor( property, val );
+			function stbShowColor( property, val ) {
+				return ' ' + stbGetColor( property, val );
 			}
 
 			var blockProps = useBlockProps({
-				className: 'md-content-upgrade ' + marginBottom + ' ' + padding + ( boxLeftRight ? ' box-lr' : '' ) + ( shadow ? ' has-shadow' : '' ) + ( bgColorClass ? ' ' + bgColorClass : '' ) + ( textColorClass ? ' ' + textColorClass : '' ) + ( bgImage ? ' image-overlay' : '' ),
+				className: 'stb-content-upgrade ' + marginBottom + ' ' + padding + ( boxLeftRight ? ' box-lr' : '' ) + ( shadow ? ' has-shadow' : '' ) + ( bgColorClass ? ' ' + bgColorClass : '' ) + ( textColorClass ? ' ' + textColorClass : '' ) + ( bgImage ? ' image-overlay' : '' ),
 				style: {
 					backgroundImage: ( bgImage ? 'url(' + bgImage + ')' : '' ),
 					backgroundColor: ! bgColorClass ? ( bgColor || '#1e293b' ) : '',
@@ -118,7 +118,7 @@
 						},
 						el( SelectControl, {
 							label: __( 'Icon', 'stackless-theme' ),
-							options: [ { label: __( 'Select an icon...', 'stackless-theme' ), value: '' } ].concat( mdIcons ),
+							options: [ { label: __( 'Select an icon...', 'stackless-theme' ), value: '' } ].concat( stbIcons ),
 							value: icon,
 							onChange: function( val ) {
 								props.setAttributes({ icon: val });
@@ -160,7 +160,7 @@
 								onChange: function( val ) {
 									props.setAttributes({
 										bgColor: val,
-										bgColorClass: val ? mdGetColor( 'background-color', val ) : ''
+										bgColorClass: val ? stbGetColor( 'background-color', val ) : ''
 									});
 								}
 							},
@@ -170,7 +170,7 @@
 								onChange: function( val ) {
 									props.setAttributes({
 										textColor: val,
-										textColorClass: val ? mdGetColor( 'color', val ) : ''
+										textColorClass: val ? stbGetColor( 'color', val ) : ''
 									});
 								}
 							},
@@ -180,7 +180,7 @@
 								onChange: function( val ) {
 									props.setAttributes({
 										buttonColor: val,
-										buttonColorClass: val ? mdGetColor( 'background-color', val ) : ''
+										buttonColorClass: val ? stbGetColor( 'background-color', val ) : ''
 									});
 								}
 							},
@@ -190,7 +190,7 @@
 								onChange: function( val ) {
 									props.setAttributes({
 										buttonTextColor: val,
-										buttonTextColorClass: val ? mdGetColor( 'color', val ) : ''
+										buttonTextColorClass: val ? stbGetColor( 'color', val ) : ''
 									});
 								}
 							},
@@ -286,14 +286,14 @@
 					( icon ?
 						el(
 							'div', {
-								className: 'md-content-upgrade-icon large-title mr-single'
+								className: 'stb-content-upgrade-icon large-title mr-single'
 							},
 							StacklessBlocks.icon( 'i', icon )
 						)
 					: '' ),
 					el(
 						'div', {
-							className: 'md-content-upgrade-text mb-single'
+							className: 'stb-content-upgrade-text mb-single'
 						},
 						el( RichText, {
 							key: 'editable',
@@ -317,11 +317,11 @@
 					),
 					el(
 						'div', {
-							className: 'md-content-upgrade-action'
+							className: 'stb-content-upgrade-action'
 						},
 						el(
 							'button', {
-								className: 'md-button md-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
+								className: 'stb-button stb-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
 								disabled: true,
 								style: {
 									backgroundColor: ! buttonColorClass ? ( buttonColor || '#2563eb' ) : '',

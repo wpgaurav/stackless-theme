@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Podcast Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -129,7 +129,7 @@
 				setError = _errorState[1];
 
 			var blockProps = useBlockProps({
-				className: 'md-podcast-card md-podcast-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-podcast-card stb-podcast-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -225,21 +225,21 @@
 					)
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-podcast-card-layout' },
-					el('div', { className: 'md-podcast-card-artwork' },
+					el('div', { className: 'stb-podcast-card-layout' },
+					el('div', { className: 'stb-podcast-card-artwork' },
 						attributes.artworkUrl
 							? el('img', { src: attributes.artworkUrl, alt: attributes.podcastTitle })
-							: StacklessBlocks.icon( 'span', 'md-icon-mic', 'md-podcast-card-artwork-placeholder' )
+							: StacklessBlocks.icon( 'span', 'stb-icon-mic', 'stb-podcast-card-artwork-placeholder' )
 					),
-					el('div', { className: 'md-podcast-card-body' },
-						attributes.podcastTitle && el('div', { className: 'md-podcast-card-show' }, attributes.podcastTitle),
-						el('h3', { className: 'md-podcast-card-title' }, attributes.episodeTitle || __( 'Episode Title', 'stackless-theme' )),
-						el('div', { className: 'md-podcast-card-meta' },
-							attributes.duration && el('span', { className: 'md-podcast-card-duration' }, StacklessBlocks.icon( 'span', 'md-icon-clock' ), ' ' + attributes.duration),
-							attributes.publishDate && el('span', { className: 'md-podcast-card-date' }, StacklessBlocks.cardIcon( 'calendar' ), ' ' + attributes.publishDate)
+					el('div', { className: 'stb-podcast-card-body' },
+						attributes.podcastTitle && el('div', { className: 'stb-podcast-card-show' }, attributes.podcastTitle),
+						el('h3', { className: 'stb-podcast-card-title' }, attributes.episodeTitle || __( 'Episode Title', 'stackless-theme' )),
+						el('div', { className: 'stb-podcast-card-meta' },
+							attributes.duration && el('span', { className: 'stb-podcast-card-duration' }, StacklessBlocks.icon( 'span', 'stb-icon-clock' ), ' ' + attributes.duration),
+							attributes.publishDate && el('span', { className: 'stb-podcast-card-date' }, StacklessBlocks.cardIcon( 'calendar' ), ' ' + attributes.publishDate)
 						),
-						attributes.episodeDescription && el('p', { className: 'md-podcast-card-desc' }, attributes.episodeDescription),
-						el('div', { className: 'md-podcast-card-actions' },
+						attributes.episodeDescription && el('p', { className: 'stb-podcast-card-desc' }, attributes.episodeDescription),
+						el('div', { className: 'stb-podcast-card-actions' },
 							(attributes.audioUrl || attributes.episodeUrl) && el('a', { href: '#', className: 'button' }, __( 'Listen', 'stackless-theme' )),
 							attributes.episodeUrl && el('a', { href: '#', className: 'button button-outline' }, __( 'View Episode', 'stackless-theme' ))
 						)

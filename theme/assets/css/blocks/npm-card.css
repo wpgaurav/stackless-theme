@@ -1,10 +1,10 @@
 /*
  * Stackless blocks: npm Card.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*) are mapped to the theme's
+ * tokens in bridge.css.
  */
 
-.md-npm-card {
+.stb-npm-card {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-l);
@@ -13,19 +13,19 @@
 	transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.md-npm-card:hover {
+.stb-npm-card:hover {
 	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 15%);
 	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 92%);
 }
 
-.md-npm-card-header {
+.stb-npm-card-header {
 	display: flex;
 	align-items: flex-start;
 	gap: var(--space-single);
 	margin-bottom: var(--space-single);
 }
 
-.md-npm-card-icon {
+.stb-npm-card-icon {
 	width: 44px;
 	height: 44px;
 	flex-shrink: 0;
@@ -41,12 +41,12 @@
 	letter-spacing: -0.02em;
 }
 
-.md-npm-card-identity {
+.stb-npm-card-identity {
 	flex: 1;
 	min-width: 0;
 }
 
-.md-npm-card-name {
+.stb-npm-card-name {
 	font-size: 1.1em;
 	font-family: var(--font-mono, ui-monospace, monospace);
 	line-height: 1.3;
@@ -54,7 +54,7 @@
 }
 
 /* The name is already set in the monospace face: drop the theme's inline-code box around it. */
-.md-npm-card-name code {
+.stb-npm-card-name code {
 	background: none;
 	border: 0;
 	color: inherit;
@@ -62,19 +62,19 @@
 	padding: 0;
 }
 
-.md-npm-card-author {
+.stb-npm-card-author {
 	display: block;
 	font-size: 0.85em;
 }
 
-.md-npm-card-desc {
+.stb-npm-card-desc {
 	color: var(--color-text-sec);
 	margin-bottom: var(--space-single);
 	line-height: 1.6;
 	font-size: 0.92em;
 }
 
-.md-npm-card-meta {
+.stb-npm-card-meta {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -84,7 +84,7 @@
 	color: var(--color-text-sec);
 }
 
-.md-npm-card-version {
+.stb-npm-card-version {
 	display: inline-block;
 	padding: 2px var(--space-half);
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 20%);
@@ -93,21 +93,21 @@
 	font-size: 0.9em;
 }
 
-.md-npm-card-downloads {
+.stb-npm-card-downloads {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
 	font-variant-numeric: tabular-nums;
 }
 
-.md-npm-card-keywords {
+.stb-npm-card-keywords {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-xs);
 	margin-bottom: var(--space-single);
 }
 
-.md-npm-card-keyword {
+.stb-npm-card-keyword {
 	display: inline-block;
 	padding: 3px var(--space-half);
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 20%);
@@ -116,46 +116,46 @@
 	color: var(--color-text-sec);
 }
 
-.md-npm-card-actions {
+.stb-npm-card-actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-half);
 }
 
 /* Compact */
-.md-npm-card-compact {
+.stb-npm-card-compact {
 	padding: var(--space-half);
 }
 
-.md-npm-card-compact .md-npm-card-icon {
+.stb-npm-card-compact .stb-npm-card-icon {
 	width: 36px;
 	height: 36px;
 	font-size: 0.6em;
 }
 
-.md-npm-card-compact .md-npm-card-desc {
+.stb-npm-card-compact .stb-npm-card-desc {
 	display: none;
 }
 
-.md-npm-card-compact .md-npm-card-keywords {
+.stb-npm-card-compact .stb-npm-card-keywords {
 	display: none;
 }
 
 /* Minimal */
-.md-npm-card-minimal {
+.stb-npm-card-minimal {
 	background: transparent;
 	border: none;
 	padding: 0;
 }
 
-.md-npm-card-minimal:hover {
+.stb-npm-card-minimal:hover {
 	box-shadow: none;
 }
 
-.md-npm-card-minimal .md-npm-card-header {
+.stb-npm-card-minimal .stb-npm-card-header {
 	margin-bottom: var(--space-half);
 }
 
-.md-npm-card-minimal .md-npm-card-keywords {
+.stb-npm-card-minimal .stb-npm-card-keywords {
 	display: none;
 }

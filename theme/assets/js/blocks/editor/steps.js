@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Steps and Step.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -33,7 +33,7 @@
 			} ]
 		},
 		edit: function ( props ) {
-			var blockProps = useBlockProps({ className: 'md-steps-editor' });
+			var blockProps = useBlockProps({ className: 'stb-steps-editor' });
 			return el(
 				'div', blockProps,
 				el( InnerBlocks, {
@@ -62,10 +62,10 @@
 		},
 		edit: function ( props ) {
 			var RichText = wp.blockEditor.RichText;
-			var blockProps = useBlockProps({ className: 'md-step-editor' });
+			var blockProps = useBlockProps({ className: 'stb-step-editor' });
 			return el(
 				'div', blockProps,
-				el( 'div', { className: 'md-step-number-editor' },
+				el( 'div', { className: 'stb-step-number-editor' },
 					el( RichText, {
 						tagName: 'span',
 						value: props.attributes.number,
@@ -73,7 +73,7 @@
 						onChange: function( val ) { props.setAttributes({ number: val }); }
 					})
 				),
-				el( 'div', { className: 'md-step-content-editor' },
+				el( 'div', { className: 'stb-step-content-editor' },
 					el( RichText, {
 						tagName: 'h4',
 						value: props.attributes.title,

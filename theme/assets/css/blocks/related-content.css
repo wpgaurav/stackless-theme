@@ -1,14 +1,14 @@
 /*
  * Stackless blocks: Related Content.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*, --fs-*) are mapped to the
+ * theme's tokens in bridge.css.
  */
 
 /*------------------------------*\
 	$RELATED_CONTENT
 \*------------------------------*/
 
-.md-related-content {
+.stb-related-content {
 	background: var(--color-content-bg);
 	border: 1px solid color-mix(in srgb, var(--color-border), transparent 30%);
 	border-radius: var(--radius-l);
@@ -16,13 +16,13 @@
 	transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.md-related-content.has-shadow {
+.stb-related-content.has-shadow {
 	box-shadow: 0 8px 24px -10px color-mix(in oklch, var(--color-headline, #212121) 16%, transparent);
 }
 
 /* LABEL ---------------------------------------------------------- */
 
-.md-related-content-label {
+.stb-related-content-label {
 	background: color-mix(in srgb, var(--color-secondary), transparent 10%);
 	color: var(--color-text-light);
 	letter-spacing: 0.08em;
@@ -31,18 +31,18 @@
 
 /* LINK + IMAGE BASE --------------------------------------------- */
 
-.md-related-content-link {
+.stb-related-content-link {
 	color: inherit;
 	display: block;
 	text-decoration: none;
 }
 
-.md-related-content-image {
+.stb-related-content-image {
 	overflow: hidden;
 	position: relative;
 }
 
-.md-related-content-img {
+.stb-related-content-img {
 	aspect-ratio: 1 / 1;
 	display: block;
 	height: 100%;
@@ -51,46 +51,46 @@
 	width: 100%;
 }
 
-.md-related-content-link:hover .md-related-content-img {
+.stb-related-content-link:hover .stb-related-content-img {
 	transform: scale(1.04);
 }
 
-.md-related-content-text {
+.stb-related-content-text {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-xs, 4px);
 }
 
-.md-related-content-title {
+.stb-related-content-title {
 	color: var(--color-text);
 	line-height: 1.3;
 	transition: color var(--transition);
 }
 
-.md-related-content-link:hover .md-related-content-title {
+.stb-related-content-link:hover .stb-related-content-title {
 	color: var(--color-primary);
 }
 
-.md-related-content-desc {
+.stb-related-content-desc {
 	color: var(--color-text-sec);
 	line-height: 1.5;
 }
 
-.md-related-content-cta {
+.stb-related-content-cta {
 	color: var(--color-primary);
 }
 
 /* CARD — single post, square thumb on the left ------------------ */
 
-.md-related-content--card .md-related-content-item,
-.md-related-content-card .md-related-content-item {
+.stb-related-content--card .stb-related-content-item,
+.stb-related-content-card .stb-related-content-item {
 	align-items: stretch;
 	display: flex;
 	flex-direction: row;
 }
 
-.md-related-content--card .md-related-content-image,
-.md-related-content-card .md-related-content-image {
+.stb-related-content--card .stb-related-content-image,
+.stb-related-content-card .stb-related-content-image {
 	aspect-ratio: 1 / 1;
 	flex-shrink: 0;
 	width: 7.5rem;
@@ -98,36 +98,36 @@
 
 /* SPOTLIGHT — bigger hero ---------------------------------------- */
 
-.md-related-content--spotlight .md-related-content-item {
+.stb-related-content--spotlight .stb-related-content-item {
 	display: grid;
 	gap: 0;
 	grid-template-columns: minmax(0, 14rem) 1fr;
 }
 
-.md-related-content--spotlight .md-related-content-image {
+.stb-related-content--spotlight .stb-related-content-image {
 	aspect-ratio: 1 / 1;
 }
 
-.md-related-content--spotlight .md-related-content-title {
+.stb-related-content--spotlight .stb-related-content-title {
 	font-size: 1.25em;
 	font-weight: 700;
 }
 
 /* GRID — square cards in a responsive grid ----------------------- */
 
-.md-related-content--grid {
+.stb-related-content--grid {
 	background: transparent;
 	border: 0;
 	overflow: visible;
 }
 
-.md-related-content--grid .md-related-content-label {
+.stb-related-content--grid .stb-related-content-label {
 	background: transparent;
 	color: var(--color-text);
 	padding: 0 0 var(--space-xs);
 }
 
-.md-related-content--grid .md-related-content-item {
+.stb-related-content--grid .stb-related-content-item {
 	background: var(--color-content-bg);
 	border: 1px solid color-mix(in srgb, var(--color-border), transparent 40%);
 	border-radius: var(--radius-m);
@@ -137,31 +137,31 @@
 	transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
-.md-related-content--grid .md-related-content-item:hover {
+.stb-related-content--grid .stb-related-content-item:hover {
 	border-color: color-mix(in srgb, var(--color-primary), transparent 60%);
 	box-shadow: 0 6px 18px -8px color-mix(in oklch, var(--color-headline, #212121) 18%, transparent);
 	transform: translateY(-2px);
 }
 
-.md-related-content--grid .md-related-content-image {
+.stb-related-content--grid .stb-related-content-image {
 	aspect-ratio: 1 / 1;
 }
 
 /* LIST — horizontal rows, square thumb left --------------------- */
 
-.md-related-content--list {
+.stb-related-content--list {
 	background: transparent;
 	border: 0;
 	overflow: visible;
 }
 
-.md-related-content--list .md-related-content-label {
+.stb-related-content--list .stb-related-content-label {
 	background: transparent;
 	color: var(--color-text);
 	padding: 0 0 var(--space-xs);
 }
 
-.md-related-content--list .md-related-content-item {
+.stb-related-content--list .stb-related-content-item {
 	align-items: stretch;
 	background: var(--color-content-bg);
 	border: 1px solid color-mix(in srgb, var(--color-border), transparent 40%);
@@ -172,12 +172,12 @@
 	transition: border-color var(--transition), transform var(--transition);
 }
 
-.md-related-content--list .md-related-content-item:hover {
+.stb-related-content--list .stb-related-content-item:hover {
 	border-color: color-mix(in srgb, var(--color-primary), transparent 60%);
 	transform: translateX(2px);
 }
 
-.md-related-content--list .md-related-content-image {
+.stb-related-content--list .stb-related-content-image {
 	aspect-ratio: 1 / 1;
 	flex-shrink: 0;
 	width: 6rem;
@@ -185,76 +185,76 @@
 
 /* INLINE — pill links ------------------------------------------- */
 
-.md-related-content--inline {
+.stb-related-content--inline {
 	background: transparent;
 	border: 0;
 	overflow: visible;
 }
 
-.md-related-content--inline .md-related-content-label {
+.stb-related-content--inline .stb-related-content-label {
 	background: transparent;
 	color: var(--color-text);
 	padding: 0 0 var(--space-xs);
 }
 
-.md-related-content--inline .md-related-content-item {
+.stb-related-content--inline .stb-related-content-item {
 	background: color-mix(in srgb, var(--color-primary), transparent 92%);
 	border-radius: var(--radius-full);
 	padding: var(--space-xs, 4px) var(--space-half, var(--space-half));
 	transition: background var(--transition), color var(--transition);
 }
 
-.md-related-content--inline .md-related-content-item:hover {
+.stb-related-content--inline .stb-related-content-item:hover {
 	background: color-mix(in srgb, var(--color-primary), transparent 80%);
 }
 
-.md-related-content--inline .md-related-content-text {
+.stb-related-content--inline .stb-related-content-text {
 	display: inline;
 	gap: 0;
 }
 
-.md-related-content--inline .md-related-content-title {
+.stb-related-content--inline .stb-related-content-title {
 	color: var(--color-primary);
 }
 
 /* RESPONSIVE ---------------------------------------------------- */
 
 @media (max-width: 992px) {
-	.md-related-content--spotlight .md-related-content-item {
+	.stb-related-content--spotlight .stb-related-content-item {
 		grid-template-columns: minmax(0, 9rem) 1fr;
 	}}
 
 @media (max-width: 640px) {
-	.md-related-content--card .md-related-content-image,
-	.md-related-content-card .md-related-content-image {
+	.stb-related-content--card .stb-related-content-image,
+	.stb-related-content-card .stb-related-content-image {
 		width: 6rem;
 	}
 
-	.md-related-content--spotlight .md-related-content-item {
+	.stb-related-content--spotlight .stb-related-content-item {
 		grid-template-columns: 1fr;
 	}
 
-	.md-related-content--list .md-related-content-image {
+	.stb-related-content--list .stb-related-content-image {
 		width: 5rem;
 	}}
 
 /* LEGACY COMPACT + MINIMAL — preserved for old blocks ----------- */
 
-.md-related-content-compact .md-related-content-label,
-.md-related-content--compact .md-related-content-label {
+.stb-related-content-compact .stb-related-content-label,
+.stb-related-content--compact .stb-related-content-label {
 	display: inline-block;
 	border-radius: var(--radius-s) var(--radius-s) 0 0;
 }
 
-.md-related-content-compact .md-related-content-text,
-.md-related-content--compact .md-related-content-text {
+.stb-related-content-compact .stb-related-content-text,
+.stb-related-content--compact .stb-related-content-text {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 }
 
-.md-related-content-minimal,
-.md-related-content--minimal {
+.stb-related-content-minimal,
+.stb-related-content--minimal {
 	background: transparent;
 	border: none;
 	border-left: 3px solid var(--color-primary);
@@ -262,13 +262,13 @@
 	padding-left: var(--space-single);
 }
 
-.md-related-content-minimal:hover,
-.md-related-content--minimal:hover {
+.stb-related-content-minimal:hover,
+.stb-related-content--minimal:hover {
 	box-shadow: none;
 }
 
-.md-related-content-minimal .md-related-content-label,
-.md-related-content--minimal .md-related-content-label {
+.stb-related-content-minimal .stb-related-content-label,
+.stb-related-content--minimal .stb-related-content-label {
 	background: transparent;
 	color: var(--color-primary);
 	padding: 0 0 var(--space-xs);
@@ -276,12 +276,12 @@
 
 /* EDITOR PREVIEW (Gutenberg) ------------------------------------ */
 
-.md-related-content-editor.md-related-content--grid .md-related-content-item,
-.md-related-content-editor.md-related-content--list .md-related-content-item {
+.stb-related-content-editor.stb-related-content--grid .stb-related-content-item,
+.stb-related-content-editor.stb-related-content--list .stb-related-content-item {
 	cursor: default;
 }
 
-.md-related-content-editor .md-related-content-upload {
+.stb-related-content-editor .stb-related-content-upload {
 	align-items: center;
 	background: color-mix(in srgb, var(--color-text), transparent 92%);
 	border: 1px dashed color-mix(in srgb, var(--color-border), transparent 30%);

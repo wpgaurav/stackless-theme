@@ -22,7 +22,7 @@ Stackless is a quiet, fast classic theme. It styles every semantic HTML element,
 * One Customizer panel for colors, typography, widths, the header and mobile menu, blog and archives, single posts, custom post types, store elements, the footer line and header and footer code.
 * Full width and Canvas templates, and per-page options to hide the title, header or footer or lay the header over the first section.
 * Page Blocks Builder regions (header, hero, before and after content, sidebar, footer, 404, shop and store) and an edge-to-edge builder template.
-* Settings export and import with backups, and an importer for sites moving from Marketers Delight.
+* Settings export and import with backups.
 
 == Installation ==
 
@@ -55,7 +55,7 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: card blocks. Plugin Card, Theme Card, GitHub Card, npm Package Card, Book Card, YouTube Card and Podcast Card fill themselves in from a slug, a repository, a package name, an ISBN, a video link or a feed. Each card saves its data in the post, so a page view waits on no outside service, and none of them loads a script. Plugin and theme images are copied into the media library. The YouTube card links to the video and loads no player.
 * New: the Plugin, Theme, GitHub and npm cards keep their ratings, installs, stars and versions up to date. The numbers are fetched in the background at most once a day and are never waited for on a page view.
 * New: style variations for core blocks: paragraphs, headings, lists, buttons, images, tables, groups, covers, videos, separators and the query loop. A variation's stylesheet loads only on pages that use it.
-* New: the blocks match the Marketers Delight theme blocks by name and settings, so content moves between the two themes. Appearance > Stackless Tools > Convert blocks switches the block names in posts, pages and patterns either way, with a preview first and a revision of every changed post. From the command line: wp stackless blocks migrate --from=marketers-delight, with --dry-run to preview and --to=marketers-delight to go back.
+* Removed: the one-off settings importer for sites moving from another theme. The theme's own settings export, import and backups are unchanged.
 * New: icons chosen in a block are drawn as Tabler icons, and each block can be hidden, replaced or filtered through the theme's hooks.
 * Fixed: a post with no tags showed an empty tag after it.
 
@@ -88,7 +88,6 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: a Layout panel in the editor to hide the title, the site header or the site footer, or to lay the header over the first section until the page scrolls. Over a dark cover the header switches to light text (filter stackless_theme_header_on_dark for other heroes). Products and other classic-editor screens get the same options in a side box.
 * New: Page Blocks Builder support. Blocks placed in the header or footer regions replace the theme's own (filter stackless_theme_region_mode to keep both); the hero, before content, after content, sidebar and 404 regions print in place, and two theme regions sit above the WooCommerce shop grid and the download grid. The builder template runs edge to edge and the builder preview uses the theme's type and colors.
 * New: Appearance > Stackless tools. Export the theme settings as JSON, import them on another site, and restore one of the last three backups taken before each import.
-* New: Marketers Delight importer (also under Tools > Import). It previews, then moves the logo, colors, widths, fonts, header and footer scripts, menu locations, widgets, the footer copyright, MD page templates (PBB Template, Builder, Full Blank, Premium Builder) and per-page header, footer, headline and transparent-header settings. It lists what Stackless cannot take over: MD page blocks (with a link to Page Blocks Builder's own importer), MD shortcodes and blocks in content, dropin post types and MD-only features. MD's data is never changed.
 * Improved: the WooCommerce stylesheet (46 KB) loads only on store screens, pages with WooCommerce or Stackless blocks and shortcodes, and pages with WooCommerce widgets, instead of on every page. Blocks and shortcodes it cannot see in advance still pull it in.
 * Improved: the Stackless module layer loads on store screens or when a Stackless module queues its own styles, and the EDD header-cart script only where the header cart prints.
 * Improved: related posts are cached per post and refresh when any post is published, edited or unpublished.

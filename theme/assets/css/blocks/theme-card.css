@@ -1,11 +1,11 @@
 /*
  * Stackless blocks: Theme Card.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*) are mapped to the theme's
+ * tokens in bridge.css.
  */
 
 /* Base Theme Card */
-.md-theme-card {
+.stb-theme-card {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-l);
@@ -13,20 +13,20 @@
 	transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.md-theme-card:hover {
+.stb-theme-card:hover {
 	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 15%);
 	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 92%);
 }
 
 /* Screenshot Area */
-.md-theme-card-screenshot {
+.stb-theme-card-screenshot {
 	position: relative;
 	aspect-ratio: 4/3;
 	overflow: hidden;
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 35%);
 }
 
-.md-theme-card-screenshot img {
+.stb-theme-card-screenshot img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -34,11 +34,11 @@
 	transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.md-theme-card:hover .md-theme-card-screenshot img {
+.stb-theme-card:hover .stb-theme-card-screenshot img {
 	transform: scale(1.04);
 }
 
-.md-theme-card-preview-overlay {
+.stb-theme-card-preview-overlay {
 	position: absolute;
 	inset: 0;
 	display: flex;
@@ -56,29 +56,29 @@
 	backdrop-filter: blur(2px);
 }
 
-.md-theme-card-screenshot:hover .md-theme-card-preview-overlay,
-.md-theme-card-preview-overlay:focus {
+.stb-theme-card-screenshot:hover .stb-theme-card-preview-overlay,
+.stb-theme-card-preview-overlay:focus {
 	opacity: 1;
 }
 
 /* Content Area */
-.md-theme-card-content {
+.stb-theme-card-content {
 	padding: var(--space-single);
 }
 
-.md-theme-card-name {
+.stb-theme-card-name {
 	font-size: 1.1em;
 	line-height: 1.3;
 	margin: 0 0 2px 0;
 }
 
-.md-theme-card-author {
+.stb-theme-card-author {
 	display: block;
 	font-size: 0.85em;
 	margin-bottom: var(--space-half);
 }
 
-.md-theme-card-desc {
+.stb-theme-card-desc {
 	color: var(--color-text-sec);
 	margin-bottom: var(--space-single);
 	line-height: 1.6;
@@ -86,7 +86,7 @@
 }
 
 /* Meta Information */
-.md-theme-card-meta {
+.stb-theme-card-meta {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -96,32 +96,32 @@
 	color: var(--color-text-sec);
 }
 
-.md-theme-card-rating {
+.stb-theme-card-rating {
 	display: inline-flex;
 	align-items: center;
 	gap: 1px;
 }
 
-.md-theme-card-rating .md-icon-star-full,
-.md-theme-card-rating .md-icon-star-half {
+.stb-theme-card-rating .stb-icon-star-full,
+.stb-theme-card-rating .stb-icon-star-half {
 	font-size: 0.9em;
 }
 
 /* No opacity: at 70% the secondary text colour dropped to 2.9:1. */
-.md-theme-card-rating-count {
+.stb-theme-card-rating-count {
 	margin-left: var(--space-xs);
 	font-size: 0.9em;
 }
 
-.md-theme-card-installs,
-.md-theme-card-version {
+.stb-theme-card-installs,
+.stb-theme-card-version {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
 }
 
 /* Requirements */
-.md-theme-card-requirements {
+.stb-theme-card-requirements {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-half);
@@ -134,7 +134,7 @@
 }
 
 /* Actions */
-.md-theme-card-actions {
+.stb-theme-card-actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-half);
@@ -143,31 +143,31 @@
 /*------------------------------*\
 	Horizontal Style
 \*------------------------------*/
-.md-theme-card-horizontal {
+.stb-theme-card-horizontal {
 	display: grid;
 	grid-template-columns: minmax(200px, 350px) 1fr;
 }
 
-.md-theme-card-horizontal .md-theme-card-screenshot {
+.stb-theme-card-horizontal .stb-theme-card-screenshot {
 	aspect-ratio: auto;
 	height: 100%;
 	min-height: 180px;
 }
 
-.md-theme-card-horizontal .md-theme-card-content {
+.stb-theme-card-horizontal .stb-theme-card-content {
 	display: flex;
 	flex-direction: column;
 }
 
-.md-theme-card-horizontal .md-theme-card-actions {
+.stb-theme-card-horizontal .stb-theme-card-actions {
 	margin-top: auto;
 }
 
 @media all and (max-width: 640px) {
-	.md-theme-card-horizontal {
+	.stb-theme-card-horizontal {
 		grid-template-columns: 1fr;
 	}
-	.md-theme-card-horizontal .md-theme-card-screenshot {
+	.stb-theme-card-horizontal .stb-theme-card-screenshot {
 		aspect-ratio: 16/9;
 		height: auto;
 		min-height: 0;
@@ -177,26 +177,26 @@
 /*------------------------------*\
 	Compact Style
 \*------------------------------*/
-.md-theme-card-compact .md-theme-card-screenshot {
+.stb-theme-card-compact .stb-theme-card-screenshot {
 	aspect-ratio: 16/9;
 }
 
-.md-theme-card-compact .md-theme-card-content {
+.stb-theme-card-compact .stb-theme-card-content {
 	padding: var(--space-half);
 }
 
-.md-theme-card-compact .md-theme-card-desc {
+.stb-theme-card-compact .stb-theme-card-desc {
 	display: none;
 }
 
-.md-theme-card-compact .md-theme-card-requirements {
+.stb-theme-card-compact .stb-theme-card-requirements {
 	display: none;
 }
 
 /*------------------------------*\
 	Minimal Style
 \*------------------------------*/
-.md-theme-card-minimal {
+.stb-theme-card-minimal {
 	background: transparent;
 	border: none;
 	display: flex;
@@ -204,23 +204,23 @@
 	align-items: flex-start;
 }
 
-.md-theme-card-minimal:hover {
+.stb-theme-card-minimal:hover {
 	box-shadow: none;
 	border-color: transparent;
 }
 
-.md-theme-card-minimal .md-theme-card-screenshot {
+.stb-theme-card-minimal .stb-theme-card-screenshot {
 	width: 120px;
 	aspect-ratio: auto;
 	border-radius: var(--radius-m);
 	flex-shrink: 0;
 }
 
-.md-theme-card-minimal .md-theme-card-content {
+.stb-theme-card-minimal .stb-theme-card-content {
 	padding: 0;
 	flex: 1;
 }
 
-.md-theme-card-minimal .md-theme-card-requirements {
+.stb-theme-card-minimal .stb-theme-card-requirements {
 	display: none;
 }

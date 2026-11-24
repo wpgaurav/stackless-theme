@@ -1,6 +1,6 @@
 /*
  * Stackless blocks: Query Loop.
- * Six layouts. Wrapper and item class names follow Marketers Delight's loop templates.
+ * Six layouts: default, blocks, cards, list, teasers and docs.
  */
 
 [class*="wp-block-stackless-query-loop"] :is(h2, h3, h4, h5, h6, p) { margin-top: 0; }

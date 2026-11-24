@@ -6,10 +6,10 @@
 	'use strict';
 
 	document.addEventListener('click', function (event) {
-		var head = event.target.closest ? event.target.closest('.md-toc-collapsible .md-toc-head') : null;
-		var toc = head ? head.closest('.md-toc') : null;
-		var toggle = toc ? toc.querySelector('.md-toc-toggle') : null;
-		var body = toc ? toc.querySelector('.md-toc-body') : null;
+		var head = event.target.closest ? event.target.closest('.stb-toc-collapsible .stb-toc-head') : null;
+		var toc = head ? head.closest('.stb-toc') : null;
+		var toggle = toc ? toc.querySelector('.stb-toc-toggle') : null;
+		var body = toc ? toc.querySelector('.stb-toc-body') : null;
 		if (!toggle || !body) {
 			return;
 		}

@@ -1,10 +1,10 @@
 /*
  * Stackless blocks: YouTube Card.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*) are mapped to the theme's
+ * tokens in bridge.css.
  */
 
-.md-youtube-card {
+.stb-youtube-card {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-l);
@@ -12,12 +12,12 @@
 	transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.md-youtube-card:hover {
+.stb-youtube-card:hover {
 	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 15%);
 	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 92%);
 }
 
-.md-youtube-card-thumbnail {
+.stb-youtube-card-thumbnail {
 	/* An <a> on the front end: inline boxes ignore aspect-ratio, so the
 	   thumbnail collapsed and the play button was clipped by the card. */
 	display: block;
@@ -27,7 +27,7 @@
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-text) 8%);
 }
 
-.md-youtube-card-thumbnail img {
+.stb-youtube-card-thumbnail img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -35,11 +35,11 @@
 	transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.md-youtube-card:hover .md-youtube-card-thumbnail img {
+.stb-youtube-card:hover .stb-youtube-card-thumbnail img {
 	transform: scale(1.03);
 }
 
-.md-youtube-card-thumb-placeholder {
+.stb-youtube-card-thumb-placeholder {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -51,7 +51,7 @@
 	opacity: 0.4;
 }
 
-.md-youtube-card-play {
+.stb-youtube-card-play {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -67,7 +67,7 @@
 	transition: background var(--motion), transform var(--motion);
 }
 
-.md-youtube-card-play::after {
+.stb-youtube-card-play::after {
 	content: '';
 	position: absolute;
 	top: 50%;
@@ -78,29 +78,29 @@
 	border-color: transparent transparent transparent #fff;
 }
 
-.md-youtube-card:hover .md-youtube-card-play {
+.stb-youtube-card:hover .stb-youtube-card-play {
 	background: #ff0000;
 	transform: translate(-50%, -50%) scale(1.08);
 }
 
-.md-youtube-card-body {
+.stb-youtube-card-body {
 	padding: var(--space-single);
 }
 
-.md-youtube-card-title {
+.stb-youtube-card-title {
 	font-size: 1.1em;
 	line-height: 1.3;
 	margin: 0 0 var(--space-xs) 0;
 }
 
-.md-youtube-card-channel {
+.stb-youtube-card-channel {
 	font-size: 0.85em;
 	color: var(--color-text-sec);
 	margin-bottom: var(--space-single);
 	display: block;
 }
 
-.md-youtube-card-actions {
+.stb-youtube-card-actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-half);
@@ -109,30 +109,30 @@
 /*------------------------------*\
 	Compact Style
 \*------------------------------*/
-.md-youtube-card-compact .md-youtube-card-thumbnail {
+.stb-youtube-card-compact .stb-youtube-card-thumbnail {
 	display: none;
 }
 
-.md-youtube-card-compact .md-youtube-card-body {
+.stb-youtube-card-compact .stb-youtube-card-body {
 	padding: var(--space-half);
 }
 
 /*------------------------------*\
 	Minimal Style
 \*------------------------------*/
-.md-youtube-card-minimal {
+.stb-youtube-card-minimal {
 	background: transparent;
 	border: none;
 }
 
-.md-youtube-card-minimal:hover {
+.stb-youtube-card-minimal:hover {
 	box-shadow: none;
 }
 
-.md-youtube-card-minimal .md-youtube-card-thumbnail {
+.stb-youtube-card-minimal .stb-youtube-card-thumbnail {
 	display: none;
 }
 
-.md-youtube-card-minimal .md-youtube-card-body {
+.stb-youtube-card-minimal .stb-youtube-card-body {
 	padding: 0;
 }

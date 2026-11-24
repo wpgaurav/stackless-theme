@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Theme Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -282,16 +282,16 @@
 				var hasHalf = (rating - fullStars) >= 0.5;
 
 				for (var i = 0; i < fullStars; i++) {
-					stars.push(StacklessBlocks.icon( 'span', 'md-icon-star-full', 'text-warning', { key: 'star-' + i } ));
+					stars.push(StacklessBlocks.icon( 'span', 'stb-icon-star-full', 'text-warning', { key: 'star-' + i } ));
 				}
 				if (hasHalf) {
-					stars.push(StacklessBlocks.icon( 'span', 'md-icon-star-half', 'text-warning', { key: 'star-half' } ));
+					stars.push(StacklessBlocks.icon( 'span', 'stb-icon-star-half', 'text-warning', { key: 'star-half' } ));
 				}
 				return stars;
 			};
 
 			var blockProps = useBlockProps({
-				className: 'md-theme-card md-theme-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-theme-card stb-theme-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -443,33 +443,33 @@
 					)
 				),
 				el('div', blockProps,
-					attributes.screenshot && el('div', { className: 'md-theme-card-screenshot' },
+					attributes.screenshot && el('div', { className: 'stb-theme-card-screenshot' },
 						el('img', { src: attributes.screenshot, alt: attributes.name }),
-						attributes.previewUrl && el('a', { href: '#', className: 'md-theme-card-preview-overlay' },
-							StacklessBlocks.icon( 'span', 'md-icon-eye' ),
+						attributes.previewUrl && el('a', { href: '#', className: 'stb-theme-card-preview-overlay' },
+							StacklessBlocks.icon( 'span', 'stb-icon-eye' ),
 							' ' + __( 'Preview', 'stackless-theme' )
 						)
 					),
-					el('div', { className: 'md-theme-card-content' },
-						el('h3', { className: 'md-theme-card-name mb-none' }, attributes.name || __( 'Theme Name', 'stackless-theme' )),
-						attributes.author && el('span', { className: 'md-theme-card-author text-sec small' }, 'by ' + attributes.author),
-						attributes.description && el('p', { className: 'md-theme-card-desc' }, attributes.description),
-						el('div', { className: 'md-theme-card-meta' },
-							attributes.rating > 0 && el('span', { className: 'md-theme-card-rating' },
+					el('div', { className: 'stb-theme-card-content' },
+						el('h3', { className: 'stb-theme-card-name mb-none' }, attributes.name || __( 'Theme Name', 'stackless-theme' )),
+						attributes.author && el('span', { className: 'stb-theme-card-author text-sec small' }, 'by ' + attributes.author),
+						attributes.description && el('p', { className: 'stb-theme-card-desc' }, attributes.description),
+						el('div', { className: 'stb-theme-card-meta' },
+							attributes.rating > 0 && el('span', { className: 'stb-theme-card-rating' },
 								renderStars(),
-								attributes.ratingCount > 0 && el('span', { className: 'md-theme-card-rating-count' }, '(' + attributes.ratingCount + ')')
+								attributes.ratingCount > 0 && el('span', { className: 'stb-theme-card-rating-count' }, '(' + attributes.ratingCount + ')')
 							),
-							attributes.activeInstalls && el('span', { className: 'md-theme-card-installs' },
-								StacklessBlocks.icon( 'span', 'md-icon-download' ),
+							attributes.activeInstalls && el('span', { className: 'stb-theme-card-installs' },
+								StacklessBlocks.icon( 'span', 'stb-icon-download' ),
 								' ' + attributes.activeInstalls + '+'
 							),
-							attributes.version && el('span', { className: 'md-theme-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version)
+							attributes.version && el('span', { className: 'stb-theme-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version)
 						),
-						attributes.showRequirements && (attributes.requiresWP || attributes.requiresPHP) && el('div', { className: 'md-theme-card-requirements' },
+						attributes.showRequirements && (attributes.requiresWP || attributes.requiresPHP) && el('div', { className: 'stb-theme-card-requirements' },
 							attributes.requiresWP && el('span', null, __( 'Requires WP: ', 'stackless-theme' ) + attributes.requiresWP),
 							attributes.requiresPHP && el('span', null, __( 'Requires PHP: ', 'stackless-theme' ) + attributes.requiresPHP)
 						),
-						el('div', { className: 'md-theme-card-actions' },
+						el('div', { className: 'stb-theme-card-actions' },
 							attributes.wpUrl && el('a', { href: '#', className: 'button' }, __( 'View on WordPress.org', 'stackless-theme' )),
 							attributes.previewUrl && el('a', { href: '#', className: 'button button-outline' }, __( 'Live Preview', 'stackless-theme' ))
 						)

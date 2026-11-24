@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: npm Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -208,7 +208,7 @@
 				setInputValue = _inputState[1];
 
 			var blockProps = useBlockProps({
-				className: 'md-npm-card md-npm-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-npm-card stb-npm-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -291,30 +291,30 @@
 					)
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-npm-card-body' },
-						el('div', { className: 'md-npm-card-header' },
-							el('span', { className: 'md-npm-card-icon' }, StacklessBlocks.cardIcon( 'package', '' )),
-							el('div', { className: 'md-npm-card-identity' },
-								el('h3', { className: 'md-npm-card-name mb-none' }, attributes.packageName || __( 'package-name', 'stackless-theme' )),
-								attributes.author && el('span', { className: 'md-npm-card-author text-sec small' }, 'by ' + attributes.author)
+					el('div', { className: 'stb-npm-card-body' },
+						el('div', { className: 'stb-npm-card-header' },
+							el('span', { className: 'stb-npm-card-icon' }, StacklessBlocks.cardIcon( 'package', '' )),
+							el('div', { className: 'stb-npm-card-identity' },
+								el('h3', { className: 'stb-npm-card-name mb-none' }, attributes.packageName || __( 'package-name', 'stackless-theme' )),
+								attributes.author && el('span', { className: 'stb-npm-card-author text-sec small' }, 'by ' + attributes.author)
 							)
 						),
-						attributes.description && el('p', { className: 'md-npm-card-desc' }, attributes.description),
-						el('div', { className: 'md-npm-card-meta' },
-							attributes.version && el('span', { className: 'md-npm-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version),
-							el('span', { className: 'md-npm-card-downloads' },
-								StacklessBlocks.icon( 'span', 'md-icon-download' ),
+						attributes.description && el('p', { className: 'stb-npm-card-desc' }, attributes.description),
+						el('div', { className: 'stb-npm-card-meta' },
+							attributes.version && el('span', { className: 'stb-npm-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version),
+							el('span', { className: 'stb-npm-card-downloads' },
+								StacklessBlocks.icon( 'span', 'stb-icon-download' ),
 								' ' + (attributes.weeklyDownloads || '0') + '/wk'
 							),
-							attributes.license && el('span', { className: 'md-npm-card-license' }, StacklessBlocks.cardIcon( 'scale' ), ' ' + attributes.license),
-							attributes.lastPublished && el('span', { className: 'md-npm-card-published' }, StacklessBlocks.icon( 'span', 'md-icon-clock' ), ' ' + attributes.lastPublished)
+							attributes.license && el('span', { className: 'stb-npm-card-license' }, StacklessBlocks.cardIcon( 'scale' ), ' ' + attributes.license),
+							attributes.lastPublished && el('span', { className: 'stb-npm-card-published' }, StacklessBlocks.icon( 'span', 'stb-icon-clock' ), ' ' + attributes.lastPublished)
 						),
-						attributes.keywords && attributes.keywords.length > 0 && el('div', { className: 'md-npm-card-keywords' },
+						attributes.keywords && attributes.keywords.length > 0 && el('div', { className: 'stb-npm-card-keywords' },
 							attributes.keywords.slice(0, 8).map(function (kw, i) {
-								return el('span', { key: 'kw-' + i, className: 'md-npm-card-keyword' }, kw);
+								return el('span', { key: 'kw-' + i, className: 'stb-npm-card-keyword' }, kw);
 							})
 						),
-						el('div', { className: 'md-npm-card-actions' },
+						el('div', { className: 'stb-npm-card-actions' },
 							attributes.npmUrl && el('a', { href: '#', className: 'button' }, __( 'View on npm', 'stackless-theme' )),
 							attributes.homepage && el('a', { href: '#', className: 'button button-outline' }, __( 'Homepage', 'stackless-theme' ))
 						)

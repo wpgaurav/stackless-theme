@@ -1,7 +1,6 @@
 <?php
 /**
- * Appearance > Stackless tools: export and import the theme settings, restore a backup, and the
- * Marketers Delight importer (inc/admin/md-import.php).
+ * Appearance > Stackless tools: export and import the theme settings, and restore a backup.
  *
  * @package Stackless_Theme
  */
@@ -193,7 +192,7 @@ function stackless_theme_export_settings(): void
     exit;
 }
 
-/** One upload box: a Stackless export imports at once; a Marketers Delight export opens the import preview. */
+/** Imports a Stackless settings export. */
 function stackless_theme_import_file(): void
 {
     stackless_theme_tools_guard('stackless_import_file');
@@ -209,13 +208,7 @@ function stackless_theme_import_file(): void
         stackless_theme_tools_redirect('bad-file');
     }
 
-    $generator = (string) ($data['_generator'] ?? '');
-    if ($generator === 'marketers-delight') {
-        set_transient('stackless_md_file_' . get_current_user_id(), $data['settings'], HOUR_IN_SECONDS);
-        wp_safe_redirect(stackless_theme_tools_url(['md' => 'preview', 'source' => 'file']));
-        exit;
-    }
-    if ($generator !== 'stackless-theme') {
+    if ((string) ($data['_generator'] ?? '') !== 'stackless-theme') {
         stackless_theme_tools_redirect('bad-file');
     }
 
@@ -247,16 +240,11 @@ function stackless_theme_tools_notice(): void
     $dropped = isset($_GET['dropped']) ? absint($_GET['dropped']) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
     $messages = [
         'no-file' => ['error', __('Choose a .json file to import.', 'stackless-theme')],
-        'bad-file' => ['error', __('That file is not a Stackless or Marketers Delight settings export.', 'stackless-theme')],
+        'bad-file' => ['error', __('That file is not a Stackless settings export.', 'stackless-theme')],
         /* translators: 1: settings imported, 2: settings skipped */
         'imported' => ['success', sprintf(__('Imported %1$d settings (%2$d skipped). The previous settings are saved as a backup below.', 'stackless-theme'), $count, $dropped)],
         'restored' => ['success', __('Backup restored.', 'stackless-theme')],
         'no-backup' => ['error', __('That backup no longer exists.', 'stackless-theme')],
-        'md-imported' => ['success', __('Marketers Delight import finished. Check the summary below; the previous Stackless settings are saved as a backup.', 'stackless-theme')],
-        'md-nothing' => ['warning', __('Nothing was selected to import.', 'stackless-theme')],
-        'blocks-preview' => ['info', __('Block conversion preview: nothing was changed. The posts that would change are listed under Convert blocks.', 'stackless-theme')],
-        'blocks-done' => ['success', __('Blocks converted. Each changed post has a revision of its earlier content.', 'stackless-theme')],
-        'blocks-none' => ['warning', __('No blocks to convert were found.', 'stackless-theme')],
     ];
     if (isset($messages[$notice])) {
         printf('<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>', esc_attr($messages[$notice][0]), esc_html($messages[$notice][1]));
@@ -268,16 +256,10 @@ function stackless_theme_tools_render(): void
     if (!current_user_can('manage_options')) {
         return;
     }
-    $view = isset($_GET['md']) ? sanitize_key(wp_unslash($_GET['md'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- view switch only.
     ?>
 	<div class="wrap stackless-tools">
 		<h1><?php esc_html_e('Stackless tools', 'stackless-theme'); ?></h1>
 		<?php stackless_theme_tools_notice(); ?>
-
-		<?php if ($view === 'preview') : ?>
-			<?php stackless_theme_md_render_preview(); ?>
-		<?php else : ?>
-			<?php stackless_theme_md_render_intro(); ?>
 
 			<div class="card">
 				<h2><?php esc_html_e('Export settings', 'stackless-theme'); ?></h2>
@@ -291,7 +273,7 @@ function stackless_theme_tools_render(): void
 
 			<div class="card">
 				<h2><?php esc_html_e('Import a file', 'stackless-theme'); ?></h2>
-				<p><?php esc_html_e('A Stackless export replaces the current settings straight away. A Marketers Delight export (MD Settings > Import/Export) opens a preview first.', 'stackless-theme'); ?></p>
+				<p><?php esc_html_e('A Stackless settings export replaces the current settings. They are saved as a backup first.', 'stackless-theme'); ?></p>
 				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
 					<input type="hidden" name="action" value="stackless_import_file">
 					<?php wp_nonce_field('stackless_import_file'); ?>
@@ -299,12 +281,6 @@ function stackless_theme_tools_render(): void
 					<?php submit_button(__('Import', 'stackless-theme'), 'secondary', 'submit', false); ?>
 				</form>
 			</div>
-
-			<?php
-			if (function_exists('stackless_theme_blocks_tools_card')) {
-				stackless_theme_blocks_tools_card();
-			}
-			?>
 
 			<?php $backups = array_reverse(stackless_theme_backups(), true); ?>
 			<div class="card">
@@ -343,8 +319,7 @@ function stackless_theme_tools_render(): void
 					</table>
 				<?php endif; ?>
 			</div>
-		<?php endif; ?>
 	</div>
-	<style>.stackless-tools .card{max-width:56rem}.stackless-tools .card h2{margin-top:.5em}.stackless-tools .st-md-table td,.stackless-tools .st-md-table th{vertical-align:top}.stackless-tools .st-md-status{display:inline-block;min-width:4.5rem;padding:1px 6px;border-radius:2px;font-size:12px;text-align:center}.st-md-status--map{background:#edfaef;color:#1a6a28}.st-md-status--partial{background:#fef5e6;color:#7a4f00}.st-md-status--skip{background:#f0f0f1;color:#50575e}.st-md-status--report{background:#fbebeb;color:#8f2020}</style>
+	<style>.stackless-tools .card{max-width:56rem}.stackless-tools .card h2{margin-top:.5em}</style>
 	<?php
 }

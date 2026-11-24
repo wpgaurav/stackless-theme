@@ -1,16 +1,16 @@
 /*
  * Stackless blocks: Steps.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*, --fs-*) are mapped to the
+ * theme's tokens in bridge.css.
  */
 
-.md-steps {
+.stb-steps {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-single);
 }
 
-.md-step {
+.stb-step {
 	/* Single source of truth for the badge size — the connector and the
 	   content's optical offset are both derived from it. */
 	--step-badge: 2rem;
@@ -20,7 +20,7 @@
 	position: relative;
 }
 
-.md-step-number {
+.stb-step-number {
 	grid-column: 1;
 	inline-size: var(--step-badge);
 	block-size: var(--step-badge);
@@ -40,7 +40,7 @@
 
 /* Runs down the badge column, centred on the badge, from just below this
    badge to the top of the next one. Spans the flex gap between steps. */
-.md-step:not(:last-child)::before {
+.stb-step:not(:last-child)::before {
 	content: '';
 	position: absolute;
 	inset-block-start: calc(var(--step-badge) + 0.25rem);
@@ -50,7 +50,7 @@
 	background: var(--color-border);
 }
 
-.md-step-content {
+.stb-step-content {
 	grid-column: 2;
 	/* Optically centres the first line of the title against the badge. */
 	padding-block-start: calc((var(--step-badge) - 1.4em) / 2);
@@ -60,19 +60,19 @@
 /* Two classes: the theme's `.format :where(h4, p)` rhythm has the same
    specificity as one and loads later, so it restored a full line of margin
    under every step — and a doubled gap after the last. */
-.md-step .md-step-title {
+.stb-step .stb-step-title {
 	margin-block: 0;
 	font-size: var(--fs-m);
 	line-height: 1.4;
 }
 
-.md-step .md-step-text {
+.stb-step .stb-step-text {
 	margin-block: var(--space-third) 0;
 	color: var(--color-text-sec);
 	font-size: 0.9375em;
 }
 
-.md-step-title:empty,
-.md-step-text:empty {
+.stb-step-title:empty,
+.stb-step-text:empty {
 	display: none;
 }

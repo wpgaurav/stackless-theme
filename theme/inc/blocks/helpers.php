@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
  * Wraps a block's render callback.
  *
  * The block renders as the theme part "block_<name>", so it gets the theme's standard hooks
- * (show, pre, before, _html, after). Inside the part, the empty md-icon-* elements are filled
+ * (show, pre, before, _html, after). Inside the part, the empty stb-icon-* elements are filled
  * with their SVG and the block-support classes and styles are merged into the root element,
  * which also gives it the wp-block-stackless-<name> class.
  */
@@ -172,7 +172,7 @@ function stackless_theme_blocks_image(string $url, string $size = 'large', array
 /**
  * Palette slugs and colors for the blocks' color-class pickers: the theme's editor palette.
  * The class a picker stores is has-<slug>-color or has-<slug>-background-color. WordPress styles
- * those for the theme's own slugs; bridge.css styles Marketers Delight's slugs.
+ * those for the theme's own slugs; bridge.css styles the blocks' extra slugs.
  *
  * @return array<string, string>
  */

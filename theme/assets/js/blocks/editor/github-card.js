@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: GitHub Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -197,7 +197,7 @@
 				setError = _errorState[1];
 
 			var blockProps = useBlockProps({
-				className: 'md-github-card md-github-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-github-card stb-github-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -270,37 +270,37 @@
 					)
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-github-card-body' },
-						el('div', { className: 'md-github-card-header' },
+					el('div', { className: 'stb-github-card-body' },
+						el('div', { className: 'stb-github-card-header' },
 							attributes.ownerAvatar
-								? el('img', { src: attributes.ownerAvatar, alt: attributes.owner, className: 'md-github-card-avatar' })
-								: StacklessBlocks.icon( 'span', 'md-icon-github', 'md-github-card-avatar-placeholder' ),
-							el('div', { className: 'md-github-card-identity' },
-								el('h3', { className: 'md-github-card-name mb-none' }, attributes.name || __( 'owner/repo', 'stackless-theme' )),
-								attributes.owner && el('span', { className: 'md-github-card-owner text-sec small' }, attributes.owner)
+								? el('img', { src: attributes.ownerAvatar, alt: attributes.owner, className: 'stb-github-card-avatar' })
+								: StacklessBlocks.icon( 'span', 'stb-icon-github', 'stb-github-card-avatar-placeholder' ),
+							el('div', { className: 'stb-github-card-identity' },
+								el('h3', { className: 'stb-github-card-name mb-none' }, attributes.name || __( 'owner/repo', 'stackless-theme' )),
+								attributes.owner && el('span', { className: 'stb-github-card-owner text-sec small' }, attributes.owner)
 							)
 						),
-						attributes.description && el('p', { className: 'md-github-card-desc' }, attributes.description),
-						el('div', { className: 'md-github-card-meta' },
-							attributes.language && el('span', { className: 'md-github-card-language' },
+						attributes.description && el('p', { className: 'stb-github-card-desc' }, attributes.description),
+						el('div', { className: 'stb-github-card-meta' },
+							attributes.language && el('span', { className: 'stb-github-card-language' },
 								el('span', {
-									className: 'md-github-card-language-dot',
+									className: 'stb-github-card-language-dot',
 									style: { backgroundColor: languageColors[attributes.language] || '#8b8b8b' }
 								}),
 								attributes.language
 							),
-							el('span', { className: 'md-github-card-stat md-github-card-stars' }, StacklessBlocks.icon( 'span', 'md-icon-star-full' ), ' ' + formatNumber(attributes.stars)),
-							attributes.forks > 0 && el('span', { className: 'md-github-card-stat' }, StacklessBlocks.cardIcon( 'fork', 'md-github-card-icon' ), ' ' + formatNumber(attributes.forks)),
-							attributes.license && attributes.license !== 'NOASSERTION' && el('span', { className: 'md-github-card-stat' }, StacklessBlocks.icon( 'span', 'md-icon-shield-check' ), ' ' + attributes.license),
-							attributes.openIssues > 0 && el('span', { className: 'md-github-card-stat' }, StacklessBlocks.icon( 'span', 'md-icon-warning' ), ' ' + formatNumber(attributes.openIssues) + ' issues'),
-							attributes.lastUpdated && el('span', { className: 'md-github-card-stat' }, StacklessBlocks.icon( 'span', 'md-icon-clock' ), ' Updated ' + formatRelativeTime(attributes.lastUpdated))
+							el('span', { className: 'stb-github-card-stat stb-github-card-stars' }, StacklessBlocks.icon( 'span', 'stb-icon-star-full' ), ' ' + formatNumber(attributes.stars)),
+							attributes.forks > 0 && el('span', { className: 'stb-github-card-stat' }, StacklessBlocks.cardIcon( 'fork', 'stb-github-card-icon' ), ' ' + formatNumber(attributes.forks)),
+							attributes.license && attributes.license !== 'NOASSERTION' && el('span', { className: 'stb-github-card-stat' }, StacklessBlocks.icon( 'span', 'stb-icon-shield-check' ), ' ' + attributes.license),
+							attributes.openIssues > 0 && el('span', { className: 'stb-github-card-stat' }, StacklessBlocks.icon( 'span', 'stb-icon-warning' ), ' ' + formatNumber(attributes.openIssues) + ' issues'),
+							attributes.lastUpdated && el('span', { className: 'stb-github-card-stat' }, StacklessBlocks.icon( 'span', 'stb-icon-clock' ), ' Updated ' + formatRelativeTime(attributes.lastUpdated))
 						),
-						attributes.topics && attributes.topics.length > 0 && el('div', { className: 'md-github-card-topics' },
+						attributes.topics && attributes.topics.length > 0 && el('div', { className: 'stb-github-card-topics' },
 							attributes.topics.map(function (topic, i) {
-								return el('span', { key: 'topic-' + i, className: 'md-github-card-topic' }, topic);
+								return el('span', { key: 'topic-' + i, className: 'stb-github-card-topic' }, topic);
 							})
 						),
-						el('div', { className: 'md-github-card-actions' },
+						el('div', { className: 'stb-github-card-actions' },
 							attributes.repoUrl && el('a', { href: '#', className: 'button' }, __( 'View on GitHub', 'stackless-theme' ))
 						)
 					)

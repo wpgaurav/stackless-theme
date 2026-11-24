@@ -1,10 +1,10 @@
 <?php
 /**
- * Stackless blocks: the Marketers Delight theme blocks under the stackless/ namespace.
+ * Stackless blocks: content and card blocks under the stackless/ namespace.
  *
- * Every block keeps Marketers Delight's name after the slash, its attributes and its parent and
- * child rules, and saves no HTML, so a post moves between the two themes by replacing
- * "wp:marketers-delight/" with "wp:stackless/" in its content (see migrate.php).
+ * The blocks are dynamic: they save only their attributes, and PHP renders the markup. Their
+ * names, attributes and parent and child rules are a storage contract, so do not rename, add or
+ * drop them.
  *
  * This folder is self-contained: it needs only stackless_theme_part(), stackless_theme_icon()
  * and the asset helpers from the theme.
@@ -21,13 +21,12 @@ require __DIR__ . '/cards.php';
 require __DIR__ . '/toc.php';
 require __DIR__ . '/query-loop.php';
 require __DIR__ . '/core-styles.php';
-require __DIR__ . '/migrate.php';
 
 /**
  * Block definitions, keyed by the name after the slash.
  *
  * - callback:   the render callback.
- * - attributes: only where Marketers Delight declares them in PHP. The other blocks declare
+ * - attributes: only for the blocks that declare them in PHP. The other blocks declare
  *               theirs in the editor script, and the callbacks rely on unset attributes staying
  *               unset, so do not add defaults here.
  * - style:      false when the block has no stylesheet of its own.
@@ -381,8 +380,8 @@ function stackless_theme_blocks_category(array $categories): array
 }
 
 /**
- * Supports. The baseline matches Marketers Delight's, so the same inspector controls write the
- * same attributes in both themes.
+ * Supports. Keep the baseline as it is: the inspector controls write these attributes, and
+ * stored content depends on them.
  */
 function stackless_theme_blocks_supports(string $slug, array $block = []): array
 {

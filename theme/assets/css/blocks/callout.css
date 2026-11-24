@@ -1,7 +1,7 @@
 /*
  * Stackless blocks: Callout.
  * A hairline and a soft fill, both mixed from one accent, so a preset reads as its semantic
- * color. Ported from Marketers Delight's .callout; no thick rail on a rounded box.
+ * color. No thick rail on a rounded box.
  */
 
 .callout {

@@ -1,14 +1,14 @@
 /*
  * Stackless blocks: Quote.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*, --fs-*) are mapped to the
+ * theme's tokens in bridge.css.
  */
 
 /* ============================================
    BASE
    ============================================ */
 
-.md-quote {
+.stb-quote {
 	/* Serif variants follow Blockquote settings, including editor previews. */
 	--font-serif: var(--font-quote, ui-serif, Georgia, serif);
 	position: relative;
@@ -20,14 +20,14 @@
 
 /* The theme gives a bare blockquote a rail, padding and a muted color. This block draws its own,
    so those are cleared first; the style rules below set what each style needs. */
-.md-quote .md-quote-text {
+.stb-quote .stb-quote-text {
 	border: 0;
 	color: inherit;
 	padding: 0;
 }
 
 /* Two classes, so the theme's blockquote margin does not push the attribution away. */
-.md-quote .md-quote-text {
+.stb-quote .stb-quote-text {
 	font-size: 1.25em;
 	line-height: 1.65;
 	margin: 0;
@@ -35,22 +35,22 @@
 }
 
 /* Font family toggle */
-.md-quote-font-sans .md-quote-text {
+.stb-quote-font-sans .stb-quote-text {
 	font-family: var(--font-base);
 }
 
-.md-quote-font-serif .md-quote-text {
+.stb-quote-font-serif .stb-quote-text {
 	font-family: var(--font-serif);
 }
 
 /* Citations always use default theme font */
-.md-quote-name {
+.stb-quote-name {
 	font-family: var(--font-base);
 	font-style: normal;
 	font-weight: var(--font-weight-bold);
 }
 
-.md-quote-role {
+.stb-quote-role {
 	font-family: var(--font-base);
 	display: block;
 	font-size: 0.8125em;
@@ -58,12 +58,12 @@
 	margin-top: 0.125em;
 }
 
-.md-quote-avatar {
+.stb-quote-avatar {
 	object-fit: cover;
 	flex-shrink: 0;
 }
 
-.md-quote-stars {
+.stb-quote-stars {
 	display: flex;
 	gap: 0.1em;
 	color: #d4a017;
@@ -71,7 +71,7 @@
 	letter-spacing: 0.1em;
 }
 
-.md-quote-meta {
+.stb-quote-meta {
 	display: flex;
 	align-items: center;
 	gap: 0.75em;
@@ -82,12 +82,12 @@
    BLOCKQUOTE: VERTICAL RULE
    ============================================ */
 
-.md-quote-vertical-rule {
+.stb-quote-vertical-rule {
 	border-left: 3px solid var(--color-primary);
 	padding: 0.25em 0 0.25em 1.75em;
 }
 
-.md-quote-vertical-rule .md-quote-name {
+.stb-quote-vertical-rule .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-text-sec);
 }
@@ -96,11 +96,11 @@
    BLOCKQUOTE: OVERSIZE MARK
    ============================================ */
 
-.md-quote-oversize-mark {
+.stb-quote-oversize-mark {
 	padding-left: 3.5em;
 }
 
-.md-quote-oversize-mark > .md-quote-mark {
+.stb-quote-oversize-mark > .stb-quote-mark {
 	position: absolute;
 	left: 0;
 	top: -0.15em;
@@ -111,11 +111,11 @@
 	opacity: 0.2;
 }
 
-.md-quote-oversize-mark .md-quote-name {
+.stb-quote-oversize-mark .stb-quote-name {
 	font-size: var(--fs-s);
 }
 
-.md-quote-oversize-mark .md-quote-name strong {
+.stb-quote-oversize-mark .stb-quote-name strong {
 	font-weight: var(--font-weight-bold);
 	color: var(--color-text);
 }
@@ -124,25 +124,25 @@
    BLOCKQUOTE: EDITORIAL BAND
    ============================================ */
 
-.md-quote-editorial-band {
+.stb-quote-editorial-band {
 	border-top: 1px solid var(--color-border);
 	border-bottom: 1px solid var(--color-border);
 	padding: 2em 0;
 	text-align: center;
 }
 
-.md-quote-editorial-band .md-quote-text {
+.stb-quote-editorial-band .stb-quote-text {
 	max-width: 38ch;
 	margin-inline: auto;
 	letter-spacing: -0.01em;
 	font-style: italic;
 }
 
-.md-quote-editorial-band .md-quote-meta {
+.stb-quote-editorial-band .stb-quote-meta {
 	justify-content: center;
 }
 
-.md-quote-editorial-band .md-quote-name {
+.stb-quote-editorial-band .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-text-sec);
 	letter-spacing: 0.06em;
@@ -153,17 +153,17 @@
    BLOCKQUOTE: TINTED SURFACE
    ============================================ */
 
-.md-quote-tinted-surface {
+.stb-quote-tinted-surface {
 	background: color-mix(in srgb, var(--color-primary) 8%, var(--color-content-bg));
 	border-radius: var(--radius-l);
 	padding: var(--space-double);
 }
 
-.md-quote-tinted-surface .md-quote-meta {
+.stb-quote-tinted-surface .stb-quote-meta {
 	gap: 0.625em;
 }
 
-.md-quote-tinted-surface .md-quote-meta::before {
+.stb-quote-tinted-surface .stb-quote-meta::before {
 	content: "";
 	display: block;
 	width: 20px;
@@ -171,7 +171,7 @@
 	background: color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
-.md-quote-tinted-surface .md-quote-name {
+.stb-quote-tinted-surface .stb-quote-name {
 	font-size: var(--fs-s);
 	font-weight: 500;
 	color: var(--color-text-sec);
@@ -181,17 +181,17 @@
    BLOCKQUOTE: BOXED ACCENT
    ============================================ */
 
-/* Same resolution as `.md-quote-success-border` below: the rail stays — this
+/* Same resolution as `.stb-quote-success-border` below: the rail stays — this
    variant is named for it — but it now sits on a flat edge instead of being
    curved to follow a 12px corner it can never match optically. */
-.md-quote-boxed-accent {
+.stb-quote-boxed-accent {
 	border: 1px solid var(--color-border);
 	border-radius: 0 var(--radius-l) var(--radius-l) 0;
 	padding: var(--space-double);
 	overflow: hidden;
 }
 
-.md-quote-boxed-accent::before {
+.stb-quote-boxed-accent::before {
 	content: "";
 	position: absolute;
 	top: 0;
@@ -201,11 +201,11 @@
 	background: var(--color-primary);
 }
 
-.md-quote-boxed-accent .md-quote-text {
+.stb-quote-boxed-accent .stb-quote-text {
 	font-size: 1.0625em;
 }
 
-.md-quote-boxed-accent .md-quote-name {
+.stb-quote-boxed-accent .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-primary);
 }
@@ -214,17 +214,17 @@
    BLOCKQUOTE: INLINE DASH
    ============================================ */
 
-.md-quote-inline-dash .md-quote-text {
+.stb-quote-inline-dash .stb-quote-text {
 	letter-spacing: -0.01em;
 }
 
-.md-quote-inline-dash .md-quote-name {
+.stb-quote-inline-dash .stb-quote-name {
 	font-size: 0.875em;
 	font-weight: 400;
 	color: var(--color-text-sec);
 }
 
-.md-quote-inline-dash .md-quote-name::before {
+.stb-quote-inline-dash .stb-quote-name::before {
 	content: "\2014\00a0";
 	color: var(--color-text-sec);
 }
@@ -233,18 +233,18 @@
    SUCCESS: SOFT
    ============================================ */
 
-.md-quote-success-soft {
+.stb-quote-success-soft {
 	background: color-mix(in srgb, var(--color-tertiary) 10%, var(--color-content-bg));
 	border: 1px solid color-mix(in srgb, var(--color-tertiary) 25%, var(--color-border));
 	border-radius: var(--radius-l);
 	padding: var(--space-double);
 }
 
-.md-quote-success-soft .md-quote-text {
+.stb-quote-success-soft .stb-quote-text {
 	font-size: var(--fs-m);
 }
 
-.md-quote-success-soft .md-quote-name {
+.stb-quote-success-soft .stb-quote-name {
 	font-size: var(--fs-s);
 	color: color-mix(in srgb, var(--color-tertiary) 60%, var(--color-text));
 }
@@ -257,7 +257,7 @@
    geometry is coherent (left corners are square, so the rail sits on a flat
    edge). Only the surrounding outline is softened: a fully saturated ring
    around ordinary quote text was over-weighted. */
-.md-quote-success-border {
+.stb-quote-success-border {
 	border: 1px solid color-mix(in srgb, var(--color-tertiary) 35%, var(--color-border));
 	border-left: 4px solid var(--color-tertiary);
 	border-radius: 0 var(--radius-m) var(--radius-m) 0;
@@ -265,11 +265,11 @@
 	background: var(--color-content-bg);
 }
 
-.md-quote-success-border .md-quote-text {
+.stb-quote-success-border .stb-quote-text {
 	font-size: var(--fs-m);
 }
 
-.md-quote-success-border .md-quote-name {
+.stb-quote-success-border .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-tertiary);
 }
@@ -278,23 +278,23 @@
    SUCCESS: DARK
    ============================================ */
 
-.md-quote-success-dark {
+.stb-quote-success-dark {
 	background: color-mix(in srgb, var(--color-tertiary) 85%, var(--color-headline));
 	border-radius: var(--radius-l);
 	padding: var(--space-double);
 }
 
-.md-quote-success-dark .md-quote-text {
+.stb-quote-success-dark .stb-quote-text {
 	font-size: var(--fs-m);
 	color: color-mix(in srgb, var(--color-tertiary) 15%, white);
 }
 
-.md-quote-success-dark .md-quote-name {
+.stb-quote-success-dark .stb-quote-name {
 	font-size: var(--fs-s);
 	color: color-mix(in srgb, var(--color-tertiary) 30%, white);
 }
 
-.md-quote-success-dark .md-quote-role {
+.stb-quote-success-dark .stb-quote-role {
 	color: color-mix(in srgb, var(--color-tertiary) 40%, white);
 }
 
@@ -302,12 +302,12 @@
    LEAD: SERIF
    ============================================ */
 
-.md-quote-serif-lead .md-quote-text {
+.stb-quote-serif-lead .stb-quote-text {
 	font-family: var(--font-serif);
 	max-width: 52ch;
 }
 
-.md-quote-serif-lead .md-quote-name {
+.stb-quote-serif-lead .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-text-sec);
 }
@@ -316,12 +316,12 @@
    LEAD: SANS SECONDARY
    ============================================ */
 
-.md-quote-sans-secondary .md-quote-text {
+.stb-quote-sans-secondary .stb-quote-text {
 	color: var(--color-text-sec);
 	max-width: 55ch;
 }
 
-.md-quote-sans-secondary .md-quote-name {
+.stb-quote-sans-secondary .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-text-sec);
 }
@@ -330,18 +330,18 @@
    LEAD: EDITORIAL ITALIC
    ============================================ */
 
-.md-quote-editorial-italic {
+.stb-quote-editorial-italic {
 	padding-bottom: 1.5em;
 	border-bottom: 1px solid var(--color-border);
 }
 
-.md-quote-editorial-italic .md-quote-text {
+.stb-quote-editorial-italic .stb-quote-text {
 	font-family: var(--font-serif);
 	font-style: italic;
 	max-width: 48ch;
 }
 
-.md-quote-editorial-italic .md-quote-name {
+.stb-quote-editorial-italic .stb-quote-name {
 	font-size: var(--fs-s);
 	color: var(--color-text-sec);
 }
@@ -352,12 +352,12 @@
 
 /* No surface to pad: a double line of padding here only stacked on the
    block's own margin, leaving four lines of nothing below the quote. */
-.md-quote-classic-centered {
+.stb-quote-classic-centered {
 	text-align: center;
 	padding: var(--space-single) 0;
 }
 
-.md-quote-classic-centered .md-quote-avatar {
+.stb-quote-classic-centered .stb-quote-avatar {
 	width: 56px;
 	height: 56px;
 	border-radius: 50%;
@@ -365,17 +365,17 @@
 	display: block;
 }
 
-.md-quote-classic-centered .md-quote-text {
+.stb-quote-classic-centered .stb-quote-text {
 	font-style: italic;
 	max-width: 42ch;
 	margin-inline: auto;
 }
 
-.md-quote-classic-centered .md-quote-meta {
+.stb-quote-classic-centered .stb-quote-meta {
 	justify-content: center;
 }
 
-.md-quote-classic-centered .md-quote-name {
+.stb-quote-classic-centered .stb-quote-name {
 	font-size: 0.875em;
 }
 
@@ -383,39 +383,39 @@
    TESTIMONIAL: CARD WITH STARS
    ============================================ */
 
-.md-quote-card-stars {
+.stb-quote-card-stars {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-l);
 	padding: var(--space-double);
 }
 
-.md-quote-card-stars .md-quote-stars {
+.stb-quote-card-stars .stb-quote-stars {
 	margin-bottom: var(--space-single);
 }
 
-.md-quote-card-stars .md-quote-text {
+.stb-quote-card-stars .stb-quote-text {
 	font-size: 1em;
 	line-height: 1.7;
 }
 
-.md-quote-card-stars .md-quote-meta {
+.stb-quote-card-stars .stb-quote-meta {
 	padding-top: 1.25em;
 	border-top: 1px solid var(--color-border);
 }
 
-.md-quote-card-stars .md-quote-avatar {
+.stb-quote-card-stars .stb-quote-avatar {
 	width: 36px;
 	height: 36px;
 	border-radius: 50%;
 }
 
-.md-quote-card-stars .md-quote-name {
+.stb-quote-card-stars .stb-quote-name {
 	font-size: 0.8125em;
 	line-height: 1.2;
 }
 
-.md-quote-card-stars .md-quote-role {
+.stb-quote-card-stars .stb-quote-role {
 	font-size: 0.75em;
 }
 
@@ -423,14 +423,14 @@
    TESTIMONIAL: DARK STATEMENT
    ============================================ */
 
-.md-quote-dark-statement {
+.stb-quote-dark-statement {
 	background: color-mix(in srgb, var(--color-headline) 94%, var(--color-primary));
 	border-radius: var(--radius-l);
 	padding: var(--space-double);
 	overflow: hidden;
 }
 
-.md-quote-dark-statement::before {
+.stb-quote-dark-statement::before {
 	content: "\201C";
 	position: absolute;
 	top: -0.25rem;
@@ -441,23 +441,23 @@
 	color: rgba(255, 255, 255, 0.04);
 }
 
-.md-quote-dark-statement .md-quote-text {
+.stb-quote-dark-statement .stb-quote-text {
 	color: rgba(255, 255, 255, 0.92);
 	max-width: 42ch;
 }
 
-.md-quote-dark-statement .md-quote-avatar {
+.stb-quote-dark-statement .stb-quote-avatar {
 	width: 44px;
 	height: 44px;
 	border-radius: 50%;
 }
 
-.md-quote-dark-statement .md-quote-name {
+.stb-quote-dark-statement .stb-quote-name {
 	font-size: 0.875em;
 	color: rgba(255, 255, 255, 0.92);
 }
 
-.md-quote-dark-statement .md-quote-role {
+.stb-quote-dark-statement .stb-quote-role {
 	font-size: 0.75em;
 	color: rgba(255, 255, 255, 0.45);
 }
@@ -466,14 +466,14 @@
    TESTIMONIAL: ASYMMETRIC MARK
    ============================================ */
 
-.md-quote-asymmetric-mark {
+.stb-quote-asymmetric-mark {
 	display: grid;
 	grid-template-columns: 3rem 1fr;
 	gap: var(--space-single);
 	align-items: start;
 }
 
-.md-quote-asymmetric-mark > .md-quote-mark {
+.stb-quote-asymmetric-mark > .stb-quote-mark {
 	font-family: var(--font-serif);
 	font-size: 4.5rem;
 	line-height: 0.85;
@@ -482,17 +482,17 @@
 	padding-top: 0.25em;
 }
 
-.md-quote-asymmetric-mark .md-quote-avatar {
+.stb-quote-asymmetric-mark .stb-quote-avatar {
 	width: 32px;
 	height: 32px;
 	border-radius: var(--radius-m);
 }
 
-.md-quote-asymmetric-mark .md-quote-name {
+.stb-quote-asymmetric-mark .stb-quote-name {
 	font-size: 0.8125em;
 }
 
-.md-quote-asymmetric-mark .md-quote-role {
+.stb-quote-asymmetric-mark .stb-quote-role {
 	font-size: 0.75em;
 }
 
@@ -500,7 +500,7 @@
    SHADOW
    ============================================ */
 
-.md-quote.has-shadow {
+.stb-quote.has-shadow {
 	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 90%);
 }
 
@@ -509,30 +509,30 @@
    ============================================ */
 
 @media (max-width: 782px) {
-	.md-quote-asymmetric-mark {
+	.stb-quote-asymmetric-mark {
 		grid-template-columns: 2rem 1fr;
 	}
 
-	.md-quote-asymmetric-mark > .md-quote-mark {
+	.stb-quote-asymmetric-mark > .stb-quote-mark {
 		font-size: 3rem;
 	}
 
-	.md-quote-dark-statement {
+	.stb-quote-dark-statement {
 		padding: var(--space-single);
 	}
 
-	.md-quote-dark-statement .md-quote-text {
+	.stb-quote-dark-statement .stb-quote-text {
 		font-size: 1.125em;
 	}
 
-	.md-quote-editorial-band .md-quote-text {
+	.stb-quote-editorial-band .stb-quote-text {
 		font-size: 1.25em;
 	}
 
-	.md-quote-oversize-mark {
+	.stb-quote-oversize-mark {
 		padding-left: 2.5em;
 	}
 
-	.md-quote-oversize-mark > .md-quote-mark {
+	.stb-quote-oversize-mark > .stb-quote-mark {
 		font-size: 3.5em;
 	}}

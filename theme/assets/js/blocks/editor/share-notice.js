@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Share Notice.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -200,11 +200,11 @@
 							props.setAttributes({ text: val });
 						}
 					}),
-					StacklessBlocks.icon( 'i', 'md-icon-' + socialMedia, 'share-notice-icon' ),
+					StacklessBlocks.icon( 'i', 'stb-icon-' + socialMedia, 'share-notice-icon' ),
 					el( RichText, {
 						key: 'editable-button',
 						tagName: 'button',
-						className: 'share-notice-button md-submit md-submit-' + buttonStyle,
+						className: 'share-notice-button stb-submit stb-submit-' + buttonStyle,
 						value: buttonText,
 						onChange: function( val ) {
 							props.setAttributes({ buttonText: val });

@@ -1,10 +1,10 @@
 /*
  * Stackless blocks: Table of Contents.
- * Class names follow Marketers Delight's table of contents (.md-toc).
+ * The list of headings (.stb-toc), with an optional toggle.
  */
 
 /* The element name lifts the margin above the theme's content-flow rule. */
-nav.md-toc[data-md-toc] {
+nav.stb-toc[data-stb-toc] {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-card);
@@ -13,28 +13,28 @@ nav.md-toc[data-md-toc] {
 }
 
 /* Not filled: the post has too few headings, or the block rendered outside a post's content. */
-.md-toc:empty { display: none; }
+.stb-toc:empty { display: none; }
 
-.md-toc-head {
+.stb-toc-head {
 	align-items: center;
 	display: flex;
 	gap: var(--space-half);
 	justify-content: space-between;
 }
 
-.md-toc-collapsible .md-toc-head { cursor: pointer; }
+.stb-toc-collapsible .stb-toc-head { cursor: pointer; }
 
-.md-toc .md-toc-title {
+.stb-toc .stb-toc-title {
 	color: var(--color-headline);
 	font-weight: var(--font-weight-bold);
 	margin: 0;
 }
 
-.md-toc-head + .md-toc-body { margin-block-start: var(--space-half); }
+.stb-toc-head + .stb-toc-body { margin-block-start: var(--space-half); }
 
-.md-toc-body[hidden] { display: none; }
+.stb-toc-body[hidden] { display: none; }
 
-.md-toc-toggle {
+.stb-toc-toggle {
 	appearance: none;
 	background: none;
 	border: 0;
@@ -48,12 +48,12 @@ nav.md-toc[data-md-toc] {
 	width: 2rem;
 }
 
-.md-toc-toggle:focus-visible {
+.stb-toc-toggle:focus-visible {
 	outline: 2px solid var(--color-focus);
 	outline-offset: 2px;
 }
 
-.md-toc-chevron {
+.stb-toc-chevron {
 	border-block-end: 2px solid currentColor;
 	border-inline-end: 2px solid currentColor;
 	height: .5rem;
@@ -62,42 +62,42 @@ nav.md-toc[data-md-toc] {
 	width: .5rem;
 }
 
-.md-toc-toggle[aria-expanded="true"] .md-toc-chevron { transform: translateY(2px) rotate(-135deg); }
+.stb-toc-toggle[aria-expanded="true"] .stb-toc-chevron { transform: translateY(2px) rotate(-135deg); }
 
-.md-toc .md-toc-list,
-.md-toc .md-toc-sublist {
+.stb-toc .stb-toc-list,
+.stb-toc .stb-toc-sublist {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.md-toc ol.md-toc-list,
-.md-toc ol.md-toc-sublist {
+.stb-toc ol.stb-toc-list,
+.stb-toc ol.stb-toc-sublist {
 	list-style: decimal;
 	padding-inline-start: 1.5em;
 }
 
-.md-toc[data-numbering="roman"] ol { list-style-type: lower-roman; }
-.md-toc[data-numbering="alpha"] ol { list-style-type: lower-alpha; }
+.stb-toc[data-numbering="roman"] ol { list-style-type: lower-roman; }
+.stb-toc[data-numbering="alpha"] ol { list-style-type: lower-alpha; }
 
-.md-toc ul.md-toc-sublist { padding-inline-start: var(--space-single); }
+.stb-toc ul.stb-toc-sublist { padding-inline-start: var(--space-single); }
 
-.md-toc-item { margin-block: var(--space-xs); }
+.stb-toc-item { margin-block: var(--space-xs); }
 
-.md-toc-flat .md-toc-item[data-depth="1"] { padding-inline-start: var(--space-single); }
-.md-toc-flat .md-toc-item[data-depth="2"] { padding-inline-start: var(--space-double); }
-.md-toc-flat .md-toc-item[data-depth="3"] { padding-inline-start: var(--space-triple); }
+.stb-toc-flat .stb-toc-item[data-depth="1"] { padding-inline-start: var(--space-single); }
+.stb-toc-flat .stb-toc-item[data-depth="2"] { padding-inline-start: var(--space-double); }
+.stb-toc-flat .stb-toc-item[data-depth="3"] { padding-inline-start: var(--space-triple); }
 
-.md-toc .md-toc-link {
+.stb-toc .stb-toc-link {
 	color: var(--color-text);
 	text-decoration: none;
 }
 
-.md-toc .md-toc-link:hover,
-.md-toc .md-toc-link.is-active {
+.stb-toc .stb-toc-link:hover,
+.stb-toc .stb-toc-link.is-active {
 	color: var(--color-primary);
 	text-decoration: underline;
 }
 
 /* The editor shows sample headings: links there go nowhere. */
-.md-toc-editor-preview .md-toc-link { pointer-events: none; }
+.stb-toc-editor-preview .stb-toc-link { pointer-events: none; }

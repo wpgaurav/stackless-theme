@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Plugin Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -305,10 +305,10 @@
 				var hasHalf = (rating - fullStars) >= 0.5;
 
 				for (var i = 0; i < fullStars; i++) {
-					stars.push(StacklessBlocks.icon( 'span', 'md-icon-star-full', 'text-warning', { key: 'star-' + i } ));
+					stars.push(StacklessBlocks.icon( 'span', 'stb-icon-star-full', 'text-warning', { key: 'star-' + i } ));
 				}
 				if (hasHalf) {
-					stars.push(StacklessBlocks.icon( 'span', 'md-icon-star-half', 'text-warning', { key: 'star-half' } ));
+					stars.push(StacklessBlocks.icon( 'span', 'stb-icon-star-half', 'text-warning', { key: 'star-half' } ));
 				}
 				return stars;
 			};
@@ -316,7 +316,7 @@
 			var showBannerArea = attributes.cardStyle === 'card' || attributes.cardStyle === 'horizontal';
 
 			var blockProps = useBlockProps({
-				className: 'md-plugin-card md-plugin-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-plugin-card stb-plugin-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -508,37 +508,37 @@
 					)
 				),
 				el('div', blockProps,
-					showBannerArea && attributes.showBanner && attributes.banner && el('div', { className: 'md-plugin-card-banner' },
+					showBannerArea && attributes.showBanner && attributes.banner && el('div', { className: 'stb-plugin-card-banner' },
 						el('img', { src: attributes.banner, alt: attributes.name })
 					),
-					el('div', { className: 'md-plugin-card-body' },
-						el('div', { className: 'md-plugin-card-header' },
+					el('div', { className: 'stb-plugin-card-body' },
+						el('div', { className: 'stb-plugin-card-header' },
 							attributes.icon
-								? el('img', { src: attributes.icon, alt: attributes.name, className: 'md-plugin-card-icon' })
-								: StacklessBlocks.icon( 'span', 'md-icon-plugin', 'md-plugin-card-icon-placeholder' ),
-							el('div', { className: 'md-plugin-card-info' },
-								el('h3', { className: 'md-plugin-card-name mb-none' }, attributes.name || __( 'Plugin Name', 'stackless-theme' )),
-								attributes.author && el('span', { className: 'md-plugin-card-author text-sec small' }, 'by ' + attributes.author)
+								? el('img', { src: attributes.icon, alt: attributes.name, className: 'stb-plugin-card-icon' })
+								: StacklessBlocks.icon( 'span', 'stb-icon-plugin', 'stb-plugin-card-icon-placeholder' ),
+							el('div', { className: 'stb-plugin-card-info' },
+								el('h3', { className: 'stb-plugin-card-name mb-none' }, attributes.name || __( 'Plugin Name', 'stackless-theme' )),
+								attributes.author && el('span', { className: 'stb-plugin-card-author text-sec small' }, 'by ' + attributes.author)
 							)
 						),
-						attributes.description && el('p', { className: 'md-plugin-card-desc' }, attributes.description),
-						el('div', { className: 'md-plugin-card-meta' },
-							attributes.rating > 0 && el('span', { className: 'md-plugin-card-rating' },
+						attributes.description && el('p', { className: 'stb-plugin-card-desc' }, attributes.description),
+						el('div', { className: 'stb-plugin-card-meta' },
+							attributes.rating > 0 && el('span', { className: 'stb-plugin-card-rating' },
 								renderStars(),
-								attributes.ratingCount > 0 && el('span', { className: 'md-plugin-card-rating-count' }, '(' + attributes.ratingCount + ')')
+								attributes.ratingCount > 0 && el('span', { className: 'stb-plugin-card-rating-count' }, '(' + attributes.ratingCount + ')')
 							),
-							attributes.activeInstalls && el('span', { className: 'md-plugin-card-installs' },
-								StacklessBlocks.icon( 'span', 'md-icon-download' ),
+							attributes.activeInstalls && el('span', { className: 'stb-plugin-card-installs' },
+								StacklessBlocks.icon( 'span', 'stb-icon-download' ),
 								' ' + attributes.activeInstalls + '+'
 							),
-							attributes.version && el('span', { className: 'md-plugin-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version)
+							attributes.version && el('span', { className: 'stb-plugin-card-version' }, StacklessBlocks.cardIcon( 'tag' ), ' v' + attributes.version)
 						),
-						attributes.showRequirements && (attributes.testedUpTo || attributes.requiresWP || attributes.requiresPHP) && el('div', { className: 'md-plugin-card-requirements' },
+						attributes.showRequirements && (attributes.testedUpTo || attributes.requiresWP || attributes.requiresPHP) && el('div', { className: 'stb-plugin-card-requirements' },
 							attributes.testedUpTo && el('span', null, __( 'Tested up to: ', 'stackless-theme' ) + attributes.testedUpTo),
 							attributes.requiresWP && el('span', null, __( 'Requires WP: ', 'stackless-theme' ) + attributes.requiresWP),
 							attributes.requiresPHP && el('span', null, __( 'Requires PHP: ', 'stackless-theme' ) + attributes.requiresPHP)
 						),
-						el('div', { className: 'md-plugin-card-actions' },
+						el('div', { className: 'stb-plugin-card-actions' },
 							attributes.wpUrl && el('a', { href: '#', className: 'button' }, __( 'View on WordPress.org', 'stackless-theme' )),
 							attributes.downloadUrl && el('a', { href: '#', className: 'button button-outline' }, __( 'Download', 'stackless-theme' ))
 						)

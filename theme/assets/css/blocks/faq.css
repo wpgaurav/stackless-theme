@@ -1,7 +1,7 @@
 /*
  * Stackless blocks: FAQ.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*, --fs-*) are mapped to the
+ * theme's tokens in bridge.css.
  */
 
 .faq-accordion.accordion {

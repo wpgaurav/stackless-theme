@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Related Content.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -212,9 +212,9 @@
 			var hasMulti = ( attributes.posts || [] ).length > 0;
 
 			var blockProps = useBlockProps( {
-				className: 'md-related-content-editor md-related-content--' + layout
-					+ ' md-related-content-' + layout
-					+ ( layout === 'grid' ? ' md-related-content--cols-' + ( attributes.columns || 3 ) : '' )
+				className: 'stb-related-content-editor stb-related-content--' + layout
+					+ ' stb-related-content-' + layout
+					+ ( layout === 'grid' ? ' stb-related-content--cols-' + ( attributes.columns || 3 ) : '' )
 					+ ' ' + attributes.marginBottom
 					+ ( attributes.shadow ? ' has-shadow' : '' ),
 				style: {
@@ -486,7 +486,7 @@
 				),
 				el( 'div', blockProps,
 					attributes.label && el( 'div', {
-						className: 'md-related-content-label caps small bold',
+						className: 'stb-related-content-label caps small bold',
 						style: {
 							backgroundColor: attributes.labelBgColor || '',
 							color: attributes.labelTextColor || ''
@@ -494,35 +494,35 @@
 					}, attributes.label ),
 					hasMulti
 						? el( 'div', {
-							className: 'md-related-content-items '
+							className: 'stb-related-content-items '
 								+ ( layout === 'grid' ? 'grid-' + ( attributes.columns || 3 ) + ' gap-half' : '' )
 								+ ( layout === 'list' ? 'flex-column gap-half' : '' )
 								+ ( layout === 'inline' ? 'flex-row flex-wrap gap-half' : '' )
 						},
 							( attributes.posts || [] ).map( function ( p, idx ) {
-								return el( 'div', { key: idx, className: 'md-related-content-item md-related-content-link' },
+								return el( 'div', { key: idx, className: 'stb-related-content-item stb-related-content-link' },
 									p.image && layout !== 'inline' && layout !== 'minimal'
-										? el( 'div', { className: 'md-related-content-image' },
-											el( 'img', { className: 'md-related-content-img', src: p.image, alt: p.title } )
+										? el( 'div', { className: 'stb-related-content-image' },
+											el( 'img', { className: 'stb-related-content-img', src: p.image, alt: p.title } )
 										)
 										: null,
-									el( 'div', { className: 'md-related-content-text block-half' },
-										el( 'span', { className: 'md-related-content-title bold' }, p.title || __( 'Article Title', 'stackless-theme' ) ),
+									el( 'div', { className: 'stb-related-content-text block-half' },
+										el( 'span', { className: 'stb-related-content-title bold' }, p.title || __( 'Article Title', 'stackless-theme' ) ),
 										p.description && attributes.showExcerpts !== false && layout !== 'inline' && layout !== 'minimal'
-											? el( 'span', { className: 'md-related-content-desc small text-sec' }, p.description )
+											? el( 'span', { className: 'stb-related-content-desc small text-sec' }, p.description )
 											: null,
 										attributes.showCta !== false && layout !== 'inline' && layout !== 'minimal'
-											? el( 'span', { className: 'md-related-content-cta small bold' }, ( attributes.ctaText || 'Read More' ) + ' →' )
+											? el( 'span', { className: 'stb-related-content-cta small bold' }, ( attributes.ctaText || 'Read More' ) + ' →' )
 											: null
 									)
 								);
 							} )
 						)
-						: el( 'div', { className: 'md-related-content-items' },
-							el( 'div', { className: 'md-related-content-item md-related-content-link' },
-								( layout === 'card' || layout === 'spotlight' ) && el( 'div', { className: 'md-related-content-image-wrap md-related-content-image' },
+						: el( 'div', { className: 'stb-related-content-items' },
+							el( 'div', { className: 'stb-related-content-item stb-related-content-link' },
+								( layout === 'card' || layout === 'spotlight' ) && el( 'div', { className: 'stb-related-content-image-wrap stb-related-content-image' },
 									attributes.image
-										? el( 'img', { className: 'md-related-content-img', src: attributes.image } )
+										? el( 'img', { className: 'stb-related-content-img', src: attributes.image } )
 										: el( MediaUploadCheck, null,
 											el( MediaUpload, {
 												onSelect: function ( media ) {
@@ -532,23 +532,23 @@
 												value: attributes.imageId,
 												render: function ( obj ) {
 													return el( Button, {
-														className: 'md-related-content-upload',
+														className: 'stb-related-content-upload',
 														onClick: obj.open
 													}, el( 'span', { className: 'dashicons dashicons-format-image' } ), __( ' Add Image', 'stackless-theme' ) );
 												}
 											} )
 										)
 								),
-								el( 'div', { className: 'md-related-content-text block-half' },
+								el( 'div', { className: 'stb-related-content-text block-half' },
 									el( 'div', {
-										className: 'md-related-content-title bold',
+										className: 'stb-related-content-title bold',
 										style: { color: attributes.titleColor || '' }
 									}, attributes.title || __( 'Article Title', 'stackless-theme' ) ),
-									layout !== 'minimal' && el( 'div', { className: 'md-related-content-desc small text-sec' },
+									layout !== 'minimal' && el( 'div', { className: 'stb-related-content-desc small text-sec' },
 										attributes.description || __( 'Description text...', 'stackless-theme' )
 									),
 									el( 'div', {
-										className: 'md-related-content-cta small bold',
+										className: 'stb-related-content-cta small bold',
 										style: { color: attributes.ctaColor || '' }
 									}, attributes.ctaText + ' →' )
 								)

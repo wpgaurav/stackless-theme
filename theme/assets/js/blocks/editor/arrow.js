@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Arrow.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -13,7 +13,7 @@
 		PanelBody         = wp.components.PanelBody,
 		SelectControl     = wp.components.SelectControl,
 		__                = wp.i18n.__,
-		mdIcons           = StacklessBlocks.icons;
+		stbIcons           = StacklessBlocks.icons;
 
 	registerBlockType( 'stackless/arrow', {
 		apiVersion: 3,
@@ -24,7 +24,7 @@
 		attributes: {
 			icon: {
 				type: 'string',
-				default: 'md-icon-angle-down'
+				default: 'stb-icon-angle-down'
 			}
 		},
 		edit: function ( props ) {
@@ -36,7 +36,7 @@
 					el( PanelBody, { title: __( 'Icon Settings', 'stackless-theme' ) },
 						el( SelectControl, {
 							label: __( 'Icon', 'stackless-theme' ),
-							options: mdIcons,
+							options: stbIcons,
 							value: icon,
 							onChange: function( val ) { props.setAttributes({ icon: val }); }
 						})

@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: YouTube Card.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -130,7 +130,7 @@
 				setError = _errorState[1];
 
 			var blockProps = useBlockProps({
-				className: 'md-youtube-card md-youtube-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
+				className: 'stb-youtube-card stb-youtube-card-' + attributes.cardStyle + ' ' + attributes.marginBottom
 			});
 
 			return el(Fragment, null,
@@ -198,16 +198,16 @@
 					)
 				),
 				el('div', blockProps,
-					attributes.cardStyle !== 'compact' && attributes.cardStyle !== 'minimal' && el('div', { className: 'md-youtube-card-thumbnail' },
+					attributes.cardStyle !== 'compact' && attributes.cardStyle !== 'minimal' && el('div', { className: 'stb-youtube-card-thumbnail' },
 						attributes.thumbnailUrl
 							? el('img', { src: attributes.thumbnailUrl, alt: attributes.title })
-							: StacklessBlocks.icon( 'span', 'md-icon-youtube', 'md-youtube-card-thumb-placeholder' ),
-						el('span', { className: 'md-youtube-card-play' })
+							: StacklessBlocks.icon( 'span', 'stb-icon-youtube', 'stb-youtube-card-thumb-placeholder' ),
+						el('span', { className: 'stb-youtube-card-play' })
 					),
-					el('div', { className: 'md-youtube-card-body' },
-						el('h3', { className: 'md-youtube-card-title mb-none' }, attributes.title || __( 'Video Title', 'stackless-theme' )),
-						attributes.channelName && el('span', { className: 'md-youtube-card-channel text-sec small' }, StacklessBlocks.icon( 'span', 'md-icon-youtube' ), ' ' + attributes.channelName),
-						el('div', { className: 'md-youtube-card-actions' },
+					el('div', { className: 'stb-youtube-card-body' },
+						el('h3', { className: 'stb-youtube-card-title mb-none' }, attributes.title || __( 'Video Title', 'stackless-theme' )),
+						attributes.channelName && el('span', { className: 'stb-youtube-card-channel text-sec small' }, StacklessBlocks.icon( 'span', 'stb-icon-youtube' ), ' ' + attributes.channelName),
+						el('div', { className: 'stb-youtube-card-actions' },
 							attributes.videoUrl && el('a', { href: '#', className: 'button' }, __( 'Watch on YouTube', 'stackless-theme' ))
 						)
 					)

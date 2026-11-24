@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Query Loop.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType  = wp.blocks.registerBlockType,
@@ -140,8 +140,8 @@
 								{ label: __( 'Thumbnail', 'stackless-theme' ), value: 'thumbnail' },
 								{ label: __( 'Medium', 'stackless-theme' ), value: 'medium' },
 								{ label: __( 'Large', 'stackless-theme' ), value: 'large' },
-								{ label: __( 'Square', 'stackless-theme' ), value: 'md-block' },
-								{ label: __( 'Banner', 'stackless-theme' ), value: 'md-banner' }
+								{ label: __( 'Square', 'stackless-theme' ), value: 'stb-block' },
+								{ label: __( 'Banner', 'stackless-theme' ), value: 'stb-banner' }
 							],
 							value: a.imageSize,
 							onChange: function( val ) { set({ imageSize: val }); }

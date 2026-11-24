@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Spoiler.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -71,7 +71,7 @@
 			var attributes = props.attributes;
 
 			var blockProps = useBlockProps({
-				className: 'md-spoiler md-spoiler-' + attributes.blockStyle + ' ' + attributes.marginBottom,
+				className: 'stb-spoiler stb-spoiler-' + attributes.blockStyle + ' ' + attributes.marginBottom,
 				style: {
 					backgroundColor: attributes.bgColor || '',
 					color: attributes.textColor || ''
@@ -132,11 +132,11 @@
 					})
 				),
 				el('div', blockProps,
-					el('div', { className: 'md-spoiler-toggle-preview' },
-						StacklessBlocks.icon('span', 'md-icon-eye', 'md-spoiler-icon'),
-						el('span', { className: 'md-spoiler-label' }, attributes.label)
+					el('div', { className: 'stb-spoiler-toggle-preview' },
+						StacklessBlocks.icon('span', 'stb-icon-eye', 'stb-spoiler-icon'),
+						el('span', { className: 'stb-spoiler-label' }, attributes.label)
 					),
-					el('div', { className: 'md-spoiler-content' },
+					el('div', { className: 'stb-spoiler-content' },
 						el(InnerBlocks, {
 							templateLock: false
 						})

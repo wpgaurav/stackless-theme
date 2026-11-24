@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Pull Quote.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -125,7 +125,7 @@
 			var blockWidthClass = attributes.blockWidth ? ' ' + attributes.blockWidth : '';
 
 			var blockProps = useBlockProps({
-				className: 'md-pull-quote md-pull-quote-' + attributes.quoteStyle + ' ' + attributes.marginBottom + (attributes.shadow ? ' has-shadow' : '') + blockWidthClass,
+				className: 'stb-pull-quote stb-pull-quote-' + attributes.quoteStyle + ' ' + attributes.marginBottom + (attributes.shadow ? ' has-shadow' : '') + blockWidthClass,
 				style: Object.assign({
 					textAlign: attributes.alignment
 				}, boxedStyles, borderStyles, typographicStyles, sidebarStyles, bezelStyles, darkStyles)
@@ -225,11 +225,11 @@
 					)
 				),
 				el('figure', blockProps,
-					attributes.quoteStyle === 'bezel' && el('div', { className: 'md-pull-quote-bezel-inner', style: { background: '#fff', borderRadius: '15px', padding: '2.5rem', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)' } },
-						el('span', { className: 'md-pull-quote-bezel-mark', style: { fontSize: '3.5rem', lineHeight: 1, opacity: 0.15, display: 'block', marginBottom: '0.5rem' } }, '\u201C'),
+					attributes.quoteStyle === 'bezel' && el('div', { className: 'stb-pull-quote-bezel-inner', style: { background: '#fff', borderRadius: '15px', padding: '2.5rem', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)' } },
+						el('span', { className: 'stb-pull-quote-bezel-mark', style: { fontSize: '3.5rem', lineHeight: 1, opacity: 0.15, display: 'block', marginBottom: '0.5rem' } }, '\u201C'),
 						el(RichText, {
 							tagName: 'blockquote',
-							className: 'md-pull-quote-text',
+							className: 'stb-pull-quote-text',
 							style: { fontSize: (attributes.fontSize / 100) + 'em', color: attributes.quoteColor || '' },
 							value: attributes.quote,
 							placeholder: __( 'Write a compelling quote...', 'stackless-theme' ),
@@ -237,7 +237,7 @@
 						}),
 						el(RichText, {
 							tagName: 'figcaption',
-							className: 'md-pull-quote-citation',
+							className: 'stb-pull-quote-citation',
 							style: { color: attributes.citationColor || '' },
 							value: attributes.citation,
 							placeholder: __( 'Citation (optional)', 'stackless-theme' ),
@@ -246,12 +246,12 @@
 					),
 					attributes.quoteStyle !== 'bezel' && el(Fragment, null,
 						(attributes.quoteStyle === 'quote-marks' || attributes.quoteStyle === 'dark') && el('span', {
-							className: 'md-pull-quote-mark',
+							className: 'stb-pull-quote-mark',
 							style: { color: attributes.quoteStyle === 'dark' ? 'rgba(255,255,255,0.08)' : (attributes.borderColor || '#c0392b') }
 						}, '\u201C'),
 						el(RichText, {
 							tagName: 'blockquote',
-							className: 'md-pull-quote-text',
+							className: 'stb-pull-quote-text',
 							style: {
 								fontSize: (attributes.fontSize / 100) + 'em',
 								color: attributes.quoteStyle === 'dark' ? '#f0f0f0' : (attributes.quoteColor || '')
@@ -262,7 +262,7 @@
 						}),
 						el(RichText, {
 							tagName: 'figcaption',
-							className: 'md-pull-quote-citation',
+							className: 'stb-pull-quote-citation',
 							style: { color: attributes.quoteStyle === 'dark' ? 'rgba(255,255,255,0.6)' : (attributes.citationColor || '') },
 							value: attributes.citation,
 							placeholder: __( 'Citation (optional)', 'stackless-theme' ),

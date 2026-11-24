@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Side Promotion and Promotion Item.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -36,7 +36,7 @@
 			var attributes = props.attributes;
 
 			var blockProps = useBlockProps({
-				className: 'md-side-promotion-editor md-side-promotion-' + attributes.position,
+				className: 'stb-side-promotion-editor stb-side-promotion-' + attributes.position,
 				style: { maxWidth: attributes.width + 'px' }
 			});
 
@@ -76,7 +76,7 @@
 				),
 				el(
 					'div', blockProps,
-					el( 'div', { className: 'md-side-promotion-label' },
+					el( 'div', { className: 'stb-side-promotion-label' },
 						__( 'Side Promotion', 'stackless-theme' ) + ' (' + attributes.position + ')'
 					),
 					el( InnerBlocks, {
@@ -108,7 +108,7 @@
 		edit: function ( props ) {
 			var attributes = props.attributes;
 
-			var blockProps = useBlockProps({ className: 'md-side-promotion-item-editor' });
+			var blockProps = useBlockProps({ className: 'stb-side-promotion-item-editor' });
 
 			return el(Fragment, null,
 				el( InspectorControls, { key: 'inspector' },
@@ -187,17 +187,17 @@
 							value: attributes.imageId,
 							render: function( obj ) {
 								return el(
-									'div', { className: 'md-side-promotion-image-wrap' },
+									'div', { className: 'stb-side-promotion-image-wrap' },
 									attributes.image
 										? [
 											el( 'img', {
 												key: 'img',
 												src: attributes.image,
-												className: 'md-side-promotion-image'
+												className: 'stb-side-promotion-image'
 											}),
 											el( Button, {
 												key: 'remove',
-												className: 'md-side-promotion-remove',
+												className: 'stb-side-promotion-remove',
 												isDestructive: true,
 												isSmall: true,
 												onClick: function() {
@@ -206,7 +206,7 @@
 											}, el( 'span', { className: 'dashicons dashicons-no-alt' } ) )
 										]
 										: el( Button, {
-											className: 'md-side-promotion-upload',
+											className: 'stb-side-promotion-upload',
 											onClick: obj.open
 										},
 											el( 'span', { className: 'dashicons dashicons-format-image' } ),

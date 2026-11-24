@@ -1,10 +1,10 @@
 /*
  * Stackless blocks: token bridge and utilities.
  *
- * The block stylesheets are ported from Marketers Delight and read its custom properties. This
- * file maps those to the theme's --st-* tokens on every block wrapper, so they inherit inside a
- * block and never reach the rest of the page. It also styles the utility classes the block
- * markup carries (mb-*, block-*, text-*, button-*) and Marketers Delight's palette classes.
+ * The block stylesheets read their own custom properties (--color-*, --space-*, --radius-*,
+ * --fs-*). This file maps those to the theme's --st-* tokens on every block wrapper, so they
+ * inherit inside a block and never reach the rest of the page. It also styles the utility classes
+ * the block markup carries (mb-*, block-*, text-*, button-*) and the blocks' extra palette classes.
  *
  * Loaded only with a Stackless block: every block stylesheet depends on it.
  */
@@ -19,7 +19,7 @@
 	--border-soft: var(--st-border);
 	--color-primary: var(--st-primary);
 	--color-secondary: var(--st-primary-hover);
-	/* Marketers Delight's third brand color: its success styles are drawn in it. */
+	/* The third brand color: the blocks draw their success styles in it. */
 	--color-tertiary: var(--st-success);
 	--color-accent: var(--st-primary);
 	--color-links: var(--st-primary);
@@ -72,9 +72,9 @@
 }
 
 /* ------------------------------------------------------------------ Icons */
-/* An md-icon-* element holds an inline Tabler SVG sized 1em, so it follows the font size. */
-[class*="wp-block-stackless-"] [class*="md-icon-"],
-[class*="wp-block-stackless-"][class*="md-icon-"] {
+/* An stb-icon-* element holds an inline Tabler SVG sized 1em, so it follows the font size. */
+[class*="wp-block-stackless-"] [class*="stb-icon-"],
+[class*="wp-block-stackless-"][class*="stb-icon-"] {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -83,21 +83,21 @@
 	vertical-align: -.125em;
 }
 
-[class*="md-icon-"] > svg {
+[class*="stb-icon-"] > svg {
 	display: block;
 	width: 1em;
 	height: 1em;
 }
 
 /* The card blocks' small icons: an <svg> on the page, a <span> around one in the editor. */
-[class*="wp-block-stackless-"] :is(.md-card-icon, .md-github-card-icon) {
+[class*="wp-block-stackless-"] :is(.stb-card-icon, .stb-github-card-icon) {
 	display: inline-flex;
 	flex-shrink: 0;
 	vertical-align: -.125em;
 }
 
 /* A full star is drawn filled; Tabler's star is an outline. */
-[class*="wp-block-stackless-"] .md-icon-star-full > svg { fill: currentColor; }
+[class*="wp-block-stackless-"] .stb-icon-star-full > svg { fill: currentColor; }
 
 /* ------------------------------------------------------------------ Spacing */
 /* [class] is always true here. It lifts these above the theme's content-flow margins, which have
@@ -182,7 +182,7 @@
 
 
 /* ------------------------------------------------------------------ Buttons */
-/* The theme styles .button. These are the modifiers Marketers Delight's markup adds to it. */
+/* The theme styles .button. These are the modifiers the block markup adds to it. */
 [class*="wp-block-stackless-"] .button.button-arrow::after { content: "\2192"; }
 
 [class*="wp-block-stackless-"] .button:is(.button-outline, .white) {
@@ -195,7 +195,7 @@
 [class*="wp-block-stackless-"] .button.button-pill { border-radius: 999px; }
 
 /* ------------------------------------------------------------------ Palette classes */
-/* Marketers Delight's palette slugs, as stored in the *ColorClass attributes. The theme's own
+/* The extra palette slugs the blocks accept in their *ColorClass attributes. The theme's own
    slugs (primary, white, ...) are styled by WordPress from theme.json. The "text" slug needs no
    rule: has-text-color is WordPress's own marker class and the text color is the default. */
 :is([class*="wp-block-stackless-"], [class*="wp-block-stackless-"] *):is(.has-secondary-background-color, .has-action-background-color, .has-button-sec-background-color) { background-color: var(--st-primary-hover); }

@@ -31,21 +31,21 @@
 	$CALLOUT
 \*------------------------------*/
 
-/* The preview prints md-callout-* classes; the published block is styled
+/* The preview prints stb-callout-* classes; the published block is styled
    through its own front-end class, so these mirror it for the canvas. */
-.wp-block-stackless-callout.md-callout {
+.wp-block-stackless-callout.stb-callout {
 	background: color-mix(in srgb, var(--color-primary) 5%, var(--color-content-bg));
 	border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
 	border-radius: var(--radius-m, 0.5rem);
 	position: relative;
 }
 
-.wp-block-stackless-callout.md-callout.has-icon { padding-top: 0; }
+.wp-block-stackless-callout.stb-callout.has-icon { padding-top: 0; }
 
-.wp-block-stackless-callout .md-callout-title,
-.wp-block-stackless-callout .md-callout-action { text-align: center; }
+.wp-block-stackless-callout .stb-callout-title,
+.wp-block-stackless-callout .stb-callout-action { text-align: center; }
 
-.wp-block-stackless-callout.md-callout .md-callout-icon {
+.wp-block-stackless-callout.stb-callout .stb-callout-icon {
 	align-items: center;
 	border-radius: 50%;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -55,7 +55,7 @@
 	margin-inline: auto;
 }
 
-.wp-block-stackless-callout.md-callout .md-callout-icon.icon {
+.wp-block-stackless-callout.stb-callout .stb-callout-icon.icon {
 	background-color: #1e1e1e;
 	font-size: 43px;
 	height: 80px;
@@ -64,21 +64,21 @@
 	width: 80px;
 }
 
-.wp-block-stackless-callout.md-callout .md-callout-icon.image {
+.wp-block-stackless-callout.stb-callout .stb-callout-icon.image {
 	height: 100px;
 	margin-top: -35px;
 	width: 100px;
 }
 
-.wp-block-stackless-callout.md-callout .md-callout-icon.image img {
+.wp-block-stackless-callout.stb-callout .stb-callout-icon.image img {
 	border-radius: 50%;
 	height: 100px;
 	width: 100px;
 }
 
-.wp-block-stackless-callout .md-callout-list + .md-callout-action { margin-top: var(--space-single); }
+.wp-block-stackless-callout .stb-callout-list + .stb-callout-action { margin-top: var(--space-single); }
 
-.wp-block-stackless-callout .md-callout-action .md-button { width: 100%; }
+.wp-block-stackless-callout .stb-callout-action .stb-button { width: 100%; }
 
 /*------------------------------*\
 	$STEPS
@@ -86,7 +86,7 @@
 
 /* Mirrors the front-end step layout. Without it the RichText heading keeps the
    editor's default top margin and drops well below the number badge. */
-.wp-block-stackless-step.md-step-editor {
+.wp-block-stackless-step.stb-step-editor {
 	--step-badge: 2rem;
 	display: grid;
 	grid-template-columns: var(--step-badge) 1fr;
@@ -95,7 +95,7 @@
 	align-items: start;
 }
 
-.wp-block-stackless-step .md-step-number-editor {
+.wp-block-stackless-step .stb-step-number-editor {
 	grid-column: 1;
 	inline-size: var(--step-badge);
 	block-size: var(--step-badge);
@@ -111,18 +111,18 @@
 	line-height: 1;
 }
 
-.wp-block-stackless-step .md-step-content-editor {
+.wp-block-stackless-step .stb-step-content-editor {
 	grid-column: 2;
 	padding-block-start: calc((var(--step-badge) - 1.4em) / 2);
 	min-inline-size: 0;
 }
 
 /* RichText fields inherit the editor's block margins otherwise. */
-.wp-block-stackless-step .md-step-content-editor > * {
+.wp-block-stackless-step .stb-step-content-editor > * {
 	margin-block: 0;
 }
 
-.wp-block-stackless-step .md-step-content-editor > * + * {
+.wp-block-stackless-step .stb-step-content-editor > * + * {
 	margin-block-start: var(--space-third, calc(var(--space-single) / 3));
 }
 
@@ -130,14 +130,14 @@
 	$SIDE_PROMOTION
 \*------------------------------*/
 
-.wp-block-stackless-side-promotion.md-side-promotion-editor {
+.wp-block-stackless-side-promotion.stb-side-promotion-editor {
 	background: var(--editor-surface);
 	border: 1px dashed var(--editor-line-strong);
 	border-radius: 8px;
 	padding: 15px;
 }
 
-.wp-block-stackless-side-promotion .md-side-promotion-label {
+.wp-block-stackless-side-promotion .stb-side-promotion-label {
 	color: var(--color-text-sec);
 	font-size: 11px;
 	font-weight: 600;
@@ -146,7 +146,7 @@
 	text-transform: uppercase;
 }
 
-.wp-block-stackless-side-promotion-item.md-side-promotion-item-editor {
+.wp-block-stackless-side-promotion-item.stb-side-promotion-item-editor {
 	background: var(--color-content-bg);
 	border: 1px solid var(--editor-line);
 	border-radius: 6px;
@@ -154,24 +154,24 @@
 	padding: 12px;
 }
 
-.wp-block-stackless-side-promotion-item .md-side-promotion-image-wrap {
+.wp-block-stackless-side-promotion-item .stb-side-promotion-image-wrap {
 	margin-bottom: 10px;
 	position: relative;
 }
 
-.wp-block-stackless-side-promotion-item .md-side-promotion-image {
+.wp-block-stackless-side-promotion-item .stb-side-promotion-image {
 	border-radius: 4px;
 	display: block;
 	width: 100%;
 }
 
-.wp-block-stackless-side-promotion-item .md-side-promotion-remove {
+.wp-block-stackless-side-promotion-item .stb-side-promotion-remove {
 	position: absolute;
 	right: 5px;
 	top: 5px;
 }
 
-.wp-block-stackless-side-promotion-item .md-side-promotion-upload {
+.wp-block-stackless-side-promotion-item .stb-side-promotion-upload {
 	background: #f0f0f0;
 	border: 2px dashed var(--editor-line-strong);
 	border-radius: 4px;
@@ -185,7 +185,7 @@
 	$RELATED_CONTENT
 \*------------------------------*/
 
-.wp-block-stackless-related-content.md-related-content-editor {
+.wp-block-stackless-related-content.stb-related-content-editor {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: 8px;
@@ -193,12 +193,12 @@
 }
 
 /* Image placeholder shown in Card and Spotlight until an image is picked. */
-.wp-block-stackless-related-content.md-related-content-card .md-related-content-image-wrap {
+.wp-block-stackless-related-content.stb-related-content-card .stb-related-content-image-wrap {
 	flex-shrink: 0;
 	width: 120px;
 }
 
-.wp-block-stackless-related-content .md-related-content-upload {
+.wp-block-stackless-related-content .stb-related-content-upload {
 	align-items: center;
 	background: #f5f5f5;
 	border: 2px dashed var(--editor-line-strong);
@@ -213,6 +213,6 @@
 \*------------------------------*/
 
 /* Keep the avatar from being dragged or selected while editing the quote. */
-.wp-block-stackless-quote .md-quote-avatar {
+.wp-block-stackless-quote .stb-quote-avatar {
 	pointer-events: none;
 }

@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Quote.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 (function (wp) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -39,7 +39,7 @@
 				}, '\u2605')
 			);
 		}
-		return el('div', { className: 'md-quote-stars' }, stars);
+		return el('div', { className: 'stb-quote-stars' }, stars);
 	}
 
 	/**
@@ -228,14 +228,14 @@
 			}
 
 			var blockProps = useBlockProps({
-				className: 'md-quote md-quote-' + style + ' md-quote-font-' + attributes.fontFamily + ' ' + attributes.marginBottom + (attributes.shadow ? ' has-shadow' : ''),
+				className: 'stb-quote stb-quote-' + style + ' stb-quote-font-' + attributes.fontFamily + ' ' + attributes.marginBottom + (attributes.shadow ? ' has-shadow' : ''),
 				style: wrapperStyle
 			});
 
 			// Avatar element
 			var avatarEl = attributes.avatarUrl && config.hasAvatar
 				? el('img', {
-					className: 'md-quote-avatar',
+					className: 'stb-quote-avatar',
 					src: attributes.avatarUrl,
 					alt: '',
 					style: {
@@ -249,12 +249,12 @@
 				: null;
 
 			// Build meta (name + role)
-			var metaEl = el('div', { className: 'md-quote-meta', style: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1.25rem' } },
+			var metaEl = el('div', { className: 'stb-quote-meta', style: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1.25rem' } },
 				config.hasAvatar && avatarEl && style !== 'classic-centered' ? avatarEl : null,
 				el('div', null,
 					el(RichText, {
 						tagName: 'cite',
-						className: 'md-quote-name',
+						className: 'stb-quote-name',
 						style: citeStyle,
 						value: attributes.citation,
 						placeholder: __( 'Name / Source', 'stackless-theme' ),
@@ -262,7 +262,7 @@
 					}),
 					el(RichText, {
 						tagName: 'span',
-						className: 'md-quote-role',
+						className: 'stb-quote-role',
 						value: attributes.role,
 						placeholder: __( 'Role / Company (optional)', 'stackless-theme' ),
 						onChange: function (val) { props.setAttributes({ role: val }); }
@@ -275,11 +275,11 @@
 
 			if (style === 'asymmetric-mark') {
 				content = el(Fragment, null,
-					el('span', { className: 'md-quote-mark', style: { fontSize: '4.5rem', lineHeight: '0.85', opacity: 0.25, paddingTop: '0.25rem' } }, '\u201C'),
+					el('span', { className: 'stb-quote-mark', style: { fontSize: '4.5rem', lineHeight: '0.85', opacity: 0.25, paddingTop: '0.25rem' } }, '\u201C'),
 					el('div', null,
 						el(RichText, {
 							tagName: 'blockquote',
-							className: 'md-quote-text',
+							className: 'stb-quote-text',
 							style: textStyle,
 							value: attributes.quote,
 							placeholder: __( 'Write your quote...', 'stackless-theme' ),
@@ -293,7 +293,7 @@
 					avatarEl && el('div', { style: { display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' } }, avatarEl),
 					el(RichText, {
 						tagName: 'blockquote',
-						className: 'md-quote-text',
+						className: 'stb-quote-text',
 						style: textStyle,
 						value: attributes.quote,
 						placeholder: __( 'Write your quote...', 'stackless-theme' ),
@@ -306,7 +306,7 @@
 					attributes.rating > 0 && renderStars(attributes.rating),
 					el(RichText, {
 						tagName: 'blockquote',
-						className: 'md-quote-text',
+						className: 'stb-quote-text',
 						style: textStyle,
 						value: attributes.quote,
 						placeholder: __( 'Write your quote...', 'stackless-theme' ),
@@ -319,7 +319,7 @@
 					el('span', { style: { position: 'absolute', left: 0, top: '-0.15em', fontSize: '5em', lineHeight: 1, opacity: 0.2, fontFamily: 'var(--font-serif)' } }, '\u201C'),
 					el(RichText, {
 						tagName: 'blockquote',
-						className: 'md-quote-text',
+						className: 'stb-quote-text',
 						style: textStyle,
 						value: attributes.quote,
 						placeholder: __( 'Write your quote...', 'stackless-theme' ),
@@ -332,7 +332,7 @@
 				content = el(Fragment, null,
 					el(RichText, {
 						tagName: 'blockquote',
-						className: 'md-quote-text',
+						className: 'stb-quote-text',
 						style: textStyle,
 						value: attributes.quote,
 						placeholder: __( 'Write your quote...', 'stackless-theme' ),

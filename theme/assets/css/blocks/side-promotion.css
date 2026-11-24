@@ -1,33 +1,33 @@
 /*
  * Stackless blocks: Side Promotion.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*, --fs-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*, --fs-*) are mapped to the
+ * theme's tokens in bridge.css.
  */
 
 /* The element name and [class] lift the margin above the theme's content-flow rule. */
-div.md-side-promotion[class] {
+div.stb-side-promotion[class] {
 	margin-bottom: var(--space-double);
 }
 
-.md-side-promotion-right,
-.md-side-promotion-left {
+.stb-side-promotion-right,
+.stb-side-promotion-left {
 	display: none;
 	position: absolute;
 	top: var(--space-double);
 	z-index: 10;
 }
 
-.md-side-promotion-right {
+.stb-side-promotion-right {
 	right: 0;
 	transform: translateX(calc(100% + var(--space-single)));
 }
 
-.md-side-promotion-left {
+.stb-side-promotion-left {
 	left: 0;
 	transform: translateX(calc(-100% - var(--space-single)));
 }
 
-.md-side-promotion-inline {
+.stb-side-promotion-inline {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -76,10 +76,10 @@ div.md-side-promotion[class] {
 
 @media all and (min-width: 1200px) {
 	/* The panels hang in the margin beside the content they sit in. */
-	.entry-content:has(> .md-side-promotion) {
+	.entry-content:has(> .stb-side-promotion) {
 		position: relative;
 	}
-	.md-side-promotion-right,
-	.md-side-promotion-left {
+	.stb-side-promotion-right,
+	.stb-side-promotion-left {
 		display: block;
 	}}

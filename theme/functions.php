@@ -40,5 +40,4 @@ if (class_exists('Easy_Digital_Downloads') || class_exists('WooCommerce')) {
 
 if (is_admin()) {
     require STACKLESS_THEME_DIR . '/inc/admin/tools.php';
-    require STACKLESS_THEME_DIR . '/inc/admin/md-import.php';
 }

@@ -1,7 +1,6 @@
 /*
  * Stackless blocks: Content Upgrade.
- * An offer box: icon, title and text, then a button. The block prints its colors inline, as it
- * does in Marketers Delight.
+ * An offer box: icon, title and text, then a button. The block prints its colors inline.
  */
 
 .content-upgrade { border-radius: var(--radius-card); }

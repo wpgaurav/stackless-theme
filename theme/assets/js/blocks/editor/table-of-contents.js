@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Table of Contents.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType = wp.blocks.registerBlockType,
@@ -135,14 +135,14 @@
 			var hierarchical = effectiveToggle( atts.hierarchical, 'hierarchical' );
 			var collapsible = effectiveToggle( atts.collapsible, 'collapsible' );
 			var collapsed = effectiveToggle( atts.collapsed, 'collapsed' );
-			var classes = [ 'md-toc', 'md-toc-editor-preview' ];
-			if ( collapsible ) classes.push( 'md-toc-collapsible' );
+			var classes = [ 'stb-toc', 'stb-toc-editor-preview' ];
+			if ( collapsible ) classes.push( 'stb-toc-collapsible' );
 			if ( collapsible && collapsed ) classes.push( 'is-collapsed' );
-			if ( numbered ) classes.push( 'md-toc-numbered' );
+			if ( numbered ) classes.push( 'stb-toc-numbered' );
 
 			var blockProps = useBlockProps( {
 				className: classes.join( ' ' ),
-				'data-md-toc': true,
+				'data-stb-toc': true,
 				'data-numbering': numbering
 			} );
 
@@ -291,17 +291,17 @@
 							// stays in this list, so every pass consumes a heading.
 							if ( lvl > depth && children.length ) {
 								var last = children.length - 1;
-								children[ last ] = el( 'li', { key: 'i' + idx, className: 'md-toc-item' },
+								children[ last ] = el( 'li', { key: 'i' + idx, className: 'stb-toc-item' },
 									children[ last ].props.children, walk( depth + 1 ) );
 								continue;
 							}
 							var item = items[ idx ];
 							idx++;
-							children.push( el( 'li', { key: 'i' + idx, className: 'md-toc-item' },
-								el( 'span', { className: 'md-toc-link', 'data-level': item.level }, item.text ) ) );
+							children.push( el( 'li', { key: 'i' + idx, className: 'stb-toc-item' },
+								el( 'span', { className: 'stb-toc-link', 'data-level': item.level }, item.text ) ) );
 						}
 						return children.length
-							? el( listTag, { className: depth ? 'md-toc-sublist' : 'md-toc-list' }, children )
+							? el( listTag, { className: depth ? 'stb-toc-sublist' : 'stb-toc-list' }, children )
 							: null;
 					}
 					return walk( 0 );
@@ -309,27 +309,27 @@
 
 				var body = hierarchical
 					? buildNested( shown )
-					: el( listTag, { className: 'md-toc-list md-toc-flat' },
+					: el( listTag, { className: 'stb-toc-list stb-toc-flat' },
 						shown.map( function ( heading, i ) {
 							return el( 'li', {
 								key: i,
-								className: 'md-toc-item',
+								className: 'stb-toc-item',
 								'data-depth': heading.level - base
-							}, el( 'span', { className: 'md-toc-link', 'data-level': heading.level }, heading.text ) );
+							}, el( 'span', { className: 'stb-toc-link', 'data-level': heading.level }, heading.text ) );
 						} ) );
 
 				preview = el( Fragment, null,
-					el( 'div', { className: 'md-toc-head' },
-						el( 'p', { className: 'md-toc-title' }, atts.title || defaultTitle() ),
+					el( 'div', { className: 'stb-toc-head' },
+						el( 'p', { className: 'stb-toc-title' }, atts.title || defaultTitle() ),
 						collapsible
 							? el( 'span', {
-								className: 'md-toc-toggle',
+								className: 'stb-toc-toggle',
 								'aria-hidden': 'true'
-							}, el( 'span', { className: 'md-toc-chevron' } ) )
+							}, el( 'span', { className: 'stb-toc-chevron' } ) )
 							: null
 					),
 					el( 'div', {
-						className: 'md-toc-body',
+						className: 'stb-toc-body',
 						hidden: !! ( collapsible && collapsed )
 					}, body )
 				);

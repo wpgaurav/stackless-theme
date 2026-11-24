@@ -1,9 +1,9 @@
 <?php
 /**
- * Core block style variations: the "is-style-*" looks Marketers Delight adds to core blocks.
+ * Core block style variations: the "is-style-*" looks Stackless adds to core blocks.
  *
- * Every variation keeps Marketers Delight's block, name and label, so content saved with one
- * needs no change. A block's variations live in assets/css/blocks/core-<block>.css, which loads
+ * Keep every variation's block, name and label as they are: content saved with one depends on
+ * them. A block's variations live in assets/css/blocks/core-<block>.css, which loads
  * in the editor and, on the front end, only on a page where a block uses one of them.
  *
  * @package Stackless_Theme
@@ -54,9 +54,9 @@ function stackless_theme_blocks_core_styles(): array
             'browser-shot' => __('Browser Shot', 'stackless-theme'),
         ],
         'core/query' => [
-            'md-cards' => __('MD Cards', 'stackless-theme'),
-            'md-magazine' => __('MD Magazine', 'stackless-theme'),
-            'md-list' => __('MD List', 'stackless-theme'),
+            'stb-cards' => __('MD Cards', 'stackless-theme'),
+            'stb-magazine' => __('MD Magazine', 'stackless-theme'),
+            'stb-list' => __('MD List', 'stackless-theme'),
         ],
         'core/group' => [
             'aside' => __('Aside L', 'stackless-theme'),
@@ -67,7 +67,7 @@ function stackless_theme_blocks_core_styles(): array
         'core/button' => [
             'primary' => __('Primary', 'stackless-theme'),
             'secondary' => __('Secondary', 'stackless-theme'),
-            // Marketers Delight also lists "outline". That one is WordPress's own button
+            // No "outline" here. That one is WordPress's own button
             // variation, which the theme already styles, so it is not registered again and a
             // page that uses it loads nothing from here.
             'link' => __('Link', 'stackless-theme'),
@@ -96,7 +96,7 @@ function stackless_theme_blocks_core_styles(): array
 }
 
 /**
- * Variations Marketers Delight keeps for existing content but leaves out of the editor's style
+ * Variations kept for existing content but left out of the editor's style
  * picker: decorative and duplicate choices. Their CSS still loads where content uses them.
  * Return true from the stackless_theme_blocks_core_legacy_styles_enabled filter to offer them
  * in the picker as well.

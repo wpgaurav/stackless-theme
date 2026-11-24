@@ -1,7 +1,6 @@
 <?php
 /**
- * Render callbacks for Stackless blocks, ported from the Marketers Delight Blocks drop-in 2.5.0.
- * The markup keeps Marketers Delight's structure and class names.
+ * Render callbacks for Stackless blocks. Each prints the block's markup from its attributes.
  *
  * @package Stackless_Theme
  */
@@ -10,7 +9,7 @@ defined('ABSPATH') || exit;
 
 function stackless_theme_blocks_render_arrow(array $attributes, string $content = ''): string
 {
-    $icon = isset( $attributes['icon'] ) ? $attributes['icon'] : 'md-icon-angle-down';
+    $icon = isset( $attributes['icon'] ) ? $attributes['icon'] : 'stb-icon-angle-down';
     return '<p class="arrow-down text-center"><span class="' . esc_attr( $icon ) . ' large-title"></span></p>';
 }
 
@@ -106,7 +105,7 @@ function stackless_theme_blocks_render_callout(array $attributes, string $conten
     if ( ! empty( $buttonTextColorClass ) )
         $button_classes[] = $buttonTextColorClass;
     if ( $has_popup )
-        $button_classes[] = 'md-popup-trigger';
+        $button_classes[] = 'stb-popup-trigger';
     $button_classes[] = ! empty( $buttonColorClass ) ? $buttonColorClass : '';
     $button_classes = join( ' ', array_filter( $button_classes ) );
 
@@ -212,7 +211,7 @@ function stackless_theme_blocks_render_content_upgrade(array $attributes, string
     $button_classes[] = ! empty( $buttonColorClass ) ? $buttonColorClass : '';
     $button_classes[] = ! empty( $buttonTextColorClass ) ? $buttonTextColorClass : '';
     if ( $has_popup )
-        $button_classes[] = 'md-popup-trigger';
+        $button_classes[] = 'stb-popup-trigger';
     $classes = join( ' ', $classes );
     $button_classes = join( ' ', $button_classes );
 
@@ -346,7 +345,7 @@ function stackless_theme_blocks_render_faq_item(array $attributes, string $conte
 function stackless_theme_blocks_render_steps(array $attributes, string $content = ''): string
 {
 
-    return '<div class="md-steps mb-double">' . $content . '</div>';
+    return '<div class="stb-steps mb-double">' . $content . '</div>';
 }
 
 function stackless_theme_blocks_render_step(array $attributes, string $content = ''): string
@@ -357,14 +356,14 @@ function stackless_theme_blocks_render_step(array $attributes, string $content =
 
     ob_start();
     ?>
-    <div class="md-step">
-        <div class="md-step-number"><?php echo esc_html( $number ); ?></div>
-        <div class="md-step-content">
+    <div class="stb-step">
+        <div class="stb-step-number"><?php echo esc_html( $number ); ?></div>
+        <div class="stb-step-content">
             <?php if ( $title ) : ?>
-                <h4 class="md-step-title"><?php echo stackless_theme_blocks_text( $title ); ?></h4>
+                <h4 class="stb-step-title"><?php echo stackless_theme_blocks_text( $title ); ?></h4>
             <?php endif; ?>
             <?php if ( $text ) : ?>
-                <p class="md-step-text"><?php echo stackless_theme_blocks_text( $text ); ?></p>
+                <p class="stb-step-text"><?php echo stackless_theme_blocks_text( $text ); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -378,8 +377,8 @@ function stackless_theme_blocks_render_side_promotion(array $attributes, string 
     $position = isset( $attributes['position'] ) ? $attributes['position'] : 'right';
     $width = isset( $attributes['width'] ) ? intval( $attributes['width'] ) : 200;
 
-    $classes = array( 'md-side-promotion' );
-    $classes[] = 'md-side-promotion-' . esc_attr( $position );
+    $classes = array( 'stb-side-promotion' );
+    $classes[] = 'stb-side-promotion-' . esc_attr( $position );
 
     ob_start();
     ?>
@@ -436,26 +435,26 @@ function stackless_theme_blocks_render_key_takeaway(array $attributes, string $c
 
     // Map icon values to MD icon font classes
     $icon_map = array(
-        'bolt'    => 'md-icon-bolt',
-        'fire'    => 'md-icon-fire',
-        'star'    => 'md-icon-star',
-        'info'    => 'md-icon-info',
-        'warning' => 'md-icon-warning',
-        'ok'      => 'md-icon-ok',
-        'gift'    => 'md-icon-gift',
-        'trophy'  => 'md-icon-trophy',
-        'rocket'  => 'md-icon-rocket',
-        'heart'   => 'md-icon-heart',
-        'bell'    => 'md-icon-bell',
-        'gem'     => 'md-icon-gem',
+        'bolt'    => 'stb-icon-bolt',
+        'fire'    => 'stb-icon-fire',
+        'star'    => 'stb-icon-star',
+        'info'    => 'stb-icon-info',
+        'warning' => 'stb-icon-warning',
+        'ok'      => 'stb-icon-ok',
+        'gift'    => 'stb-icon-gift',
+        'trophy'  => 'stb-icon-trophy',
+        'rocket'  => 'stb-icon-rocket',
+        'heart'   => 'stb-icon-heart',
+        'bell'    => 'stb-icon-bell',
+        'gem'     => 'stb-icon-gem',
         // Legacy mappings for backwards compatibility
-        'lightbulb'   => 'md-icon-bolt',
-        'star-filled' => 'md-icon-star',
-        'yes-alt'     => 'md-icon-ok'
+        'lightbulb'   => 'stb-icon-bolt',
+        'star-filled' => 'stb-icon-star',
+        'yes-alt'     => 'stb-icon-ok'
     );
     $icon_class = isset( $icon_map[ $icon ] ) ? $icon_map[ $icon ] : '';
 
-    $classes = array( 'md-key-takeaway', 'md-key-takeaway-' . esc_attr( $style ), esc_attr( $marginBottom ) );
+    $classes = array( 'stb-key-takeaway', 'stb-key-takeaway-' . esc_attr( $style ), esc_attr( $marginBottom ) );
 
     // `has-shadow` was emitted here but no rule ever defined it, for this
     // block or globally — the "Add shadow" checkbox has been removed rather
@@ -471,13 +470,13 @@ function stackless_theme_blocks_render_key_takeaway(array $attributes, string $c
     ob_start();
     ?>
     <div class="<?php echo implode( ' ', $classes ); ?>"<?php echo $wrapper_styles ? ' style="' . implode( ';', $wrapper_styles ) . '"' : ''; ?>>
-        <div class="md-key-takeaway-header">
+        <div class="stb-key-takeaway-header">
             <?php if ( $icon !== 'none' && $icon_class ) : ?>
-                <span class="md-key-takeaway-icon <?php echo esc_attr( $icon_class ); ?>"<?php echo $iconColor ? ' style="color:' . esc_attr( $iconColor ) . '"' : ''; ?>></span>
+                <span class="stb-key-takeaway-icon <?php echo esc_attr( $icon_class ); ?>"<?php echo $iconColor ? ' style="color:' . esc_attr( $iconColor ) . '"' : ''; ?>></span>
             <?php endif; ?>
-            <span class="md-key-takeaway-label"><?php echo esc_html( $label ); ?></span>
+            <span class="stb-key-takeaway-label"><?php echo esc_html( $label ); ?></span>
         </div>
-        <div class="md-key-takeaway-content">
+        <div class="stb-key-takeaway-content">
             <?php echo wp_kses_post( $text ); ?>
         </div>
     </div>
@@ -505,7 +504,7 @@ function stackless_theme_blocks_render_pull_quote(array $attributes, string $con
         return '';
     }
 
-    $classes = array( 'md-pull-quote', 'md-pull-quote-' . esc_attr( $style ), esc_attr( $marginBottom ) );
+    $classes = array( 'stb-pull-quote', 'stb-pull-quote-' . esc_attr( $style ), esc_attr( $marginBottom ) );
     if ( $shadow ) $classes[] = 'has-shadow';
 
     // Add block width alignment class
@@ -532,26 +531,26 @@ function stackless_theme_blocks_render_pull_quote(array $attributes, string $con
 
     if ( $style === 'bezel' ) : ?>
     <figure class="<?php echo implode( ' ', $classes ); ?>" style="<?php echo implode( ';', $wrapper_styles ); ?>" role="figure" itemscope itemtype="https://schema.org/Quotation">
-        <div class="md-pull-quote-bezel-inner">
-            <span class="md-pull-quote-bezel-mark" aria-hidden="true">&ldquo;</span>
-            <blockquote class="md-pull-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?>>
+        <div class="stb-pull-quote-bezel-inner">
+            <span class="stb-pull-quote-bezel-mark" aria-hidden="true">&ldquo;</span>
+            <blockquote class="stb-pull-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?>>
                 <?php echo wp_kses_post( $quote ); ?>
             </blockquote>
             <?php if ( $citation ) : ?>
-                <figcaption class="md-pull-quote-citation"<?php echo $citationColor ? ' style="color:' . esc_attr( $citationColor ) . '"' : ''; ?>><cite><?php echo esc_html( $citation ); ?></cite></figcaption>
+                <figcaption class="stb-pull-quote-citation"<?php echo $citationColor ? ' style="color:' . esc_attr( $citationColor ) . '"' : ''; ?>><cite><?php echo esc_html( $citation ); ?></cite></figcaption>
             <?php endif; ?>
         </div>
     </figure>
     <?php else : ?>
     <figure class="<?php echo implode( ' ', $classes ); ?>" style="<?php echo implode( ';', $wrapper_styles ); ?>" role="figure" itemscope itemtype="https://schema.org/Quotation">
         <?php if ( $style === 'quote-marks' ) : ?>
-            <span class="md-pull-quote-mark" aria-hidden="true"<?php echo $borderColor ? ' style="color:' . esc_attr( $borderColor ) . '"' : ''; ?>>"</span>
+            <span class="stb-pull-quote-mark" aria-hidden="true"<?php echo $borderColor ? ' style="color:' . esc_attr( $borderColor ) . '"' : ''; ?>>"</span>
         <?php endif; ?>
-        <blockquote class="md-pull-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?>>
+        <blockquote class="stb-pull-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?>>
             <?php echo wp_kses_post( $quote ); ?>
         </blockquote>
         <?php if ( $citation ) : ?>
-            <figcaption class="md-pull-quote-citation"<?php echo $citationColor ? ' style="color:' . esc_attr( $citationColor ) . '"' : ''; ?>><cite><?php echo esc_html( $citation ); ?></cite></figcaption>
+            <figcaption class="stb-pull-quote-citation"<?php echo $citationColor ? ' style="color:' . esc_attr( $citationColor ) . '"' : ''; ?>><cite><?php echo esc_html( $citation ); ?></cite></figcaption>
         <?php endif; ?>
     </figure>
     <?php endif;
@@ -592,7 +591,7 @@ function stackless_theme_blocks_render_quote(array $attributes, string $content 
     $is_testimonial = in_array( $style, $testimonial_styles ) && '' !== trim( $citation ) && '' !== trim( $itemReviewed ) && in_array( $item_type, array( 'Product', 'Book', 'Course' ), true ) && $rating >= 1 && $rating <= 5;
     $schema_type = $is_testimonial ? 'https://schema.org/Review' : 'https://schema.org/Quotation';
 
-    $classes = array( 'md-quote', 'md-quote-' . esc_attr( $style ), 'md-quote-font-' . esc_attr( $fontFamily ), esc_attr( $marginBottom ) );
+    $classes = array( 'stb-quote', 'stb-quote-' . esc_attr( $style ), 'stb-quote-font-' . esc_attr( $fontFamily ), esc_attr( $marginBottom ) );
     if ( $shadow ) $classes[] = 'has-shadow';
 
     $wrapper_styles = array();
@@ -617,7 +616,7 @@ function stackless_theme_blocks_render_quote(array $attributes, string $content 
     if ( $rating > 0 ) {
         $star_filled = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
         $star_empty = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-        $stars_html = '<div class="md-quote-stars" role="img" aria-label="' . sprintf( esc_attr__( '%d out of 5 stars', 'stackless-theme' ), $rating ) . '">';
+        $stars_html = '<div class="stb-quote-stars" role="img" aria-label="' . sprintf( esc_attr__( '%d out of 5 stars', 'stackless-theme' ), $rating ) . '">';
         for ( $i = 1; $i <= 5; $i++ ) {
             $stars_html .= $i <= $rating ? $star_filled : $star_empty;
         }
@@ -627,23 +626,23 @@ function stackless_theme_blocks_render_quote(array $attributes, string $content 
     // Avatar
     $avatar_html = '';
     if ( $avatarUrl ) {
-        $avatar_html = '<img class="md-quote-avatar" src="' . esc_url( $avatarUrl ) . '" alt="' . esc_attr( $citation ) . '" loading="lazy" width="56" height="56" />';
+        $avatar_html = '<img class="stb-quote-avatar" src="' . esc_url( $avatarUrl ) . '" alt="' . esc_attr( $citation ) . '" loading="lazy" width="56" height="56" />';
     }
 
     // Meta block (name + role)
     $meta_html = '';
     if ( $citation || $role ) {
-        $meta_html = '<figcaption class="md-quote-meta">';
+        $meta_html = '<figcaption class="stb-quote-meta">';
         if ( $avatarUrl && $style !== 'classic-centered' && $is_testimonial ) {
             $meta_html .= $avatar_html;
             $avatar_html = ''; // consumed
         }
         $meta_html .= '<div>';
         if ( $citation ) {
-            $meta_html .= '<cite class="md-quote-name"' . ( $cite_styles ? ' style="' . implode( ';', $cite_styles ) . '"' : '' ) . '>' . esc_html( $citation ) . '</cite>';
+            $meta_html .= '<cite class="stb-quote-name"' . ( $cite_styles ? ' style="' . implode( ';', $cite_styles ) . '"' : '' ) . '>' . esc_html( $citation ) . '</cite>';
         }
         if ( $role ) {
-            $meta_html .= '<span class="md-quote-role">' . esc_html( $role ) . '</span>';
+            $meta_html .= '<span class="stb-quote-role">' . esc_html( $role ) . '</span>';
         }
         $meta_html .= '</div></figcaption>';
     }
@@ -652,12 +651,12 @@ function stackless_theme_blocks_render_quote(array $attributes, string $content 
     ?>
     <figure class="<?php echo implode( ' ', $classes ); ?>"<?php echo $wrapper_styles ? ' style="' . implode( ';', $wrapper_styles ) . '"' : ''; ?> itemscope itemtype="<?php echo esc_attr( $schema_type ); ?>">
         <?php if ( $style === 'asymmetric-mark' ) : ?>
-            <span class="md-quote-mark" aria-hidden="true">&ldquo;</span>
+            <span class="stb-quote-mark" aria-hidden="true">&ldquo;</span>
             <div>
         <?php endif; ?>
 
         <?php if ( $style === 'oversize-mark' ) : ?>
-            <span class="md-quote-mark" aria-hidden="true">&ldquo;</span>
+            <span class="stb-quote-mark" aria-hidden="true">&ldquo;</span>
         <?php endif; ?>
 
         <?php if ( $style === 'classic-centered' && $avatar_html ) : ?>
@@ -668,7 +667,7 @@ function stackless_theme_blocks_render_quote(array $attributes, string $content 
             <?php echo $stars_html; ?>
         <?php endif; ?>
 
-        <blockquote class="md-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?> itemprop="<?php echo $is_testimonial ? 'reviewBody' : 'text'; ?>">
+        <blockquote class="stb-quote-text"<?php echo $quote_styles ? ' style="' . implode( ';', $quote_styles ) . '"' : ''; ?> itemprop="<?php echo $is_testimonial ? 'reviewBody' : 'text'; ?>">
             <?php echo wp_kses_post( $quote ); ?>
         </blockquote>
 
@@ -772,14 +771,14 @@ function stackless_theme_blocks_render_related_content(array $attributes, string
     $columns = max( 1, min( 3, $columns ) );
 
     $root_classes = array(
-        'md-related-content',
-        'md-related-content--' . esc_attr( $layout ),
+        'stb-related-content',
+        'stb-related-content--' . esc_attr( $layout ),
         esc_attr( $marginBottom ),
     );
     // Keep legacy modifier classes so older custom CSS keeps targeting.
-    $root_classes[] = 'md-related-content-' . esc_attr( $layout );
+    $root_classes[] = 'stb-related-content-' . esc_attr( $layout );
     if ( $shadow ) $root_classes[] = 'has-shadow';
-    if ( $layout === 'grid' ) $root_classes[] = 'md-related-content--cols-' . $columns;
+    if ( $layout === 'grid' ) $root_classes[] = 'stb-related-content--cols-' . $columns;
 
     $wrapper_styles = array();
     if ( $bgColor )     $wrapper_styles[] = 'background-color:' . esc_attr( $bgColor );
@@ -795,10 +794,10 @@ function stackless_theme_blocks_render_related_content(array $attributes, string
     ?>
     <div class="<?php echo implode( ' ', $root_classes ); ?>"<?php echo $wrapper_styles ? ' style="' . esc_attr( implode( ';', $wrapper_styles ) ) . '"' : ''; ?>>
         <?php if ( ! empty( $label ) ) : ?>
-            <div class="md-related-content-label caps small bold"<?php echo $label_styles ? ' style="' . esc_attr( implode( ';', $label_styles ) ) . '"' : ''; ?>><?php echo esc_html( $label ); ?></div>
+            <div class="stb-related-content-label caps small bold"<?php echo $label_styles ? ' style="' . esc_attr( implode( ';', $label_styles ) ) . '"' : ''; ?>><?php echo esc_html( $label ); ?></div>
         <?php endif; ?>
 
-        <div class="md-related-content-items <?php
+        <div class="stb-related-content-items <?php
             // Use theme utility classes for layout-level spacing/grid.
             echo $layout === 'grid' ? 'grid-' . $columns . ' gap-half' : '';
             echo $layout === 'list' ? 'flex-column gap-half' : '';
@@ -817,29 +816,29 @@ function stackless_theme_blocks_render_related_content(array $attributes, string
                     $thumb_html = get_the_post_thumbnail( $p_id, (string) apply_filters( 'stackless_theme_blocks_related_image_size', 'medium_large' ), array(
                         'alt'     => esc_attr( $p_title ),
                         'loading' => 'lazy',
-                        'class'   => 'md-related-content-img'
+                        'class'   => 'stb-related-content-img'
                     ) );
                 } elseif ( ! empty( $p_image ) ) {
-                    $thumb_html = '<img class="md-related-content-img" src="' . esc_url( $p_image ) . '" alt="' . esc_attr( $p_title ) . '" loading="lazy" />';
+                    $thumb_html = '<img class="stb-related-content-img" src="' . esc_url( $p_image ) . '" alt="' . esc_attr( $p_title ) . '" loading="lazy" />';
                 }
 
                 $show_image = $thumb_html && in_array( $layout, array( 'card', 'spotlight', 'grid', 'list' ), true );
                 $show_desc  = $p_desc && $showExcerpts && $layout !== 'inline' && $layout !== 'minimal';
                 $show_cta_item = $showCta && $layout !== 'inline' && $layout !== 'minimal';
             ?>
-                <a href="<?php echo esc_url( $p_url ); ?>" class="md-related-content-item md-related-content-link"<?php echo $target_attr; ?>>
+                <a href="<?php echo esc_url( $p_url ); ?>" class="stb-related-content-item stb-related-content-link"<?php echo $target_attr; ?>>
                     <?php if ( $show_image ) : ?>
-                        <div class="md-related-content-image">
+                        <div class="stb-related-content-image">
                             <?php echo $thumb_html; ?>
                         </div>
                     <?php endif; ?>
-                    <div class="md-related-content-text block-half">
-                        <span class="md-related-content-title bold"<?php echo $titleColor ? ' style="color:' . esc_attr( $titleColor ) . '"' : ''; ?>><?php echo esc_html( $p_title ); ?></span>
+                    <div class="stb-related-content-text block-half">
+                        <span class="stb-related-content-title bold"<?php echo $titleColor ? ' style="color:' . esc_attr( $titleColor ) . '"' : ''; ?>><?php echo esc_html( $p_title ); ?></span>
                         <?php if ( $show_desc ) : ?>
-                            <span class="md-related-content-desc small text-sec"<?php echo $descColor ? ' style="color:' . esc_attr( $descColor ) . '"' : ''; ?>><?php echo esc_html( $p_desc ); ?></span>
+                            <span class="stb-related-content-desc small text-sec"<?php echo $descColor ? ' style="color:' . esc_attr( $descColor ) . '"' : ''; ?>><?php echo esc_html( $p_desc ); ?></span>
                         <?php endif; ?>
                         <?php if ( $show_cta_item ) : ?>
-                            <span class="md-related-content-cta small bold"<?php echo $ctaColor ? ' style="color:' . esc_attr( $ctaColor ) . '"' : ''; ?>><?php echo esc_html( $ctaText ); ?> &rarr;</span>
+                            <span class="stb-related-content-cta small bold"<?php echo $ctaColor ? ' style="color:' . esc_attr( $ctaColor ) . '"' : ''; ?>><?php echo esc_html( $ctaText ); ?> &rarr;</span>
                         <?php endif; ?>
                     </div>
                 </a>
@@ -936,7 +935,7 @@ function stackless_theme_blocks_render_share_notice(array $attributes, string $c
 ?>
 <div class="<?php echo esc_attr( $classes ); ?>">
     <p class="share-notice-text small-text"><?php echo stackless_theme_blocks_text( $text ); ?></p>
-    <i class="share-notice-icon md-icon-<?php echo esc_attr( $social ); ?>"></i>
+    <i class="share-notice-icon stb-icon-<?php echo esc_attr( $social ); ?>"></i>
     <p class="share-notice-button">
         <a href="<?php echo esc_url( $share_url ); ?>" class="<?php echo esc_attr( $button_classes ); ?>" target="_blank" data-share="true"><?php echo esc_html( $button_text ); ?></a>
     </p>
@@ -1104,7 +1103,7 @@ function stackless_theme_blocks_render_spoiler(array $attributes, string $conten
     $textColor = isset( $attributes['textColor'] ) ? $attributes['textColor'] : '';
     $marginBottom = isset( $attributes['marginBottom'] ) ? $attributes['marginBottom'] : 'mb-double';
 
-    $classes = array( 'md-spoiler', 'md-spoiler-' . esc_attr( $style ), esc_attr( $marginBottom ) );
+    $classes = array( 'stb-spoiler', 'stb-spoiler-' . esc_attr( $style ), esc_attr( $marginBottom ) );
 
     $wrapper_styles = array();
     if ( $bgColor ) $wrapper_styles[] = 'background-color:' . esc_attr( $bgColor );
@@ -1113,11 +1112,11 @@ function stackless_theme_blocks_render_spoiler(array $attributes, string $conten
     ob_start();
     ?>
     <div id="<?php echo esc_attr( $id ); ?>" class="<?php echo implode( ' ', $classes ); ?>"<?php echo $wrapper_styles ? ' style="' . implode( ';', $wrapper_styles ) . '"' : ''; ?>>
-        <button class="md-spoiler-toggle" type="button" aria-expanded="false" data-label="<?php echo esc_attr( $label ); ?>" data-revealed-label="<?php echo esc_attr( $revealedLabel ); ?>">
-            <span class="md-spoiler-icon md-icon-eye"></span>
-            <span class="md-spoiler-label"><?php echo esc_html( $label ); ?></span>
+        <button class="stb-spoiler-toggle" type="button" aria-expanded="false" data-label="<?php echo esc_attr( $label ); ?>" data-revealed-label="<?php echo esc_attr( $revealedLabel ); ?>">
+            <span class="stb-spoiler-icon stb-icon-eye"></span>
+            <span class="stb-spoiler-label"><?php echo esc_html( $label ); ?></span>
         </button>
-        <div class="md-spoiler-content" hidden>
+        <div class="stb-spoiler-content" hidden>
             <?php echo $content; ?>
         </div>
     </div>

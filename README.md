@@ -16,9 +16,9 @@ theme/
   template-parts/      site header and footer, post summary, single, empty state
   inc/                 setup, icons, template tags, design settings, page layouts, Page Blocks Builder regions,
                        WooCommerce and EDD integration
-  inc/admin/           Stackless tools (settings export/import, backups) and the Marketers Delight importer
-  inc/blocks/          Stackless blocks (the Marketers Delight theme blocks under stackless/), core block style
-                       variations and the block converter; self-contained, so it can move to a plugin
+  inc/admin/           Stackless tools (settings export/import, backups)
+  inc/blocks/          Stackless blocks (content and card blocks under stackless/) and core block style
+                       variations; self-contained, so it can move to a plugin
   assets/css/          base (tokens, elements, forms, blocks), layout, woocommerce, stackless, editor
   assets/js/theme.js   mobile menu, header search and the transparent-header scroll state
   assets/js/editor-layout.js  the editor's Layout panel

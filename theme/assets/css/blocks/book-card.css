@@ -1,10 +1,10 @@
 /*
  * Stackless blocks: Book Card.
- * Ported from the Marketers Delight Blocks drop-in. The custom properties it reads
- * (--color-*, --space-*, --radius-*) are mapped to the theme's tokens in bridge.css.
+ * The custom properties it reads (--color-*, --space-*, --radius-*) are mapped to the theme's
+ * tokens in bridge.css.
  */
 
-.md-book-card {
+.stb-book-card {
 	background: var(--color-content-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-l);
@@ -12,23 +12,23 @@
 	transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.md-book-card:hover {
+.stb-book-card:hover {
 	border-color: color-mix(in srgb, var(--color-border), var(--color-text) 15%);
 	box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--color-text), transparent 92%);
 }
 
-.md-book-card-layout {
+.stb-book-card-layout {
 	display: flex;
 }
 
-.md-book-card-cover {
+.stb-book-card-cover {
 	width: 140px;
 	flex-shrink: 0;
 	overflow: hidden;
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 35%);
 }
 
-.md-book-card-cover img {
+.stb-book-card-cover img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -36,11 +36,11 @@
 	transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.md-book-card:hover .md-book-card-cover img {
+.stb-book-card:hover .stb-book-card-cover img {
 	transform: scale(1.03);
 }
 
-.md-book-card-cover-placeholder {
+.stb-book-card-cover-placeholder {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -52,7 +52,7 @@
 	opacity: 0.4;
 }
 
-.md-book-card-body {
+.stb-book-card-body {
 	padding: var(--space-single);
 	flex: 1;
 	min-width: 0;
@@ -60,19 +60,19 @@
 	flex-direction: column;
 }
 
-.md-book-card-title {
+.stb-book-card-title {
 	font-size: 1.1em;
 	line-height: 1.3;
 	margin: 0 0 var(--space-xs) 0;
 }
 
-.md-book-card-authors {
+.stb-book-card-authors {
 	font-size: 0.9em;
 	margin-bottom: var(--space-half);
 	color: var(--color-text-sec);
 }
 
-.md-book-card-meta {
+.stb-book-card-meta {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -82,21 +82,21 @@
 	color: var(--color-text-sec);
 }
 
-.md-book-card-desc {
+.stb-book-card-desc {
 	color: var(--color-text-sec);
 	margin-bottom: var(--space-single);
 	font-size: 0.9em;
 	line-height: 1.6;
 }
 
-.md-book-card-subjects {
+.stb-book-card-subjects {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-xs);
 	margin-bottom: var(--space-single);
 }
 
-.md-book-card-subject {
+.stb-book-card-subject {
 	display: inline-block;
 	padding: 3px var(--space-half);
 	background: color-mix(in srgb, var(--color-content-bg), var(--color-border) 20%);
@@ -105,7 +105,7 @@
 	color: var(--color-text-sec);
 }
 
-.md-book-card-actions {
+.stb-book-card-actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-half);
@@ -113,54 +113,54 @@
 }
 
 @media all and (max-width: 480px) {
-	.md-book-card-layout {
+	.stb-book-card-layout {
 		flex-direction: column;
 	}
-	.md-book-card-cover {
+	.stb-book-card-cover {
 		width: 100%;
 		max-height: 200px;
 	}
 }
 
 /* Compact */
-.md-book-card-compact .md-book-card-cover {
+.stb-book-card-compact .stb-book-card-cover {
 	width: 80px;
 }
 
-.md-book-card-compact .md-book-card-body {
+.stb-book-card-compact .stb-book-card-body {
 	padding: var(--space-half);
 }
 
-.md-book-card-compact .md-book-card-desc {
+.stb-book-card-compact .stb-book-card-desc {
 	display: none;
 }
 
-.md-book-card-compact .md-book-card-subjects {
+.stb-book-card-compact .stb-book-card-subjects {
 	display: none;
 }
 
 /* Minimal */
-.md-book-card-minimal {
+.stb-book-card-minimal {
 	background: transparent;
 	border: none;
 }
 
-.md-book-card-minimal:hover {
+.stb-book-card-minimal:hover {
 	box-shadow: none;
 }
 
-.md-book-card-minimal .md-book-card-layout {
+.stb-book-card-minimal .stb-book-card-layout {
 	display: block;
 }
 
-.md-book-card-minimal .md-book-card-cover {
+.stb-book-card-minimal .stb-book-card-cover {
 	display: none;
 }
 
-.md-book-card-minimal .md-book-card-body {
+.stb-book-card-minimal .stb-book-card-body {
 	padding: 0;
 }
 
-.md-book-card-minimal .md-book-card-subjects {
+.stb-book-card-minimal .stb-book-card-subjects {
 	display: none;
 }

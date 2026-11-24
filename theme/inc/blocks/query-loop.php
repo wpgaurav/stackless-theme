@@ -1,8 +1,7 @@
 <?php
 /**
  * Query Loop block: a custom WP_Query rendered as one of six layouts (default, blocks, cards,
- * list, teasers, docs). The wrapper and item class names follow Marketers Delight's loop
- * templates; the styles are the block's own (assets/css/blocks/query-loop.css).
+ * list, teasers, docs). The styles are the block's own (assets/css/blocks/query-loop.css).
  *
  * @package Stackless_Theme
  */
@@ -229,9 +228,9 @@ function stackless_theme_blocks_query_loop_html(WP_Query $query, array $attribut
         $query->the_post();
         $is_featured = $layout === 'teasers' && $columns > 1 && $count < $featured;
         $size = !empty($attributes['imageSize']) ? (string) $attributes['imageSize'] : ($is_featured ? 'large' : $default_size);
-        // Marketers Delight's own image sizes, when the site does not register them.
-        if (($size === 'md-block' || $size === 'md-banner') && !has_image_size($size)) {
-            $size = $size === 'md-block' ? 'medium_large' : 'large';
+        // The block's own image sizes, when the site does not register them.
+        if (($size === 'stb-block' || $size === 'stb-banner') && !has_image_size($size)) {
+            $size = $size === 'stb-block' ? 'medium_large' : 'large';
         }
         $link = esc_url((string) get_permalink());
 

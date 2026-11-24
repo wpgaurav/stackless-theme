@@ -2,9 +2,8 @@
 /**
  * Icons for Stackless blocks.
  *
- * Blocks store Marketers Delight's icon names (md-icon-bolt), so content moves between the two
- * themes unchanged. Marketers Delight draws them with an icon font; Stackless prints the matching
- * Tabler icon as inline SVG inside the same element. A name with no match prints no icon.
+ * Blocks store an icon as a class name (stb-icon-bolt). Stackless prints the matching Tabler icon
+ * as inline SVG inside the element that carries the class. A name with no match prints no icon.
  *
  * @package Stackless_Theme
  */
@@ -12,7 +11,7 @@
 defined('ABSPATH') || exit;
 
 /**
- * Marketers Delight icon name (without the md-icon- prefix) => Tabler icon in assets/icons/.
+ * Block icon name (without the stb-icon- prefix) => Tabler icon in assets/icons/.
  *
  * @return array<string, string>
  */
@@ -160,7 +159,7 @@ function stackless_theme_blocks_icon_map(): array
         'file' => 'file',
     ];
     /**
-     * Filters the Marketers Delight icon name => Tabler icon map. A Tabler icon added here must
+     * Filters the block icon name => Tabler icon map. A Tabler icon added here must
      * exist as an SVG file in the theme's assets/icons/ folder.
      */
     $map = (array) apply_filters('stackless_theme_blocks_icon_map', $map);
@@ -168,13 +167,13 @@ function stackless_theme_blocks_icon_map(): array
 }
 
 /**
- * The inline SVG for a stored icon value: md-icon-bolt, bolt, or a Tabler name that the theme
+ * The inline SVG for a stored icon value: stb-icon-bolt, bolt, or a Tabler name that the theme
  * ships. Sized 1em so it follows the font size, as the icon font did. Empty when unknown.
  */
 function stackless_theme_blocks_icon(string $value): string
 {
     static $cache = [];
-    $name = sanitize_key(preg_replace('/^md-icon-/', '', trim($value)));
+    $name = sanitize_key(preg_replace('/^stb-icon-/', '', trim($value)));
     if ($name === '') {
         return '';
     }
@@ -187,17 +186,16 @@ function stackless_theme_blocks_icon(string $value): string
 }
 
 /**
- * Fills every empty element that carries an md-icon-* class with its SVG. The block templates
- * print the same empty <i> and <span> elements Marketers Delight does, so custom CSS aimed at
- * them keeps working.
+ * Fills every empty element that carries an stb-icon-* class with its SVG. The block templates
+ * print empty <i> and <span> elements, so custom CSS can still target them.
  */
 function stackless_theme_blocks_inline_icons(string $html): string
 {
-    if (strpos($html, 'md-icon-') === false) {
+    if (strpos($html, 'stb-icon-') === false) {
         return $html;
     }
     return (string) preg_replace_callback(
-        '/<(i|span)\b([^>]*\bclass="[^"]*\bmd-icon-([a-z0-9-]+)[^"]*"[^>]*)><\/\1>/',
+        '/<(i|span)\b([^>]*\bclass="[^"]*\bstb-icon-([a-z0-9-]+)[^"]*"[^>]*)><\/\1>/',
         static function (array $match): string {
             $svg = stackless_theme_blocks_icon($match[3]);
             return $svg === '' ? $match[0] : '<' . $match[1] . $match[2] . '>' . $svg . '</' . $match[1] . '>';
@@ -207,7 +205,7 @@ function stackless_theme_blocks_inline_icons(string $html): string
 }
 
 /**
- * The icon picker's options: label and stored value, in Marketers Delight's order of names.
+ * The icon picker's options: label and stored value, in the map's order.
  *
  * @return array<int, array{label: string, value: string}>
  */
@@ -216,7 +214,7 @@ function stackless_theme_blocks_icon_options(): array
     $options = [];
     foreach (array_keys(stackless_theme_blocks_icon_map()) as $name) {
         if (stackless_theme_blocks_icon($name) !== '') {
-            $options[] = ['label' => ucfirst(str_replace('-', ' ', $name)), 'value' => 'md-icon-' . $name];
+            $options[] = ['label' => ucfirst(str_replace('-', ' ', $name)), 'value' => 'stb-icon-' . $name];
         }
     }
     return $options;

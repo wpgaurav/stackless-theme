@@ -1,9 +1,9 @@
 /**
  * Stackless block editor script: Callout.
  *
- * Block names, attributes and save output are a storage contract shared with
- * the Marketers Delight blocks of the same name. Do not rename, add or drop
- * attributes here.
+ * Block names, attributes and save output are a storage contract: content
+ * saved with them has to keep parsing. Do not rename, add or drop attributes
+ * here.
  */
 ( function ( wp ) {
 	var registerBlockType  = wp.blocks.registerBlockType,
@@ -23,9 +23,9 @@
 		SelectControl      = wp.components.SelectControl,
 		CheckboxControl    = wp.components.CheckboxControl,
 		wpButton           = wp.components.Button,
-		mdColors           = StacklessBlocks.colors,
-		mdIcons            = StacklessBlocks.icons,
-		mdPopups           = StacklessBlocks.popups;
+		stbColors           = StacklessBlocks.colors,
+		stbIcons            = StacklessBlocks.icons,
+		stbPopups           = StacklessBlocks.popups;
 
 	var presets = {
 		'':        { border: '', bg: '' },
@@ -77,7 +77,7 @@
 				borderColor  = a.borderColor,
 				bgColor      = a.bgColor,
 				bgColorClass = a.bgColorClass,
-				iconColor    = a.iconColor ? a.iconColor : mdColors.slug.text,
+				iconColor    = a.iconColor ? a.iconColor : stbColors.slug.text,
 				textColor    = a.textColor,
 				textColorClass = a.textColorClass,
 				buttonColor  = a.buttonColor,
@@ -86,10 +86,10 @@
 				buttonTextColorClass = a.buttonTextColorClass,
 				marginBottom = a.marginBottom || 'mb-double',
 				padding      = a.padding || 'block-mid',
-				popups       = mdPopups || [];
+				popups       = stbPopups || [];
 
-			function mdGetColor( property, val ) {
-				var className = getColorClassName( property, mdColors.hex[val] );
+			function stbGetColor( property, val ) {
+				var className = getColorClassName( property, stbColors.hex[val] );
 				return className || '';
 			}
 
@@ -97,7 +97,7 @@
 			var effectiveBg = preset ? p.bg : ( ! bgColorClass ? bgColor : '' );
 
 			var blockProps = useBlockProps({
-				className: 'md-callout ' + marginBottom + ' ' + padding
+				className: 'stb-callout ' + marginBottom + ' ' + padding
 					+ ( a.shadow ? ' has-shadow' : '' )
 					+ ( ! preset && bgColorClass ? ' ' + bgColorClass : ( ! bgColor && ! preset ? ' has-accent-background-color' : '' ) )
 					+ ( textColorClass ? ' ' + textColorClass : '' )
@@ -149,7 +149,7 @@
 						}),
 						el( SelectControl, {
 							label: __( 'Icon', 'stackless-theme' ),
-							options: [ { label: __( 'Select an icon...', 'stackless-theme' ), value: '' } ].concat( mdIcons ),
+							options: [ { label: __( 'Select an icon...', 'stackless-theme' ), value: '' } ].concat( stbIcons ),
 							value: a.icon,
 							onChange: function( val ) { props.setAttributes({ icon: val }); }
 						}),
@@ -193,12 +193,12 @@
 						el( PanelColorSettings, {
 							title: __( 'Colors', 'stackless-theme' ),
 							colorSettings: [
-								{ value: bgColor, label: __( 'Background Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ bgColor: val, bgColorClass: val ? mdGetColor( 'background-color', val ) : '' }); } },
+								{ value: bgColor, label: __( 'Background Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ bgColor: val, bgColorClass: val ? stbGetColor( 'background-color', val ) : '' }); } },
 								{ value: borderColor, label: __( 'Border Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ borderColor: val || 'rgba(0, 0, 0, 0.1)' }); } },
 								{ value: a.iconColor, label: __( 'Icon Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ iconColor: val }); } },
-								{ value: textColor, label: __( 'Text Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ textColor: val, textColorClass: val ? mdGetColor( 'color', val ) : '' }); } },
-								{ value: buttonColor, label: __( 'Button Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ buttonColor: val, buttonColorClass: val ? mdGetColor( 'background-color', val ) : '' }); } },
-								{ value: buttonTextColor, label: __( 'Button Text Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ buttonTextColor: val, buttonTextColorClass: val ? mdGetColor( 'color', val ) : '' }); } }
+								{ value: textColor, label: __( 'Text Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ textColor: val, textColorClass: val ? stbGetColor( 'color', val ) : '' }); } },
+								{ value: buttonColor, label: __( 'Button Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ buttonColor: val, buttonColorClass: val ? stbGetColor( 'background-color', val ) : '' }); } },
+								{ value: buttonTextColor, label: __( 'Button Text Color', 'stackless-theme' ), onChange: function( val ) { props.setAttributes({ buttonTextColor: val, buttonTextColorClass: val ? stbGetColor( 'color', val ) : '' }); } }
 							]
 						})
 					: '',
@@ -262,13 +262,13 @@
 				el( 'div', blockProps,
 					( a.icon || a.iconImage ?
 						el( 'div', {
-							className: 'md-callout-icon mb-single' + ( a.icon ? ' icon' : '' ) + ( a.iconImage && ! a.icon ? ' image' : '' ),
+							className: 'stb-callout-icon mb-single' + ( a.icon ? ' icon' : '' ) + ( a.iconImage && ! a.icon ? ' image' : '' ),
 							style: { backgroundColor: iconColor }
 						},
 							a.icon ? StacklessBlocks.icon( 'i', a.icon ) : ( a.iconImage ? el( 'img', { src: a.iconImage } ) : '' )
 						)
 					: '' ),
-					el( 'div', { className: 'md-callout-title mb-single' },
+					el( 'div', { className: 'stb-callout-title mb-single' },
 						el( RichText, {
 							tagName: 'p',
 							className: 'med-title',
@@ -277,7 +277,7 @@
 							onChange: function( val ) { props.setAttributes({ title: val }); }
 						})
 					),
-					el( 'div', { className: 'md-callout-text mb-single' },
+					el( 'div', { className: 'stb-callout-text mb-single' },
 						el( RichText, {
 							tagName: 'p',
 							value: a.text,
@@ -285,10 +285,10 @@
 							onChange: function( val ) { props.setAttributes({ text: val }); }
 						})
 					),
-					el( 'div', { className: 'md-callout-list' },
+					el( 'div', { className: 'stb-callout-list' },
 						el( RichText, {
 							tagName: 'ul',
-							className: 'md-list',
+							className: 'stb-list',
 							multiline: 'li',
 							value: a.list,
 							placeholder: __( 'Enter list item here...', 'stackless-theme' ),
@@ -296,9 +296,9 @@
 						})
 					),
 					a.buttonText ?
-						el( 'div', { className: 'md-callout-action' },
+						el( 'div', { className: 'stb-callout-action' },
 							el( 'button', {
-								className: 'md-button md-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
+								className: 'stb-button stb-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
 								disabled: true,
 								style: {
 									backgroundColor: ! buttonColorClass ? buttonColor : '',
