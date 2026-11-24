@@ -481,6 +481,27 @@ add_filter('theme_mod_stackless_font_heading', fn ($value) => $value ?: 'font-an
 add_filter('theme_mod_stackless_heading_case', fn ($value) => $value ?: 'uppercase');
 ```
 
+## Typography
+
+Customize > Stackless Theme > Typography holds the fonts, heading case, and these theme mods. Each is empty by default, which prints nothing and keeps the theme's own value. The theme declares `add_theme_support('stackless-typography-options')` so a plugin can defer to them.
+
+| Theme mod | Values | Custom property |
+|---|---|---|
+| `stackless_type_heading_scale` | `''`, `compact` (1.2), `balanced` (1.25), `large` (1.333), `dramatic` (1.414) | `--st-h1` to `--st-h4`, `--st-post-title` |
+| `stackless_type_heading_weight` | `''` (the heading font's own), `300` to `900` | `--st-heading-weight` |
+| `stackless_type_body_size` | 14 to 22 (px) | `--st-text-base` |
+| `stackless_type_body_leading` | 1.3 to 2 | `--st-leading` |
+| `stackless_type_body_tracking` | -0.02 to 0.08 (em) | `--st-tracking` |
+| `stackless_type_heading_leading` | 1 to 1.6 | `--st-heading-leading` |
+| `stackless_type_heading_tracking` | -0.05 to 0.1 (em) | `--st-heading-tracking` |
+
+The heading weight and spacing settings win over a bundled heading font's own tuning. h1, h2 and the single post title shrink on narrow screens with `clamp()`. All of them preview live in the Customizer.
+
+| Filter | What it controls |
+|---|---|
+| `stackless_theme_type_settings` | The numeric settings: key => [property, min, max, step, default, unit, label, description]. |
+| `stackless_theme_type_scales` | The heading scales: slug => [label, ratio]. |
+
 ## Customizer
 
 The theme's options live in one panel, `STACKLESS_THEME_PANEL` (`stackless_theme_panel`). Once the theme has registered its own sections and controls, it fires:

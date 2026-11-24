@@ -148,6 +148,108 @@ function stackless_theme_sanitize_heading_case($value): string
     return $value === 'uppercase' ? 'uppercase' : 'none';
 }
 
+/**
+ * Numeric type settings in Typography: key (theme mod stackless_type_{key}) => [
+ *   CSS custom property, min, max, step, theme default (null: the heading font's own), unit,
+ *   label, description,
+ * ]. An empty value keeps the default and prints nothing.
+ */
+function stackless_theme_type_settings(): array
+{
+    return (array) apply_filters('stackless_theme_type_settings', [
+        'body_size' => ['--st-text-base', 14, 22, 1, 16, 'px', __('Body text size (px)', 'stackless-theme'), __('Default 16.', 'stackless-theme')],
+        'body_leading' => ['--st-leading', 1.3, 2, .05, 1.6, '', __('Body line height', 'stackless-theme'), __('Space between lines of text, as a multiple of the text size. Default 1.6.', 'stackless-theme')],
+        'body_tracking' => ['--st-tracking', -.02, .08, .005, 0, 'em', __('Body letter spacing (em)', 'stackless-theme'), __('Default 0. Small steps: 0.01 is already visible.', 'stackless-theme')],
+        'heading_leading' => ['--st-heading-leading', 1, 1.6, .05, 1.25, '', __('Heading line height', 'stackless-theme'), __('Default 1.25. Tighter suits large and condensed headings.', 'stackless-theme')],
+        'heading_tracking' => ['--st-heading-tracking', -.05, .1, .005, null, 'em', __('Heading letter spacing (em)', 'stackless-theme'), __('Empty keeps the heading font\'s own spacing.', 'stackless-theme')],
+    ]);
+}
+
+/** Heading size scales: slug => [label, ratio between heading levels]. */
+function stackless_theme_type_scales(): array
+{
+    return (array) apply_filters('stackless_theme_type_scales', [
+        'compact' => [__('Compact', 'stackless-theme'), 1.2],
+        'balanced' => [__('Balanced', 'stackless-theme'), 1.25],
+        'large' => [__('Large', 'stackless-theme'), 1.333],
+        'dramatic' => [__('Dramatic', 'stackless-theme'), 1.414],
+    ]);
+}
+
+/** A number for CSS: at most three decimals, no trailing zeros. */
+function stackless_theme_css_number(float $value): string
+{
+    return rtrim(rtrim(number_format($value, 3, '.', ''), '0'), '.');
+}
+
+/** --st-h1 to --st-h4 and --st-post-title for a scale slug, or [] for the theme's own sizes. h1 and h2 shrink on narrow screens. */
+function stackless_theme_type_scale_vars(string $scale): array
+{
+    $scales = stackless_theme_type_scales();
+    if (!isset($scales[$scale])) {
+        return [];
+    }
+    $r = (float) $scales[$scale][1];
+    $rem = static function (float $value): string {
+        return stackless_theme_css_number($value) . 'rem';
+    };
+    $h1 = $r ** 4;
+    $h2 = $r ** 3;
+    return [
+        '--st-h1' => 'clamp(' . $rem(max($h2, $h1 * .78)) . ', ' . $rem($h1 * .6) . ' + 1.6vw, ' . $rem($h1) . ')',
+        '--st-h2' => 'clamp(' . $rem(max($r * $r, $h2 * .82)) . ', ' . $rem($h2 * .7) . ' + .9vw, ' . $rem($h2) . ')',
+        '--st-h3' => $rem($r * $r),
+        '--st-h4' => $rem($r),
+        // A single post's title runs a step above h1.
+        '--st-post-title' => 'clamp(' . $rem($h1 * .85) . ', ' . $rem($h1 * .6) . ' + 2.2vw, ' . $rem($h1 * $r) . ')',
+    ];
+}
+
+/** A numeric type setting: '' (default) or the value clamped to its range. */
+function stackless_theme_sanitize_type_value($value, $setting = null): string
+{
+    $key = $setting instanceof WP_Customize_Setting ? substr($setting->id, strlen('stackless_type_')) : '';
+    $range = stackless_theme_type_settings()[$key] ?? null;
+    $value = trim((string) $value);
+    if ($range === null || $value === '' || !is_numeric($value)) {
+        return '';
+    }
+    return stackless_theme_css_number(max((float) $range[1], min((float) $range[2], (float) $value)));
+}
+
+function stackless_theme_sanitize_type_scale($value): string
+{
+    return isset(stackless_theme_type_scales()[(string) $value]) ? (string) $value : '';
+}
+
+/** Heading weight: '' (the heading font's own) or 300 to 900. */
+function stackless_theme_sanitize_heading_weight($value): string
+{
+    return in_array((string) $value, ['300', '400', '500', '600', '700', '800', '900'], true) ? (string) $value : '';
+}
+
+/** The type custom properties the saved settings ask for, after the heading font's tuning. */
+function stackless_theme_type_vars(): array
+{
+    $vars = [];
+    foreach (stackless_theme_type_settings() as $key => [$property, $min, $max, , $default, $unit]) {
+        $value = (string) get_theme_mod('stackless_type_' . $key, '');
+        if ($value === '' || !is_numeric($value)) {
+            continue;
+        }
+        $value = max((float) $min, min((float) $max, (float) $value));
+        if ($default !== null && abs($value - (float) $default) < .0001) {
+            continue;
+        }
+        $vars[$property] = stackless_theme_css_number($value) . $unit;
+    }
+    $weight = stackless_theme_sanitize_heading_weight(get_theme_mod('stackless_type_heading_weight', ''));
+    if ($weight !== '') {
+        $vars['--st-heading-weight'] = $weight;
+    }
+    return $vars + stackless_theme_type_scale_vars(stackless_theme_sanitize_type_scale(get_theme_mod('stackless_type_heading_scale', '')));
+}
+
 /** Width limits in px: setting => [min, max, default]. */
 function stackless_theme_design_widths(): array
 {
@@ -301,6 +403,8 @@ function stackless_theme_design_vars(): array
     if (stackless_theme_sanitize_heading_case(get_theme_mod('stackless_heading_case', 'none')) === 'uppercase') {
         $vars['--st-heading-transform'] = 'uppercase';
     }
+    // The type settings win over the heading font's own weight and spacing.
+    $vars = stackless_theme_type_vars() + $vars;
     return (array) apply_filters('stackless_theme_design_vars', $vars);
 }
 
@@ -310,7 +414,10 @@ function stackless_theme_design_vars(): array
  */
 function stackless_theme_design_live_properties(): array
 {
-    $properties = ['--st-primary-hover', '--st-primary-light', '--st-primary-text', '--st-ring', '--st-surface-muted', '--st-font', '--st-font-heading', '--st-heading-weight', '--st-heading-tracking', '--st-heading-transform'];
+    $properties = ['--st-primary-hover', '--st-primary-light', '--st-primary-text', '--st-ring', '--st-surface-muted', '--st-font', '--st-font-heading', '--st-heading-weight', '--st-heading-tracking', '--st-heading-transform', '--st-h1', '--st-h2', '--st-h3', '--st-h4', '--st-post-title'];
+    foreach (stackless_theme_type_settings() as [$property]) {
+        $properties[] = $property;
+    }
     foreach (stackless_theme_design_colors() as [, $property]) {
         $properties[] = $property;
     }
@@ -413,6 +520,10 @@ function stackless_theme_design_preview_script(): void
         }, stackless_theme_font_stacks()),
         'fonts' => $fonts,
         'palette' => stackless_theme_design_palette_map(),
+        'type' => array_map(static function (array $setting): array {
+            return [$setting[0], (float) $setting[1], (float) $setting[2], $setting[4] === null ? null : (float) $setting[4], $setting[5]];
+        }, stackless_theme_type_settings()),
+        'scales' => (object) array_map('stackless_theme_type_scale_vars', array_combine(array_keys(stackless_theme_type_scales()), array_keys(stackless_theme_type_scales()))),
     ];
     wp_add_inline_script('stackless-theme-customize-preview', 'window.stacklessThemePreview = ' . wp_json_encode($data) . ';', 'before');
 }
@@ -590,6 +701,45 @@ function stackless_theme_design_customize_register(WP_Customize_Manager $wp_cust
             'uppercase' => __('All capitals', 'stackless-theme'),
         ],
     ]);
+
+    $wp_customize->add_setting('stackless_type_heading_scale', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_type_scale', 'transport' => 'postMessage']);
+    $wp_customize->add_control('stackless_type_heading_scale', [
+        'label' => __('Heading sizes', 'stackless-theme'),
+        'description' => __('How much larger each heading level is than the next. The largest headings shrink a little on phones.', 'stackless-theme'),
+        'section' => 'stackless_theme_typography',
+        'type' => 'select',
+        'choices' => ['' => __('Theme default', 'stackless-theme')] + array_map(static function (array $scale): string {
+            return $scale[0];
+        }, stackless_theme_type_scales()),
+    ]);
+    $wp_customize->add_setting('stackless_type_heading_weight', ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_heading_weight', 'transport' => 'postMessage']);
+    $wp_customize->add_control('stackless_type_heading_weight', [
+        'label' => __('Heading weight', 'stackless-theme'),
+        'description' => __('Fonts without that weight show the nearest one they have.', 'stackless-theme'),
+        'section' => 'stackless_theme_typography',
+        'type' => 'select',
+        'choices' => [
+            '' => __('The font\'s default', 'stackless-theme'),
+            '300' => __('300 Light', 'stackless-theme'),
+            '400' => __('400 Regular', 'stackless-theme'),
+            '500' => __('500 Medium', 'stackless-theme'),
+            '600' => __('600 Semibold', 'stackless-theme'),
+            '700' => __('700 Bold', 'stackless-theme'),
+            '800' => __('800 Extra bold', 'stackless-theme'),
+            '900' => __('900 Black', 'stackless-theme'),
+        ],
+    ]);
+    foreach (stackless_theme_type_settings() as $key => [, $min, $max, $step, $default, , $label, $description]) {
+        $id = 'stackless_type_' . $key;
+        $wp_customize->add_setting($id, ['default' => '', 'sanitize_callback' => 'stackless_theme_sanitize_type_value', 'transport' => 'postMessage']);
+        $wp_customize->add_control($id, [
+            'label' => $label,
+            'description' => $description,
+            'section' => 'stackless_theme_typography',
+            'type' => 'number',
+            'input_attrs' => ['min' => $min, 'max' => $max, 'step' => $step, 'placeholder' => $default === null ? '' : stackless_theme_css_number((float) $default)],
+        ]);
+    }
 
     $wp_customize->add_setting('stackless_logo_width', ['default' => 0, 'sanitize_callback' => 'stackless_theme_sanitize_logo_width']);
     $wp_customize->add_control('stackless_logo_width', [

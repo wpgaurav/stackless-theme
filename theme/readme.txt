@@ -84,6 +84,7 @@ Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.
 * New: the --st-header-offset CSS property moves the header over the first section down, so a bar printed above the header (Pro's announcement bar, for one) stays visible.
 * Fixed: a full-width Group with its own content or wide size kept the theme's reading width instead.
 * Fixed: on phones, pages jumped about 78px on first load while the menu switched from its no-JavaScript state. The page is now marked as scripted before it draws.
+* New: more Typography settings: heading sizes (four scales), heading weight, body text size, line height and letter spacing, and heading line height and letter spacing. Each previews live and stays at the theme default until you set it.
 
 = 1.7.0 =
 * New: one Stackless Theme panel in the Customizer, with sections for colors, typography, layout, header and menu, blog and archives, single posts, custom post types, store, footer and custom code. Store options appear only for the store plugin that is active. Saved settings carry over.

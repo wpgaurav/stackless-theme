@@ -1747,7 +1747,7 @@ p.demo_store a {
 }
 
 .entry--post .entry-title {
-	font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem);
+	font-size: var(--st-post-title, clamp(2rem, 1.5rem + 2.2vw, 3rem));
 	letter-spacing: var(--st-heading-tracking, -.025em);
 	line-height: 1.15;
 }

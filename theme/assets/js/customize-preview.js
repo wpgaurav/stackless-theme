@@ -15,6 +15,15 @@
 	Object.keys(data.colors).forEach(function (key) {
 		ids.push('stackless_color_' + key);
 	});
+	ids.push('stackless_type_heading_scale', 'stackless_type_heading_weight');
+	Object.keys(data.type || {}).forEach(function (key) {
+		ids.push('stackless_type_' + key);
+	});
+
+	/* A number for CSS, as stackless_theme_css_number() writes it. */
+	function cssNumber(n) {
+		return String(parseFloat(n.toFixed(3)));
+	}
 
 	function value(id) {
 		var setting = api(id);
@@ -106,6 +115,30 @@
 		}
 		if (value('stackless_heading_case') === 'uppercase') {
 			out['--st-heading-transform'] = 'uppercase';
+		}
+		/* The type settings, as stackless_theme_type_vars(): they win over the heading font's own. */
+		var type = data.type || {};
+		Object.keys(type).forEach(function (key) {
+			var setting = type[key];
+			var raw = value('stackless_type_' + key).trim();
+			if (raw === '' || isNaN(Number(raw))) {
+				return;
+			}
+			var n = Math.min(setting[2], Math.max(setting[1], Number(raw)));
+			if (setting[3] !== null && Math.abs(n - setting[3]) < 0.0001) {
+				return;
+			}
+			out[setting[0]] = cssNumber(n) + setting[4];
+		});
+		var weight = value('stackless_type_heading_weight');
+		if (/^[3-9]00$/.test(weight)) {
+			out['--st-heading-weight'] = weight;
+		}
+		var scale = (data.scales || {})[value('stackless_type_heading_scale')];
+		if (scale) {
+			Object.keys(scale).forEach(function (property) {
+				out[property] = scale[property];
+			});
 		}
 		return out;
 	}

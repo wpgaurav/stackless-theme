@@ -28,6 +28,8 @@ function stackless_theme_setup(): void
     // Header and menu has the header layout, clear header and hide-on-scroll options (theme mods
     // stackless_header_*). current_theme_supports('stackless-header-options') lets Pro defer to them.
     add_theme_support('stackless-header-options');
+    // Typography sizes, line heights, spacing and heading scale (stackless_type_*). current_theme_supports('stackless-typography-options') lets Pro defer to them.
+    add_theme_support('stackless-typography-options');
 
     // Block Editor.
     add_theme_support('wp-block-styles');
