@@ -14,6 +14,7 @@ define('STACKLESS_THEME_URI', get_template_directory_uri());
 require STACKLESS_THEME_DIR . '/inc/icons.php';
 require STACKLESS_THEME_DIR . '/inc/hooks.php';
 require STACKLESS_THEME_DIR . '/inc/setup.php';
+require STACKLESS_THEME_DIR . '/inc/css-parts.php';
 require STACKLESS_THEME_DIR . '/inc/template-tags.php';
 require STACKLESS_THEME_DIR . '/inc/customizer.php';
 require STACKLESS_THEME_DIR . '/inc/content-options.php';

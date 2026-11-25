@@ -1,0 +1,319 @@
+/* Stackless theme, layout part: the full-screen search and its live results. Loads while Header and menu > Search button is on, and with the store toolbar.
+ * Split from layout.css and printed right after it, so the cascade is unchanged (inc/setup.php). */
+
+/* ------------------------------------------------------------------ Header */
+.header-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: 3.25rem;
+	padding: .3rem .3rem .3rem 2.85rem;
+	border: 1px solid var(--st-border-strong);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-sm);
+	transition: border-color var(--st-ease), box-shadow var(--st-ease);
+}
+
+.header-search:focus-within {
+	border-color: var(--st-primary);
+	box-shadow: var(--st-ring);
+}
+
+.header-search__icon {
+	position: absolute;
+	top: 50%;
+	left: 1rem;
+	display: flex;
+	color: var(--st-gray-400);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+.header-search:focus-within .header-search__icon {
+	color: var(--st-link, var(--st-primary));
+}
+
+.header-search .header-search__field {
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+	padding: .4rem .5rem .4rem 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	font-size: 1.0625rem;
+}
+
+.header-search .header-search__field:focus {
+	box-shadow: none;
+}
+
+.header-search .header-search__field::-webkit-search-cancel-button {
+	display: none;
+}
+
+.header-search__submit {
+	flex: none;
+	min-height: 2.5rem;
+	padding: .5rem 1.1rem;
+	border: 1px solid var(--st-primary);
+	border-radius: var(--st-radius);
+	background: var(--st-primary);
+	color: #fff;
+	font-size: .9375rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color var(--st-ease);
+}
+
+.header-search__submit:hover {
+	background: var(--st-primary-hover);
+}
+
+.header-search__submit:focus-visible {
+	outline: 0;
+	box-shadow: var(--st-ring);
+}
+
+/* ------------------------------------------------------------------ Full-screen search */
+html.search-open {
+	overflow: hidden;
+}
+
+.search-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	overflow-y: auto;
+	background: rgba(250, 250, 250, .97);
+	background: color-mix(in srgb, var(--st-bg) 97%, transparent);
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+	animation: st-fade .18s ease-out;
+}
+
+.admin-bar .search-overlay {
+	top: var(--wp-admin--admin-bar--height, 32px);
+}
+
+.search-overlay__inner {
+	padding-block: clamp(1.5rem, 5vh, 3.5rem) 4rem;
+	animation: st-rise .22s ease-out;
+}
+
+.search-overlay__inner.container {
+	max-width: calc(52rem + var(--st-gutter) * 2);
+}
+
+.search-overlay__top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.25rem;
+}
+
+.search-overlay__title {
+	margin: 0;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 600;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+}
+
+.search-overlay__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius);
+	background: var(--st-surface);
+	color: var(--st-heading);
+	cursor: pointer;
+	transition: transform var(--st-ease), border-color var(--st-ease);
+}
+
+.search-overlay__close:hover {
+	border-color: var(--st-border-strong);
+	transform: rotate(90deg);
+}
+
+.search-overlay__close:focus-visible {
+	outline: 0;
+	box-shadow: var(--st-ring);
+}
+
+.search-overlay .header-search {
+	min-height: 4rem;
+	padding: .45rem .45rem .45rem 3.5rem;
+	border-radius: var(--st-radius-xl);
+	box-shadow: var(--st-shadow-lg);
+}
+
+.search-overlay .header-search__icon {
+	left: 1.25rem;
+}
+
+.search-overlay .header-search .header-search__field {
+	font-size: clamp(1.125rem, 1rem + .6vw, 1.375rem);
+}
+
+.search-overlay .header-search__submit {
+	min-height: 3rem;
+	padding-inline: 1.4rem;
+	border-radius: var(--st-radius-lg);
+}
+
+.search-overlay__heading {
+	margin: 0 0 .85rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	font-weight: 600;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+}
+
+.search-overlay__section,
+.search-results {
+	margin-top: 2.25rem;
+}
+
+.search-overlay__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
+}
+
+.search-overlay__chips .chip {
+	padding: .4rem .9rem;
+	font-size: .9375rem;
+}
+
+.search-results__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.search-results__all {
+	display: inline-flex;
+	align-items: center;
+	gap: .3rem;
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+	text-decoration: none;
+}
+
+.search-results__list {
+	display: grid;
+	gap: .5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.search-results__list li + li {
+	margin: 0;
+}
+
+.search-results__list--grid {
+	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+}
+
+.search-result {
+	display: flex;
+	align-items: center;
+	gap: .9rem;
+	padding: .6rem;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius-lg);
+	background: var(--st-surface);
+	color: inherit;
+	text-decoration: none;
+	transition: border-color var(--st-ease), box-shadow var(--st-ease);
+}
+
+.search-result:hover,
+.search-result:focus-visible {
+	border-color: var(--st-border-strong);
+	box-shadow: var(--st-shadow);
+	outline: 0;
+	text-decoration: none;
+}
+
+.search-result__image {
+	flex: none;
+	width: 3.5rem;
+	height: 3.5rem;
+	overflow: hidden;
+	border-radius: var(--st-radius);
+	background: var(--st-surface-muted);
+}
+
+.search-result__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.search-result__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.35;
+}
+
+.search-result__name {
+	overflow: hidden;
+	color: var(--st-heading);
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.search-result:hover .search-result__name {
+	color: var(--st-link, var(--st-primary));
+}
+
+.search-result__price {
+	color: var(--st-gray-600);
+	font-size: var(--st-text-sm);
+}
+
+.search-result__price del {
+	margin-right: .3rem;
+}
+
+.search-result__price ins {
+	background: none;
+	font-weight: 600;
+}
+
+.search-results__empty {
+	padding: 1.5rem;
+	border: 1px dashed var(--st-border-strong);
+	border-radius: var(--st-radius-lg);
+	color: var(--st-muted);
+	text-align: center;
+}
+
+.search-results.is-loading .search-results__list {
+	opacity: .5;
+}
+@media (max-width: 599.98px) {
+	.search-overlay .header-search__submit {
+		display: none;
+	}
+}
+
+/* ------------------------------------------------------------------ Store toolbar (EDD store page and archives; WooCommerce when switched on) */
+.search-result__meta {
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	line-height: 1.4;
+}

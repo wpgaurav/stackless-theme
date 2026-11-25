@@ -1,0 +1,81 @@
+/* Stackless theme, layout part: the clear header laid over the first section. Loads where the body has has-transparent-header.
+ * Split from layout.css and printed right after it, so the cascade is unchanged (inc/setup.php). */
+
+/* ------------------------------------------------------------------ Header */
+/*
+ * Header over the first section (per-page option): clear until the page scrolls or a panel opens.
+ * --st-header-offset: how far below the top of the window the clear header sits, for content
+ * printed above it in the page flow (an announcement bar). 0 by default; whatever prints that
+ * content sets it. The admin bar is added separately below, so the token never includes it.
+ */
+.has-transparent-header .site-header {
+	position: fixed;
+	top: var(--st-header-offset, 0px);
+	right: 0;
+	left: 0;
+	border-bottom-color: transparent;
+	background: transparent;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+	transition: background-color var(--st-ease), border-color var(--st-ease);
+}
+
+/* The admin bar rule above is less specific than the clear header's top, so it is repeated with the offset. */
+.admin-bar.has-transparent-header .site-header {
+	top: calc(var(--wp-admin--admin-bar--height, 32px) + var(--st-header-offset, 0px));
+}
+
+/*
+ * On a dark first section (has-header-on-dark), the clear header uses light text until it turns
+ * solid; on a light one (has-header-on-light, Header text over the first section > Dark) it uses
+ * dark text, in light and dark color schemes alike. The page's own colors are kept on the body
+ * (--st-solid-*) for the dropdowns, which sit on a solid surface even while the header is clear.
+ */
+.has-header-on-dark,
+.has-header-on-light {
+	--st-solid-heading: var(--st-heading);
+	--st-solid-gray-600: var(--st-gray-600);
+	--st-solid-surface-muted: var(--st-surface-muted);
+}
+
+.has-header-on-dark .site-header {
+	--st-heading: #fff;
+	--st-gray-600: rgba(255, 255, 255, .85);
+	--st-surface-muted: rgba(255, 255, 255, .16);
+	color: #fff;
+}
+
+.has-header-on-light .site-header {
+	--st-heading: #171717;
+	--st-gray-600: #404040;
+	--st-surface-muted: rgba(0, 0, 0, .06);
+	color: #262626;
+}
+
+.has-header-on-dark .site-nav .sub-menu,
+.has-header-on-dark .site-nav .children,
+.has-header-on-light .site-nav .sub-menu,
+.has-header-on-light .site-nav .children {
+	--st-heading: var(--st-solid-heading);
+	--st-gray-600: var(--st-solid-gray-600);
+	--st-surface-muted: var(--st-solid-surface-muted);
+	color: var(--st-text);
+}
+@media (max-width: 600px) {
+	.admin-bar.has-transparent-header .site-header {
+		position: absolute;
+		top: calc(var(--wp-admin--admin-bar--height, 46px) + var(--st-header-offset, 0px));
+	}
+}
+.has-transparent-header .site-main {
+	padding-top: 0;
+}
+
+/* A full-width block that opens the page meets the top edge, under the clear header. */
+.has-transparent-header .entry > .entry-content:first-child > .alignfull:first-child {
+	margin-top: 0;
+}
+
+.has-static-header.has-transparent-header .site-header {
+	position: absolute;
+}

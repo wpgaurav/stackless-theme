@@ -1,0 +1,411 @@
+/* Stackless theme, EDD part: cart rows (Checkout and Cart blocks), the cart widget, [download_cart] and the mini cart.
+ * Split from edd.css and printed right after it on the EDD pages that need it (inc/edd.php). */
+
+/* ------------------------------------------------------------------ Cart rows (Checkout block, Cart block) */
+/* Phones: the cart rows drop their header row. */
+@media (max-width: 479.98px) {
+	body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-header {
+		display: none;
+	}
+}
+
+body.stackless-theme .edd-blocks-form__cart #edd_checkout_cart {
+	overflow: hidden;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-sm);
+}
+
+body.stackless-theme .edd-blocks-form__cart :is(.edd-blocks-cart__row, .edd_cart_footer_row) {
+	gap: .75rem 1rem;
+	padding: 1rem var(--st-edd-card-pad);
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-header {
+	padding-block: .65rem;
+	border-bottom: 1px solid var(--st-border);
+	background: var(--st-surface-muted);
+	color: var(--st-muted);
+	font-size: var(--st-text-xs);
+	font-weight: 600;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-header > .edd_cart_item_price {
+	margin-left: auto;
+	text-align: right;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__items {
+	border-bottom: 1px solid var(--st-border);
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item + .edd-blocks-cart__row-item {
+	border-top: 1px solid var(--st-border);
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item {
+	flex-wrap: nowrap;
+	align-items: flex-start;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_name {
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: .625rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_checkout_cart_item_title {
+	gap: .875rem;
+	color: var(--st-heading);
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_cart) .edd_cart_item_image {
+	flex: none;
+}
+
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_cart) .edd_cart_item_image img {
+	display: block;
+	width: 3rem;
+	height: 3rem;
+	margin: 0;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-edd-radius);
+	object-fit: cover;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_item_name .edd_cart_actions {
+	gap: .5rem;
+	padding-left: 3.875rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme .edd-blocks-form__cart #edd_checkout_cart .edd_cart_item_name .edd_cart_actions label {
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-weight: 400;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_item_name .edd_cart_actions input.edd-item-quantity {
+	height: 2.5rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-item > .edd_cart_item_price {
+	flex: none;
+	align-items: center;
+	justify-content: flex-end;
+	min-height: 3rem;
+	color: var(--st-heading);
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+	white-space: nowrap;
+}
+
+body.stackless-theme .edd-blocks-form__cart :is(.edd-blocks-cart__action-remove, .edd_discount_remove) {
+	display: inline-block;
+	width: 2.5rem;
+	height: 2.5rem;
+	margin: 0;
+	border-radius: var(--st-edd-radius);
+	background-size: 1rem;
+	opacity: .55;
+	transition: opacity var(--st-ease), background-color var(--st-ease);
+}
+
+body.stackless-theme .edd-blocks-form__cart :is(.edd-blocks-cart__action-remove, .edd_discount_remove):hover {
+	background-color: var(--st-danger-light);
+	opacity: 1;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_footer_row {
+	align-items: center;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-footer + .edd-blocks-cart__row-footer:not([style*="none"]) {
+	border-top: 1px solid var(--st-border);
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_total {
+	color: var(--st-heading);
+	font-size: 1.125rem;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_total .edd_cart_amount {
+	margin-left: .35rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__row-buttons {
+	padding-top: 0;
+}
+
+/* Discount: a quiet button opens a field and Apply button on one line. */
+body.stackless-theme .edd-blocks-form__cart .edd-blocks-cart__discount {
+	flex: 1 1 18rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart #edd_show_discount .edd_discount_link {
+	min-height: 2.5rem;
+	padding-inline: .875rem;
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_form_wrap) .edd-discount-code-field-wrap {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: .5rem;
+	max-width: 24rem;
+}
+
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_form_wrap) .edd-discount-code-field-wrap input.edd-input {
+	flex: 1;
+	width: auto;
+	height: 2.75rem;
+}
+
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_form_wrap) .edd-discount-code-field-wrap .edd-apply-discount,
+body.stackless-theme #edd_checkout_form_wrap .edd-cart-adjustment input.edd-submit {
+	flex: none;
+	display: inline-flex;
+	min-height: var(--st-control-h);
+	margin: 0;
+	padding: 0 1rem;
+}
+
+body.stackless-theme .edd-blocks-form__cart #edd-discount-error-wrap {
+	margin: .75rem 0 0;
+}
+
+/* Applied codes show as tags. */
+body.stackless-theme :is(.edd-blocks-form__cart, #edd_checkout_cart) .edd_discount {
+	display: inline-flex;
+	align-items: center;
+	gap: .25rem;
+	margin-block: 0 0 .5rem;
+	padding: .1rem .2rem .1rem .55rem;
+	border: 1px solid color-mix(in srgb, var(--st-success) 35%, var(--st-surface));
+	border-radius: var(--st-edd-radius-xs);
+	background: var(--st-success-light);
+	color: var(--st-success-text);
+	font-size: var(--st-text-sm);
+	font-weight: 500;
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_cart_discount {
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+}
+
+body.stackless-theme .edd-blocks-form__cart .edd_discount .edd_discount_remove {
+	width: 1.5rem;
+	height: 1.5rem;
+	background-size: .875rem;
+}
+
+body.stackless-theme .edd_empty_cart,
+body.stackless-theme #edd_checkout_wrap > .edd_empty_cart {
+	display: block;
+	margin-block: 0 1.5rem;
+	padding: 2.5rem 1rem;
+	border: 1px dashed var(--st-border-strong);
+	border-radius: var(--st-edd-radius);
+	color: var(--st-muted);
+	font-size: 1.0625rem;
+	text-align: center;
+}
+
+/* ------------------------------------------------------------------ Cart widget, [download_cart] and the mini cart */
+body.stackless-theme ul.edd-cart {
+	margin-block: 0 1.5rem;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	list-style: none;
+}
+
+body.stackless-theme ul.edd-cart li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: .25rem .5rem;
+	margin: 0;
+	padding: .75rem 1rem;
+	border-top: 1px solid var(--st-border);
+	font-size: .9375rem;
+}
+
+body.stackless-theme ul.edd-cart li:first-child {
+	border-top: 0;
+}
+
+body.stackless-theme ul.edd-cart .edd-cart-item-title {
+	flex: 1 1 10rem;
+	color: var(--st-heading);
+	font-weight: 500;
+}
+
+body.stackless-theme ul.edd-cart .edd-cart-item > .edd-cart-item-separator {
+	display: none;
+}
+
+body.stackless-theme ul.edd-cart .edd-cart-item-title .edd-cart-item-separator {
+	color: var(--st-gray-400);
+}
+
+body.stackless-theme ul.edd-cart :is(.edd-cart-item-quantity, .edd-cart-item-price) {
+	color: var(--st-gray-600);
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme ul.edd-cart .edd-remove-from-cart {
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	text-decoration: none;
+}
+
+body.stackless-theme ul.edd-cart .edd-remove-from-cart:hover {
+	color: var(--st-danger);
+	text-decoration: underline;
+}
+
+body.stackless-theme ul.edd-cart .edd-cart-meta {
+	justify-content: space-between;
+	background: var(--st-surface-muted);
+	color: var(--st-heading);
+	font-style: normal;
+	font-weight: 600;
+}
+
+body.stackless-theme ul.edd-cart .edd-cart-meta.edd_subtotal,
+body.stackless-theme ul.edd-cart .edd-cart-meta.edd_cart_tax {
+	font-weight: 400;
+}
+
+body.stackless-theme ul.edd-cart .edd_checkout {
+	padding: .75rem 1rem 1rem;
+	border-top: 0;
+	background: var(--st-surface-muted);
+}
+
+body.stackless-theme ul.edd-cart .edd_checkout a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: var(--st-control-h);
+	border: 1px solid var(--st-primary);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-primary);
+	color: #fff;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+body.stackless-theme ul.edd-cart .edd_checkout a:hover {
+	border-color: var(--st-primary-hover);
+	background: var(--st-primary-hover);
+}
+
+body.stackless-theme ul.edd-cart .cart_item.empty {
+	display: block;
+	padding: 1.25rem 1rem;
+	color: var(--st-muted);
+	text-align: center;
+}
+
+body.stackless-theme ul.edd-cart .cart_item.empty .edd_empty_cart {
+	padding: 0;
+	border: 0;
+	font-size: .9375rem;
+}
+
+body.stackless-theme .edd-cart-number-of-items {
+	margin-block: 0 .75rem;
+	color: var(--st-muted);
+	font-size: var(--st-text-sm);
+	font-style: normal;
+}
+
+body.stackless-theme .edd-cart-number-of-items .edd-cart-quantity {
+	color: var(--st-heading);
+	font-weight: 600;
+}
+
+body.stackless-theme .widget ul.edd-cart li + li {
+	margin-top: 0;
+}
+
+body.stackless-theme .edd-blocks__cart-mini {
+	justify-content: flex-start;
+	margin-block: 0 1.5rem;
+}
+
+body.stackless-theme .edd-blocks__cart-mini a {
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	min-height: var(--st-control-h);
+	padding: 0 1rem;
+	border: 1px solid var(--st-border-strong);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-surface);
+	box-shadow: var(--st-shadow-input);
+	color: var(--st-heading);
+	font-size: .9375rem;
+	font-weight: 500;
+	text-decoration: none;
+	transition: border-color var(--st-ease), background-color var(--st-ease);
+}
+
+body.stackless-theme .edd-blocks__cart-mini a:hover {
+	border-color: var(--st-gray-400);
+	background: var(--st-surface-muted);
+}
+
+body.stackless-theme .edd-blocks__cart-mini svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	color: var(--st-gray-600);
+}
+
+body.stackless-theme .edd-blocks-cart__mini-total {
+	font-variant-numeric: tabular-nums;
+}
+
+body.stackless-theme .wp-block-edd-cart:not(.edd-blocks__cart-mini) {
+	margin-bottom: 1.5rem;
+}
+
+body.stackless-theme .wp-block-edd-cart a.edd-blocks__button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	min-height: var(--st-control-h);
+	margin: 1rem 0 0 auto;
+	padding: 0 1.5rem;
+	border: 1px solid var(--st-primary);
+	border-radius: var(--st-edd-radius);
+	background: var(--st-primary);
+	box-shadow: var(--st-shadow-input);
+	color: #fff;
+	font-size: .9375rem;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+body.stackless-theme .wp-block-edd-cart a.edd-blocks__button:hover {
+	border-color: var(--st-primary-hover);
+	background: var(--st-primary-hover);
+	color: #fff;
+}

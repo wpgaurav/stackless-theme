@@ -63,24 +63,7 @@ body {
 	.admin-bar .site-header {
 		top: 0;
 	}
-}
 
-/*
- * Header over the first section (per-page option): clear until the page scrolls or a panel opens.
- * --st-header-offset: how far below the top of the window the clear header sits, for content
- * printed above it in the page flow (an announcement bar). 0 by default; whatever prints that
- * content sets it. The admin bar is added separately below, so the token never includes it.
- */
-.has-transparent-header .site-header {
-	position: fixed;
-	top: var(--st-header-offset, 0px);
-	right: 0;
-	left: 0;
-	border-bottom-color: transparent;
-	background: transparent;
-	-webkit-backdrop-filter: none;
-	backdrop-filter: none;
-	transition: background-color var(--st-ease), border-color var(--st-ease);
 }
 
 html.is-scrolled .has-transparent-header .site-header,
@@ -92,38 +75,6 @@ html.search-open .has-transparent-header .site-header,
 	background: color-mix(in srgb, var(--st-surface) 92%, transparent);
 	-webkit-backdrop-filter: saturate(180%) blur(12px);
 	backdrop-filter: saturate(180%) blur(12px);
-}
-
-/* The admin bar rule above is less specific than the clear header's top, so it is repeated with the offset. */
-.admin-bar.has-transparent-header .site-header {
-	top: calc(var(--wp-admin--admin-bar--height, 32px) + var(--st-header-offset, 0px));
-}
-
-/*
- * On a dark first section (has-header-on-dark), the clear header uses light text until it turns
- * solid; on a light one (has-header-on-light, Header text over the first section > Dark) it uses
- * dark text, in light and dark color schemes alike. The page's own colors are kept on the body
- * (--st-solid-*) for the dropdowns, which sit on a solid surface even while the header is clear.
- */
-.has-header-on-dark,
-.has-header-on-light {
-	--st-solid-heading: var(--st-heading);
-	--st-solid-gray-600: var(--st-gray-600);
-	--st-solid-surface-muted: var(--st-surface-muted);
-}
-
-.has-header-on-dark .site-header {
-	--st-heading: #fff;
-	--st-gray-600: rgba(255, 255, 255, .85);
-	--st-surface-muted: rgba(255, 255, 255, .16);
-	color: #fff;
-}
-
-.has-header-on-light .site-header {
-	--st-heading: #171717;
-	--st-gray-600: #404040;
-	--st-surface-muted: rgba(0, 0, 0, .06);
-	color: #262626;
 }
 
 html.is-scrolled .has-header-on-dark .site-header,
@@ -140,32 +91,7 @@ html.search-open .has-header-on-light .site-header,
 	color: inherit;
 }
 
-.has-header-on-dark .site-nav .sub-menu,
-.has-header-on-dark .site-nav .children,
-.has-header-on-light .site-nav .sub-menu,
-.has-header-on-light .site-nav .children {
-	--st-heading: var(--st-solid-heading);
-	--st-gray-600: var(--st-solid-gray-600);
-	--st-surface-muted: var(--st-solid-surface-muted);
-	color: var(--st-text);
-}
-
 /* Phones scroll the admin bar away, so the header sits below it and scrolls with the page. */
-@media (max-width: 600px) {
-	.admin-bar.has-transparent-header .site-header {
-		position: absolute;
-		top: calc(var(--wp-admin--admin-bar--height, 46px) + var(--st-header-offset, 0px));
-	}
-}
-
-.has-transparent-header .site-main {
-	padding-top: 0;
-}
-
-/* A full-width block that opens the page meets the top edge, under the clear header. */
-.has-transparent-header .entry > .entry-content:first-child > .alignfull:first-child {
-	margin-top: 0;
-}
 
 .site-header__inner {
 	display: flex;
@@ -347,6 +273,7 @@ svg.custom-logo {
 	.site-header--split .site-header__start .site-nav > ul {
 		justify-content: flex-end;
 	}
+
 }
 
 .header-action {
@@ -395,80 +322,6 @@ svg.custom-logo {
 
 .header-cart__count.is-empty {
 	display: none;
-}
-
-.header-search {
-	position: relative;
-	display: flex;
-	align-items: center;
-	min-height: 3.25rem;
-	padding: .3rem .3rem .3rem 2.85rem;
-	border: 1px solid var(--st-border-strong);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-	box-shadow: var(--st-shadow-sm);
-	transition: border-color var(--st-ease), box-shadow var(--st-ease);
-}
-
-.header-search:focus-within {
-	border-color: var(--st-primary);
-	box-shadow: var(--st-ring);
-}
-
-.header-search__icon {
-	position: absolute;
-	top: 50%;
-	left: 1rem;
-	display: flex;
-	color: var(--st-gray-400);
-	transform: translateY(-50%);
-	pointer-events: none;
-}
-
-.header-search:focus-within .header-search__icon {
-	color: var(--st-link, var(--st-primary));
-}
-
-.header-search .header-search__field {
-	flex: 1;
-	min-width: 0;
-	min-height: 0;
-	padding: .4rem .5rem .4rem 0;
-	border: 0;
-	background: transparent;
-	box-shadow: none;
-	font-size: 1.0625rem;
-}
-
-.header-search .header-search__field:focus {
-	box-shadow: none;
-}
-
-.header-search .header-search__field::-webkit-search-cancel-button {
-	display: none;
-}
-
-.header-search__submit {
-	flex: none;
-	min-height: 2.5rem;
-	padding: .5rem 1.1rem;
-	border: 1px solid var(--st-primary);
-	border-radius: var(--st-radius);
-	background: var(--st-primary);
-	color: #fff;
-	font-size: .9375rem;
-	font-weight: 500;
-	cursor: pointer;
-	transition: background-color var(--st-ease);
-}
-
-.header-search__submit:hover {
-	background: var(--st-primary-hover);
-}
-
-.header-search__submit:focus-visible {
-	outline: 0;
-	box-shadow: var(--st-ring);
 }
 
 .chip {
@@ -563,6 +416,7 @@ svg.custom-logo {
 	.site-nav .site-nav__merged {
 		display: none;
 	}
+
 }
 
 /* Mobile navigation drawer. */
@@ -680,6 +534,7 @@ svg.custom-logo {
 			animation: st-drawer-in .2s ease-out;
 		}
 	}
+
 }
 
 /* The drawer starts below the admin bar, which stays fixed above 600px. */
@@ -687,6 +542,7 @@ svg.custom-logo {
 	.admin-bar.has-menu-drawer {
 		--st-drawer-offset: var(--wp-admin--admin-bar--height, 32px);
 	}
+
 }
 
 @keyframes st-drawer-in {
@@ -700,10 +556,6 @@ svg.custom-logo {
 .has-static-header .site-header {
 	position: relative;
 	top: auto;
-}
-
-.has-static-header.has-transparent-header .site-header {
-	position: absolute;
 }
 
 /* A drawer opened on a scrolled page still needs the header's close button in view. */
@@ -727,6 +579,7 @@ html.is-header-hidden:not(.nav-open):not(.search-open) .has-header-autohide .sit
 	.has-header-autohide .site-header {
 		transition: transform .25s ease, background-color var(--st-ease), border-color var(--st-ease);
 	}
+
 }
 
 /* ------------------------------------------------------------------ Content */
@@ -765,10 +618,6 @@ html.is-header-hidden:not(.nav-open):not(.search-open) .has-header-autohide .sit
 .comments-area {
 	max-width: var(--st-content);
 	margin-inline: auto;
-}
-
-.comments-area {
-	width: calc(100% - var(--st-gutter) * 2);
 }
 
 .entry .entry-content > .alignwide,
@@ -886,14 +735,6 @@ html.is-header-hidden:not(.nav-open):not(.search-open) .has-header-autohide .sit
 	border-top: 1px solid var(--st-border);
 }
 
-.page-links {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .5rem;
-	margin-top: 2rem;
-	font-size: var(--st-text-sm);
-}
-
 /* ------------------------------------------------------------------ Full width and Canvas templates
    Full-width blocks, covers, background groups and raw HTML sections (Page Blocks) run edge to edge
    with no gaps between them; text and other blocks keep the reading width and wide blocks the wide
@@ -967,72 +808,6 @@ body.has-page-blocks-template .site-main {
 	padding-inline: var(--st-gutter);
 }
 
-/* Post list. */
-.post-list {
-	display: grid;
-	gap: 1.5rem;
-	max-width: 52rem;
-}
-
-/* Blog layout: posts beside the blog sidebar from 960px, stacked below that. */
-.blog-layout {
-	display: grid;
-	gap: 2.5rem;
-}
-
-.blog-layout__main {
-	min-width: 0;
-}
-
-.blog-layout .post-list {
-	max-width: none;
-}
-
-/*
- * Grid layouts (Blog and archives > Post list layout). Columns are capped at two or three and
- * drop as the column narrows, so a grid beside the sidebar falls back to fewer columns by itself.
- */
-.post-list--grid {
-	max-width: none;
-	gap: 1.5rem;
-}
-
-.post-list--grid-2 {
-	grid-template-columns: repeat(auto-fill, minmax(max(18rem, calc((100% - 1.5rem) / 2)), 1fr));
-}
-
-.post-list--grid-3 {
-	grid-template-columns: repeat(auto-fill, minmax(max(15rem, calc((100% - 3rem) / 3)), 1fr));
-}
-
-.post-list--grid .post-card,
-.post-list--grid .post-card.has-post-thumbnail {
-	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: auto 1fr;
-	align-content: start;
-}
-
-.post-list--grid .post-card__media img {
-	aspect-ratio: 16 / 10;
-	min-height: 0;
-}
-
-.post-list--grid .post-card__body {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.post-list--grid .more-link {
-	margin-top: auto;
-}
-
-/* Featured images switched off: the text takes the whole card. */
-.post-card.is-text-only,
-.post-card.is-text-only.has-post-thumbnail {
-	grid-template-columns: minmax(0, 1fr);
-}
-
 /* Single posts > Featured image: Text column width. */
 .entry .entry-media:not(.alignwide) {
 	max-width: var(--st-content);
@@ -1104,57 +879,6 @@ body.has-page-blocks-template .site-main {
 	padding-inline: .9rem;
 }
 
-@media (min-width: 960px) {
-	.blog-layout {
-		grid-template-columns: minmax(0, 1fr) 18rem;
-		align-items: start;
-		gap: 3rem;
-	}
-}
-
-.post-card {
-	display: grid;
-	overflow: hidden;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-	box-shadow: var(--st-shadow-sm);
-}
-
-@media (min-width: 720px) {
-	.post-card.has-post-thumbnail {
-		grid-template-columns: 16rem 1fr;
-	}
-}
-
-.post-card__media img {
-	width: 100%;
-	height: 100%;
-	min-height: 12rem;
-	object-fit: cover;
-}
-
-.post-card__body {
-	padding: 1.25rem 1.5rem 1.5rem;
-}
-
-.post-card .entry-meta {
-	margin-bottom: .6rem;
-}
-
-.post-card .entry-title {
-	font-size: 1.25rem;
-}
-
-.post-card .entry-title a {
-	color: var(--st-heading);
-	text-decoration: none;
-}
-
-.post-card .entry-title a:hover {
-	color: var(--st-link, var(--st-primary));
-}
-
 .entry-summary {
 	margin-top: .5rem;
 	color: var(--st-gray-600);
@@ -1171,78 +895,6 @@ body.has-page-blocks-template .site-main {
 	font-size: var(--st-text-sm);
 	font-weight: 500;
 	text-decoration: none;
-}
-
-/* A product in search results: square thumbnail, title, price and View product. */
-.post-card--product.has-media {
-	grid-template-columns: 7rem 1fr;
-	align-items: center;
-}
-
-@media (min-width: 720px) {
-	.post-card--product.has-media {
-		grid-template-columns: 9rem 1fr;
-	}
-}
-
-.post-card--product .post-card__media {
-	align-self: stretch;
-	background: var(--st-surface-muted);
-}
-
-.post-card--product .post-card__media img {
-	aspect-ratio: 1;
-	min-height: 0;
-}
-
-.post-card--product .post-card__body {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: .5rem 1rem;
-	padding: 1rem 1.25rem;
-}
-
-.post-card--product .entry-title {
-	flex-basis: 100%;
-	margin: 0;
-	font-size: 1.125rem;
-}
-
-.post-card__price {
-	margin-right: auto;
-	color: var(--st-heading);
-	font-weight: 500;
-	font-variant-numeric: tabular-nums;
-}
-
-.post-card__price > * {
-	margin: 0;
-}
-
-/* FluentCart's price labels for screen readers, in case its stylesheet is not on the search page. */
-.post-card__price .fct-sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
-
-/* In a grid layout a product result matches the post cards beside it. */
-.post-list--grid .post-card--product .post-card__body {
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 1.25rem 1.5rem 1.5rem;
-}
-
-.post-list--grid .post-card--product .post-card__media img {
-	aspect-ratio: 16 / 10;
-}
-
-.post-list--grid .post-card--product .post-card__action {
-	margin-top: auto;
 }
 
 /* Recovery paths under an empty search. */
@@ -1302,46 +954,6 @@ a.page-numbers:hover {
 
 .page-numbers.dots {
 	min-width: auto;
-}
-
-/* Previous / next post. */
-.post-navigation {
-	margin-top: 2rem;
-}
-
-.post-navigation .nav-links {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-	gap: 1rem;
-}
-
-.post-navigation a {
-	display: block;
-	height: 100%;
-	padding: 1rem 1.25rem;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-	text-decoration: none;
-	transition: border-color var(--st-ease), box-shadow var(--st-ease);
-}
-
-.post-navigation a:hover {
-	border-color: var(--st-border-strong);
-	box-shadow: var(--st-shadow);
-}
-
-.post-navigation .nav-next {
-	text-align: right;
-}
-
-.nav-subtitle {
-	display: block;
-	color: var(--st-muted);
-	font-size: var(--st-text-xs);
-	font-weight: 600;
-	letter-spacing: .04em;
-	text-transform: uppercase;
 }
 
 .nav-title {
@@ -1413,106 +1025,11 @@ a.page-numbers:hover {
 }
 
 /* ------------------------------------------------------------------ Comments */
-.comments-area {
-	margin-top: 3rem;
-	padding-top: 2rem;
-	border-top: 1px solid var(--st-border);
-}
-
-.comments-title,
-.comment-reply-title {
-	font-size: 1.25rem;
-}
-
-.comment-list,
-.comment-list .children {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.comment-list .children {
-	margin-left: clamp(1rem, 4vw, 2.5rem);
-}
-
-.comment-body {
-	margin-bottom: 1rem;
-	padding: 1rem 1.25rem;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-}
-
-.comment-meta {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: .25rem .75rem;
-	margin-bottom: .6rem;
-	font-size: var(--st-text-sm);
-}
-
-.comment-author {
-	display: flex;
-	align-items: center;
-	gap: .6rem;
-}
-
-.comment-author .avatar {
-	border-radius: 50%;
-}
-
-.comment-author .fn {
-	color: var(--st-heading);
-	font-style: normal;
-	font-weight: 600;
-}
-
-.comment-author .says {
-	display: none;
-}
-
-.comment-metadata a {
-	color: var(--st-muted);
-	text-decoration: none;
-}
-
-.comment-content > :last-child {
-	margin-bottom: 0;
-}
 
 .reply {
 	margin-top: .6rem;
 	font-size: var(--st-text-sm);
 	font-weight: 500;
-}
-
-.comment-respond {
-	margin-top: 2rem;
-}
-
-.comment-form {
-	display: grid;
-	gap: 1rem;
-}
-
-.comment-form p {
-	margin: 0;
-}
-
-.comment-form label {
-	display: block;
-	margin-bottom: .35rem;
-}
-
-.comment-form-cookies-consent {
-	display: flex;
-	align-items: flex-start;
-}
-
-.comment-form-cookies-consent label {
-	margin: 0;
-	font-weight: 400;
 }
 
 .comment-notes,
@@ -1556,157 +1073,15 @@ a.page-numbers:hover {
 }
 
 /* ------------------------------------------------------------------ Currency switcher (Stackless) */
-body.stackless-theme .st-currency {
-	position: relative;
-	display: inline-flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 0;
-}
-
-body.stackless-theme .st-currency .stackless-currency-selector__form {
-	flex-wrap: nowrap;
-	gap: 0;
-}
-
-body.stackless-theme .st-currency .stackless-currency-selector__select {
-	width: auto;
-	min-width: 0;
-	min-height: 2.5rem;
-	margin: 0;
-	padding: 0 1.6rem 0 .6rem;
-	border: 0;
-	border-radius: var(--st-radius);
-	background-color: transparent;
-	background-position: right .45rem center;
-	background-size: 10px 8px;
-	box-shadow: none;
-	color: var(--st-gray-600);
-	font-size: var(--st-text-sm);
-	font-weight: 500;
-	cursor: pointer;
-}
-
-body.stackless-theme .st-currency .stackless-currency-selector__select:hover {
-	background-color: var(--st-surface-muted);
-	color: var(--st-heading);
-}
-
-body.stackless-theme .st-currency .stackless-currency-selector__select:focus-visible {
-	outline: 0;
-	box-shadow: var(--st-ring);
-}
-
-/* Progress text stays available to screen readers without shifting the header or footer. */
-body.stackless-theme .st-currency .stackless-currency-selector__status {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip: rect(0 0 0 0);
-	white-space: nowrap;
-}
-
-body.stackless-theme .st-currency--header {
-	margin-right: .25rem;
-}
-
-/* The menu copy only shows in the phone drawer, where the header copy is hidden. */
-body.stackless-theme .st-currency--menu {
-	display: none;
-}
 
 /* Small phones keep the header to its four buttons; the menu and footer switchers cover them. */
-@media (max-width: 599.98px) {
-	body.stackless-theme .st-currency--header {
-		display: none;
-	}
-
-	body.stackless-theme .st-currency--menu {
-		display: flex;
-		margin-top: .25rem;
-		padding: .45rem 0 0 .5rem;
-		border-top: 1px solid var(--st-gray-100);
-	}
-
-	body.stackless-theme .st-currency--menu .stackless-currency-selector__form {
-		flex: 1;
-		justify-content: space-between;
-	}
-
-	body.stackless-theme .st-currency--menu .stackless-currency-selector__label {
-		color: var(--st-heading);
-		font-size: 1rem;
-		font-weight: 400;
-	}
-
-	body.stackless-theme .st-currency--menu .stackless-currency-selector__select {
-		font-size: 1rem;
-	}
-}
-
-body.stackless-theme .st-currency--footer .stackless-currency-selector__select {
-	color: var(--st-muted);
-}
 
 /* ------------------------------------------------------------------ Sale badge
    FluentCart and EDD cards and product pages (part product_sale_badge), drawn like WooCommerce's
    .onsale: over the image's top-left corner, or above the title when there is no image. */
-.stackless-sale-badge {
-	display: inline-block;
-	padding: .2rem .55rem;
-	border-radius: var(--st-radius-pill);
-	background: var(--st-danger);
-	color: #fff;
-	font-size: var(--st-text-xs);
-	font-weight: 600;
-	line-height: 1.4;
-	letter-spacing: .02em;
-}
-
-:is(.fct-product-card, .st-download-card, .st-download__media, .st-fc-product__media):has(> .stackless-sale-badge) {
-	position: relative;
-}
-
-:is(.fct-product-card, .st-download-card, .st-download__media, .st-fc-product__media) > .stackless-sale-badge {
-	position: absolute;
-	top: .75rem;
-	left: .75rem;
-	z-index: 2;
-}
-
-.st-download__summary > .stackless-sale-badge {
-	margin-bottom: .75rem;
-}
 
 /* ------------------------------------------------------------------ WooCommerce store notice
    Global: WooCommerce prints it on every page, while the WooCommerce layer loads only on store screens. */
-/* WooCommerce prints the notice in the footer and pins it to the top of the page, over the sticky
-   header. Keep it as a bar at the bottom of the viewport instead. */
-.woocommerce-store-notice,
-p.demo_store {
-	position: fixed;
-	top: auto;
-	bottom: 0;
-	padding: .65rem var(--st-gutter);
-	background: var(--st-gray-900);
-	color: var(--st-inverse-text, #fff);
-	font-size: var(--st-text-sm);
-	box-shadow: none;
-}
-
-/* WooCommerce's .admin-bar p.demo_store { top: 32px } outranks the rule above for logged-in
-   users; with bottom: 0 the notice then stretched over the whole page. */
-.admin-bar .woocommerce-store-notice,
-.admin-bar p.demo_store {
-	top: auto;
-}
-
-.woocommerce-store-notice a,
-p.demo_store a {
-	color: var(--st-inverse-text, #fff);
-	font-weight: 500;
-}
 
 /* ------------------------------------------------------------------ Footer */
 .site-footer {
@@ -1771,271 +1146,12 @@ p.demo_store a {
 }
 
 /* ------------------------------------------------------------------ Single post */
-.entry--post .post-header {
-	margin-bottom: clamp(2rem, 5vw, 3rem);
-	text-align: center;
-}
-
-.post-eyebrow {
-	display: inline-block;
-	margin-bottom: 1rem;
-	padding: .2rem .7rem;
-	border-radius: var(--st-radius-pill);
-	background: var(--st-primary-light);
-	color: var(--st-primary-text);
-	font-size: var(--st-text-xs);
-	font-weight: 600;
-	letter-spacing: .06em;
-	text-decoration: none;
-	text-transform: uppercase;
-}
-
-.post-eyebrow:hover {
-	color: var(--st-link, var(--st-primary));
-	text-decoration: none;
-}
-
-.entry--post .entry-title {
-	font-size: var(--st-post-title, clamp(2rem, 1.5rem + 2.2vw, 3rem));
-	letter-spacing: var(--st-heading-tracking, -.025em);
-	line-height: 1.15;
-}
-
-.post-standfirst {
-	max-width: 36rem;
-	margin: 1rem auto 0;
-	color: var(--st-gray-600);
-	font-size: 1.1875rem;
-	line-height: 1.55;
-}
-
-.post-byline {
-	display: inline-flex;
-	align-items: center;
-	gap: .75rem;
-	margin-top: 1.5rem;
-	text-align: left;
-}
-
-.post-byline__avatar,
-.author-box__avatar {
-	flex: none;
-	border-radius: 50%;
-}
-
-.post-byline__text {
-	display: flex;
-	flex-direction: column;
-	line-height: 1.35;
-}
-
-.post-byline__author {
-	color: var(--st-heading);
-	font-weight: 600;
-	text-decoration: none;
-}
-
-.post-byline__meta {
-	display: flex;
-	gap: .4rem;
-	color: var(--st-muted);
-	font-size: var(--st-text-sm);
-}
-
-.entry--post .entry-media img {
-	max-height: 34rem;
-	object-fit: cover;
-	box-shadow: var(--st-shadow);
-}
-
-.entry--post .entry-content {
-	font-size: 1.125rem;
-	line-height: 1.75;
-}
-
-.entry--post .entry-content > p:first-child::first-line {
-	font-weight: 500;
-}
-
-.entry--post .entry-content h2 {
-	margin-top: 2.25em;
-}
-
-.entry--post .entry-content :is(h2, h3)[id] {
-	scroll-margin-top: 6rem;
-}
-
-.entry--post .entry-content a:not(.wp-element-button) {
-	text-decoration-color: rgba(6, 111, 209, .35);
-	text-decoration-color: color-mix(in srgb, var(--st-link, var(--st-primary)) 35%, transparent);
-}
-
-.entry--post .entry-content a:not(.wp-element-button):hover {
-	text-decoration-color: currentColor;
-}
-
-.post-footer {
-	display: block;
-	margin-top: 3rem;
-	padding-top: 0;
-	border-top: 0;
-	font-size: inherit;
-	color: inherit;
-}
-
-.post-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .4rem;
-	margin-bottom: 1.5rem;
-}
-
-.author-box {
-	display: flex;
-	gap: 1rem;
-	align-items: flex-start;
-	padding: 1.25rem 1.5rem;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-	box-shadow: var(--st-shadow-sm);
-}
-
-.author-box p {
-	margin: 0;
-}
-
-.author-box__label {
-	color: var(--st-muted);
-	font-size: var(--st-text-xs);
-	font-weight: 600;
-	letter-spacing: .06em;
-	text-transform: uppercase;
-}
-
-.author-box__name {
-	font-size: 1.0625rem;
-	font-weight: 600;
-}
-
-.author-box__name a {
-	color: var(--st-heading);
-	text-decoration: none;
-}
-
-.author-box__bio {
-	margin-top: .35rem !important;
-	color: var(--st-gray-600);
-	font-size: .9375rem;
-}
-
-.entry--post .post-navigation {
-	margin-top: 1.5rem;
-}
-
-.nav-subtitle .st-icon {
-	vertical-align: -2px;
-}
-
-/* More from the journal. */
-.related-posts {
-	margin-top: clamp(3rem, 7vw, 5rem);
-	padding-top: clamp(2rem, 5vw, 3rem);
-	border-top: 1px solid var(--st-border);
-}
-
-.related-posts__title {
-	margin: 0 0 1.5rem;
-	font-size: 1.375rem;
-}
-
-.related-posts__grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1.5rem;
-}
-
-@media (max-width: 899.98px) {
-	.related-posts__grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-@media (max-width: 539.98px) {
-	.related-posts__grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-.related-post__link {
-	display: flex;
-	flex-direction: column;
-	gap: .4rem;
-	color: inherit;
-	text-decoration: none;
-}
-
-.related-post__media {
-	display: block;
-	overflow: hidden;
-	margin-bottom: .5rem;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface-muted);
-	aspect-ratio: 16 / 10;
-}
-
-.related-post__media img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	transition: transform .3s ease;
-}
-
-.related-post__link:hover .related-post__media img {
-	transform: scale(1.03);
-}
-
-.related-post__date {
-	color: var(--st-muted);
-	font-size: var(--st-text-sm);
-}
-
-.related-post__title {
-	color: var(--st-heading);
-	font-size: 1.0625rem;
-	font-weight: 600;
-	line-height: 1.35;
-}
-
-.related-post__link:hover .related-post__title {
-	color: var(--st-link, var(--st-primary));
-}
 
 .single-post .comments-area {
 	margin-top: clamp(2.5rem, 6vw, 4rem);
 }
 
 /* ------------------------------------------------------------------ Full-screen search */
-html.search-open {
-	overflow: hidden;
-}
-
-.search-overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 1000;
-	overflow-y: auto;
-	background: rgba(250, 250, 250, .97);
-	background: color-mix(in srgb, var(--st-bg) 97%, transparent);
-	-webkit-backdrop-filter: blur(16px);
-	backdrop-filter: blur(16px);
-	animation: st-fade .18s ease-out;
-}
-
-.admin-bar .search-overlay {
-	top: var(--wp-admin--admin-bar--height, 32px);
-}
 
 @keyframes st-fade {
 	from {
@@ -2043,225 +1159,10 @@ html.search-open {
 	}
 }
 
-.search-overlay__inner {
-	padding-block: clamp(1.5rem, 5vh, 3.5rem) 4rem;
-	animation: st-rise .22s ease-out;
-}
-
-.search-overlay__inner.container {
-	max-width: calc(52rem + var(--st-gutter) * 2);
-}
-
 @keyframes st-rise {
 	from {
 		opacity: 0;
 		transform: translateY(12px);
-	}
-}
-
-.search-overlay__top {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 1.25rem;
-}
-
-.search-overlay__title {
-	margin: 0;
-	color: var(--st-muted);
-	font-size: var(--st-text-sm);
-	font-weight: 600;
-	letter-spacing: .06em;
-	text-transform: uppercase;
-}
-
-.search-overlay__close {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.75rem;
-	height: 2.75rem;
-	padding: 0;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius);
-	background: var(--st-surface);
-	color: var(--st-heading);
-	cursor: pointer;
-	transition: transform var(--st-ease), border-color var(--st-ease);
-}
-
-.search-overlay__close:hover {
-	border-color: var(--st-border-strong);
-	transform: rotate(90deg);
-}
-
-.search-overlay__close:focus-visible {
-	outline: 0;
-	box-shadow: var(--st-ring);
-}
-
-.search-overlay .header-search {
-	min-height: 4rem;
-	padding: .45rem .45rem .45rem 3.5rem;
-	border-radius: var(--st-radius-xl);
-	box-shadow: var(--st-shadow-lg);
-}
-
-.search-overlay .header-search__icon {
-	left: 1.25rem;
-}
-
-.search-overlay .header-search .header-search__field {
-	font-size: clamp(1.125rem, 1rem + .6vw, 1.375rem);
-}
-
-.search-overlay .header-search__submit {
-	min-height: 3rem;
-	padding-inline: 1.4rem;
-	border-radius: var(--st-radius-lg);
-}
-
-.search-overlay__heading {
-	margin: 0 0 .85rem;
-	color: var(--st-muted);
-	font-size: var(--st-text-xs);
-	font-weight: 600;
-	letter-spacing: .06em;
-	text-transform: uppercase;
-}
-
-.search-overlay__section,
-.search-results {
-	margin-top: 2.25rem;
-}
-
-.search-overlay__chips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .5rem;
-}
-
-.search-overlay__chips .chip {
-	padding: .4rem .9rem;
-	font-size: .9375rem;
-}
-
-.search-results__head {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 1rem;
-}
-
-.search-results__all {
-	display: inline-flex;
-	align-items: center;
-	gap: .3rem;
-	font-size: var(--st-text-sm);
-	font-weight: 500;
-	text-decoration: none;
-}
-
-.search-results__list {
-	display: grid;
-	gap: .5rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.search-results__list li + li {
-	margin: 0;
-}
-
-.search-results__list--grid {
-	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-}
-
-.search-result {
-	display: flex;
-	align-items: center;
-	gap: .9rem;
-	padding: .6rem;
-	border: 1px solid var(--st-border);
-	border-radius: var(--st-radius-lg);
-	background: var(--st-surface);
-	color: inherit;
-	text-decoration: none;
-	transition: border-color var(--st-ease), box-shadow var(--st-ease);
-}
-
-.search-result:hover,
-.search-result:focus-visible {
-	border-color: var(--st-border-strong);
-	box-shadow: var(--st-shadow);
-	outline: 0;
-	text-decoration: none;
-}
-
-.search-result__image {
-	flex: none;
-	width: 3.5rem;
-	height: 3.5rem;
-	overflow: hidden;
-	border-radius: var(--st-radius);
-	background: var(--st-surface-muted);
-}
-
-.search-result__image img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.search-result__text {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-	line-height: 1.35;
-}
-
-.search-result__name {
-	overflow: hidden;
-	color: var(--st-heading);
-	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.search-result:hover .search-result__name {
-	color: var(--st-link, var(--st-primary));
-}
-
-.search-result__price {
-	color: var(--st-gray-600);
-	font-size: var(--st-text-sm);
-}
-
-.search-result__price del {
-	margin-right: .3rem;
-}
-
-.search-result__price ins {
-	background: none;
-	font-weight: 600;
-}
-
-.search-results__empty {
-	padding: 1.5rem;
-	border: 1px dashed var(--st-border-strong);
-	border-radius: var(--st-radius-lg);
-	color: var(--st-muted);
-	text-align: center;
-}
-
-.search-results.is-loading .search-results__list {
-	opacity: .5;
-}
-
-@media (max-width: 599.98px) {
-	.search-overlay .header-search__submit {
-		display: none;
 	}
 }
 
@@ -2287,6 +1188,7 @@ html.search-open {
 		width: 2.5rem;
 		height: 2.5rem;
 	}
+
 }
 
 /*
@@ -2333,6 +1235,7 @@ html.search-open {
 	.site-header--has-center .site-header__center .custom-logo {
 		object-position: center;
 	}
+
 }
 
 /* The narrowest phones: slightly smaller header buttons. */
@@ -2345,224 +1248,15 @@ html.search-open {
 		width: 2.25rem;
 		height: 2.25rem;
 	}
+
 }
 
 /* ------------------------------------------------------------------ Store toolbar (EDD store page and archives; WooCommerce when switched on) */
-.st-store-bar {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
-	margin: 0 0 2rem;
-}
-
-.st-store-promo {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: .35rem .6rem;
-	margin: 0;
-	padding: .625rem 1rem;
-	border: 1px solid color-mix(in srgb, var(--st-primary) 30%, var(--st-surface));
-	border-radius: var(--st-radius);
-	background: var(--st-primary-light);
-	color: var(--st-primary-text);
-	font-size: .9375rem;
-	font-weight: 500;
-	line-height: 1.45;
-}
-
-.st-store-promo .st-icon {
-	color: var(--st-link, var(--st-primary));
-}
-
-.st-store-promo__code code {
-	padding: .1rem .45rem;
-	border: 1px dashed color-mix(in srgb, var(--st-primary) 55%, var(--st-surface));
-	border-radius: 2px;
-	background: var(--st-surface);
-	color: var(--st-primary-text);
-	font-size: .875rem;
-	font-weight: 600;
-	letter-spacing: .04em;
-}
-
-.st-store-toolbar {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
-	gap: .75rem 1rem;
-}
-
-.st-store-search {
-	display: flex;
-	flex: 1 1 26rem;
-	flex-wrap: wrap;
-	gap: .5rem;
-	min-width: 0;
-	max-width: 40rem;
-	margin: 0;
-}
-
-.st-store-search__field {
-	position: relative;
-	flex: 1 1 14rem;
-	min-width: 0;
-}
-
-.st-store-search__field .st-icon {
-	position: absolute;
-	top: 50%;
-	left: .75rem;
-	color: var(--st-gray-400);
-	transform: translateY(-50%);
-	pointer-events: none;
-}
-
-.st-store-search__field input {
-	padding-left: 2.35rem;
-	border-radius: var(--st-radius);
-}
-
-.st-store-search .st-store-sort {
-	flex: 0 1 13rem;
-	width: auto;
-	min-width: 0;
-	border-radius: var(--st-radius);
-}
-
-.st-store-search__submit {
-	min-height: var(--st-control-h);
-	padding: 0 1rem;
-	border: 1px solid var(--st-border-strong);
-	border-radius: var(--st-radius);
-	background: var(--st-surface);
-	color: var(--st-heading);
-	font-weight: 500;
-	cursor: pointer;
-}
-
-.st-store-search__submit:hover {
-	background: var(--st-surface-muted);
-}
-
-/* With JavaScript, sorting submits on change and Enter submits the search. */
-.js .st-store-search__submit {
-	position: absolute !important;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip: rect(1px, 1px, 1px, 1px);
-	white-space: nowrap;
-}
-
-.st-store-nav {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
-	gap: .75rem 1.5rem;
-}
-
-.st-store-chips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .4rem;
-	min-width: 0;
-}
-
-.st-store-chips .chip {
-	min-height: 2.5rem;
-	padding: .3rem .8rem;
-	border-radius: var(--st-radius-sm);
-}
-
-.st-store-chips .chip.is-current {
-	border-color: var(--st-primary);
-	background: var(--st-primary-light);
-	color: var(--st-primary-text);
-}
-
-.st-store-links {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: .5rem 1.25rem;
-	margin-left: auto;
-}
-
-.st-store-link {
-	display: inline-flex;
-	align-items: center;
-	gap: .35rem;
-	color: var(--st-gray-600);
-	font-size: var(--st-text-sm);
-	font-weight: 500;
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-.st-store-link .st-icon {
-	color: var(--st-gray-400);
-}
-
-.st-store-link:hover {
-	color: var(--st-link, var(--st-primary));
-}
-
-.st-store-link:hover .st-icon {
-	color: currentColor;
-}
 
 /* The currency switcher matches the other controls. */
 .st-store-currency-wrap .stackless-currency-selector,
 .st-store-currency-wrap form {
 	margin: 0;
-}
-
-.st-store-currency-wrap select {
-	width: auto;
-	min-width: 8rem;
-	border-radius: var(--st-radius);
-}
-
-@media (max-width: 599.98px) {
-	.st-store-search .st-store-sort {
-		flex: 1 1 100%;
-	}
-
-	/* Phones: the chips scroll sideways in one row instead of stacking four rows deep. */
-	.st-store-chips {
-		flex-wrap: nowrap;
-		width: calc(100% + var(--st-gutter));
-		margin-right: calc(var(--st-gutter) * -1);
-		padding-bottom: .25rem;
-		overflow-x: auto;
-		scrollbar-width: none;
-	}
-
-	.st-store-chips::-webkit-scrollbar {
-		display: none;
-	}
-
-	.st-store-chips .chip {
-		flex: none;
-	}
-
-	.st-store-links {
-		margin-left: 0;
-	}
-
-	.st-store-currency-wrap,
-	.st-store-currency-wrap select {
-		width: 100%;
-	}
-}
-
-.search-result__meta {
-	color: var(--st-muted);
-	font-size: var(--st-text-xs);
-	line-height: 1.4;
 }
 
 /* ------------------------------------------------------------------ Single post options */
@@ -2609,92 +1303,6 @@ html.search-open {
 	color: var(--st-heading);
 }
 
-/* Header style: left-aligned title (and always beside a sidebar). */
-.entry--post .post-header--left {
-	text-align: left;
-}
-
-.post-header--left .post-standfirst {
-	margin-inline: 0;
-}
-
-/* Pages and custom post types: a centered title picked in their Layout panel. */
-.entry-header--center {
-	text-align: center;
-}
-
-.entry-header--center .entry-meta {
-	justify-content: center;
-}
-
-/* Header style: featured image above the title. */
-.entry--post > .entry-media:first-child,
-.entry--post > .st-breadcrumbs + .entry-media {
-	margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
-}
-
-/* Byline placements. Above the title it sits between the category label and the title. */
-.post-byline--above {
-	margin: 0 0 1rem;
-}
-
-.post-eyebrow + .post-byline--above {
-	margin-top: .25rem;
-}
-
-.post-byline--end {
-	margin: 0 0 1.5rem;
-}
-
-.post-byline__category {
-	color: var(--st-primary-text, var(--st-primary));
-	font-weight: 500;
-	text-decoration: none;
-}
-
-.post-byline__category:hover {
-	text-decoration: underline;
-}
-
-/* Category after the post, leading the tag chips. */
-.post-tags__label {
-	align-self: center;
-	margin-right: .25rem;
-	color: var(--st-muted);
-	font-size: var(--st-text-sm);
-}
-
-.chip--category {
-	border-color: transparent;
-	background: var(--st-primary-light);
-	color: var(--st-primary-text, var(--st-primary));
-}
-
-/*
- * Layout: sidebar beside the post. The whole layout is the reading width plus the sidebar, centred,
- * so the text, wide images and sidebar line up with no empty band between them. The main column
- * is the reading column; wide images and blocks fill it. Phones stack the sidebar below.
- */
-.single-layout {
-	--st-sidebar: 18rem;
-	--st-sidebar-gap: 4rem;
-	display: grid;
-	gap: 3rem;
-}
-
-.single-layout.container {
-	max-width: calc(var(--st-content) + var(--st-sidebar) + var(--st-sidebar-gap) + var(--st-gutter) * 2);
-}
-
-.single-layout__main {
-	--st-wide: 100%;
-	min-width: 0;
-}
-
-.single-layout .entry {
-	padding-inline: 0;
-}
-
 .single-layout .entry > .st-breadcrumbs,
 .single-layout .entry .entry-header,
 .single-layout .entry .entry-content > *,
@@ -2705,43 +1313,8 @@ html.search-open {
 	margin-inline: 0;
 }
 
-.single-layout .entry .entry-content > .alignfull {
-	max-width: none;
-	margin-inline: 0;
-}
-
 .single-layout .comments-area {
 	width: 100%;
-}
-
-@media (min-width: 960px) {
-	.single-layout {
-		grid-template-columns: minmax(0, 1fr) var(--st-sidebar);
-		align-items: start;
-		gap: var(--st-sidebar-gap);
-	}
-
-	.single-layout--sidebar-left {
-		grid-template-columns: var(--st-sidebar) minmax(0, 1fr);
-	}
-
-	.single-layout--sidebar-left .single-layout__aside {
-		order: -1;
-	}
-
-	/* Sticky sidebar: below the header when that stays in view, otherwise at the top. */
-	.single-layout__aside.is-sticky {
-		position: sticky;
-		top: calc(var(--wp-admin--admin-bar--height, 0px) + 4rem + 1.5rem);
-	}
-
-	.has-static-header .single-layout__aside.is-sticky {
-		top: calc(var(--wp-admin--admin-bar--height, 0px) + 1.5rem);
-	}
-
-	.single-layout__aside.is-sticky.is-too-tall {
-		position: static;
-	}
 }
 
 /* Footer: the theme credit after the default copyright line. */
@@ -2778,4 +1351,5 @@ html.search-open {
 		height: auto;
 		aspect-ratio: 4 / 3;
 	}
+
 }

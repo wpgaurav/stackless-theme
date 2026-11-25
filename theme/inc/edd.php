@@ -150,32 +150,110 @@ function stackless_theme_edd_assets(): void
     if (!stackless_theme_is_edd_surface()) {
         return;
     }
-    stackless_theme_edd_enqueue_style();
+    stackless_theme_edd_enqueue_style(stackless_theme_edd_parts());
 }
 
-function stackless_theme_edd_enqueue_style(): void
+/** The edd.css core, then the given parts (grid, single, cart, checkout, account) after it. */
+function stackless_theme_edd_enqueue_style(array $parts = []): void
 {
-    if (wp_style_is('stackless-theme-edd', 'enqueued') || !function_exists('stackless_theme_style')) {
+    if (!function_exists('stackless_theme_style')) {
         return;
     }
-    $deps = ['stackless-theme-layout'];
-    foreach (['edd-styles', 'edd-blocks', 'stackless-edd-account'] as $handle) {
-        if (wp_style_is($handle, 'registered')) {
-            $deps[] = $handle;
+    if (!wp_style_is('stackless-theme-edd', 'enqueued')) {
+        $deps = ['stackless-theme-layout'];
+        foreach (['edd-styles', 'edd-blocks', 'stackless-edd-account'] as $handle) {
+            if (wp_style_is($handle, 'registered')) {
+                $deps[] = $handle;
+            }
+        }
+        stackless_theme_style('stackless-theme-edd', 'assets/css/edd.css', $deps);
+    }
+    if ($parts) {
+        stackless_theme_style_parts('edd', array_values(array_intersect(STACKLESS_THEME_EDD_PARTS, $parts)));
+    }
+}
+
+/** Which edd.css parts an EDD block or shortcode needs. */
+function stackless_theme_edd_parts_for(string $name): array
+{
+    $map = [
+        'edd/downloads' => ['grid'], 'downloads' => ['grid'], 'edd/terms' => ['grid'],
+        'edd/cart' => ['cart'], 'download_cart' => ['cart'],
+        'edd/checkout' => ['cart', 'checkout'], 'download_checkout' => ['cart', 'checkout'],
+        'edd/receipt' => ['account'], 'edd_receipt' => ['account'], 'edd/confirmation' => ['account'],
+        'edd/order-history' => ['account'], 'purchase_history' => ['account'],
+        'edd/user-downloads' => ['account'], 'download_history' => ['account'],
+        'edd/profile-editor' => ['account'], 'edd_profile_editor' => ['account'],
+        'stackless_edd_account' => ['account'],
+    ];
+    return $map[$name] ?? [];
+}
+
+/**
+ * The edd.css parts this view needs: by page type (archive, single download, checkout, receipt,
+ * history), by the EDD blocks and shortcodes in the content, and every part where Stackless for
+ * EDD's own blocks or shortcodes are used.
+ */
+function stackless_theme_edd_parts(): array
+{
+    if (!function_exists('stackless_theme_split_css') || !stackless_theme_split_css()) {
+        $parts = STACKLESS_THEME_EDD_PARTS;
+    } else {
+        $parts = [];
+        if (is_post_type_archive('download') || is_tax(['download_category', 'download_tag']) || (is_search() && get_query_var('post_type') === 'download')) {
+            $parts[] = 'grid';
+        }
+        if (is_singular('download')) {
+            // Related downloads use the grid cards.
+            array_push($parts, 'single', 'grid');
+        }
+        if (function_exists('edd_is_checkout') && edd_is_checkout()) {
+            array_push($parts, 'cart', 'checkout');
+        }
+        if ((function_exists('edd_is_success_page') && edd_is_success_page())
+            || (function_exists('edd_is_purchase_history_page') && edd_is_purchase_history_page())
+            || (stackless_theme_edd_account_page_id() > 0 && is_page(stackless_theme_edd_account_page_id()))) {
+            $parts[] = 'account';
+        }
+        if (is_active_widget(false, false, 'edd_cart_widget')) {
+            $parts[] = 'cart';
+        }
+        $post = is_singular() ? get_queried_object() : null;
+        if ($post instanceof WP_Post && $post->post_content !== '') {
+            if (strpos($post->post_content, '<!-- wp:stackless-edd/') !== false || strpos($post->post_content, '[stackless_edd_') !== false) {
+                $parts = STACKLESS_THEME_EDD_PARTS;
+            }
+            $markers = stackless_theme_edd_markers();
+            foreach ($markers['blocks'] as $block) {
+                if (has_block($block, $post)) {
+                    $parts = array_merge($parts, stackless_theme_edd_parts_for($block));
+                }
+            }
+            foreach ($markers['shortcodes'] as $shortcode) {
+                if (has_shortcode($post->post_content, $shortcode)) {
+                    $parts = array_merge($parts, stackless_theme_edd_parts_for($shortcode));
+                }
+            }
         }
     }
-    stackless_theme_style('stackless-theme-edd', 'assets/css/edd.css', $deps);
+    /**
+     * Filters the edd.css parts a view loads: grid, single, cart, checkout, account.
+     *
+     * @param string[] $parts
+     */
+    $parts = (array) apply_filters('stackless_theme_edd_parts', $parts);
+    return array_values(array_intersect(STACKLESS_THEME_EDD_PARTS, $parts));
 }
 
 /**
  * EDD blocks and shortcodes placed somewhere the checks above cannot see (a widget, a template part,
- * a page builder) still get the layer; it then prints in the footer.
+ * a page builder) still get the layer and the parts they need; those then print in the footer.
  */
 add_filter('render_block', 'stackless_theme_edd_late_block_style', 10, 2);
 function stackless_theme_edd_late_block_style($content, array $block)
 {
     if (!is_admin() && isset($block['blockName']) && strpos((string) $block['blockName'], 'edd/') === 0) {
-        stackless_theme_edd_enqueue_style();
+        stackless_theme_edd_enqueue_style(stackless_theme_edd_parts_for((string) $block['blockName']));
     }
     return $content;
 }
@@ -184,7 +262,7 @@ add_filter('do_shortcode_tag', 'stackless_theme_edd_late_shortcode_style', 10, 2
 function stackless_theme_edd_late_shortcode_style($output, string $tag)
 {
     if (!is_admin() && in_array($tag, stackless_theme_edd_markers()['shortcodes'], true)) {
-        stackless_theme_edd_enqueue_style();
+        stackless_theme_edd_enqueue_style(stackless_theme_edd_parts_for($tag));
     }
     return $output;
 }

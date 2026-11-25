@@ -565,6 +565,35 @@ apply_filters('stackless_theme_performance_body_classes_removed', array $classes
 
 Stackless Theme Pro's Performance module adds its options to the same section, at priorities 200 and up.
 
+## Stylesheet parts
+
+`layout.css` and `edd.css` each have a core file and parts that only some views need. A view gets the core file and the parts it prints markup for, decided before the head is printed (`inc/css-parts.php`, `inc/edd.php`). Parts print right after their core file, in the order their rules had in the single file, so the cascade is the same as before the split. Inline CSS added to `stackless-theme-layout` or `stackless-theme-edd` with `wp_add_inline_style()` moves behind the last part. Parts of 4 KB or less carry a `path`, so WordPress may print them inline in their place (filter `stackless_theme_inline_part_limit`).
+
+| Handle | Loads on |
+|---|---|
+| `stackless-theme-layout-transparent` | views whose body has `has-transparent-header` |
+| `stackless-theme-layout-archive` | views using `index.php` (blog, archives, search) |
+| `stackless-theme-layout-single` | views using `singular.php` |
+| `stackless-theme-layout-comments` | singular views with comments open or comments to show |
+| `stackless-theme-layout-store` | any view while a store plugin or the Stackless plugin is active |
+| `stackless-theme-layout-search` | while Header and menu > Search button is on, and with the store toolbar |
+| `stackless-theme-layout-toolbar` | views that show the store toolbar |
+| `stackless-theme-edd-grid` | download archives and search, single downloads, Downloads and Terms blocks, `[downloads]` |
+| `stackless-theme-edd-single` | single downloads |
+| `stackless-theme-edd-cart` | checkout, Cart and Checkout blocks, `[download_cart]`, `[download_checkout]`, the cart widget |
+| `stackless-theme-edd-checkout` | checkout, the Checkout block, `[download_checkout]` |
+| `stackless-theme-edd-account` | receipt, purchase history, the Stackless for EDD account page, Receipt, Confirmation, Order history, Download history and Profile editor blocks and their shortcodes |
+
+A template from outside the theme (child theme, plugin) gets the archive and single parts too, content with Stackless for EDD blocks or shortcodes gets every EDD part, and an EDD block or shortcode rendered where the checks cannot see it (a widget, a template part) queues its parts late. The Customizer preview loads every part.
+
+```php
+apply_filters('stackless_theme_layout_parts', string[] $parts); // transparent, archive, single, comments, store, search, toolbar
+apply_filters('stackless_theme_edd_parts', string[] $parts);    // grid, single, cart, checkout, account
+apply_filters('stackless_theme_split_css', bool $split);         // false: every part on every view
+```
+
+A child theme that prints theme markup from its own templates is covered by the "outside the theme" rule; one that moves markup between theme templates can add parts with the filters above.
+
 ## Admin screens
 
 Appearance > Stackless tools and Stackless Theme Pro's screens share one stylesheet, `stackless-theme-admin` (`assets/css/admin.css`), registered on every admin page and printed where a screen enqueues it. It reads core's `--wpds-*` design tokens (the `wp-theme` stylesheet on WordPress 7.0 and later) with fallbacks.

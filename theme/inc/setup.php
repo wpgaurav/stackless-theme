@@ -124,6 +124,8 @@ function stackless_theme_assets(): void
 {
     stackless_theme_style('stackless-theme-base', 'assets/css/base.css');
     stackless_theme_style('stackless-theme-layout', 'assets/css/layout.css', ['stackless-theme-base']);
+    // Straight after layout.css, before any store layer, as the rules were in the single file.
+    stackless_theme_style_parts('layout', stackless_theme_layout_parts());
     if (function_exists('stackless_theme_is_woo_surface') && stackless_theme_is_woo_surface()) {
         stackless_theme_woo_enqueue_style();
     }
