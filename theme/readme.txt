@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,12 @@ Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefont
 Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
 
 == Changelog ==
+
+= 1.9.3 =
+* New: a Performance section under Customize > Stackless Theme. Six options, all off until ticked: leave out the emoji script, leave out extra head links (RSD, shortlink, REST link, version tag), stop other sites showing your posts as embed cards, a shorter body class list (classes the theme and store plugins use stay), Dashicons only for signed-in users, and leave out jQuery Migrate. None of them touch wp-admin.
+* Changed: the layout and Easy Digital Downloads stylesheets load in parts, so each page gets only the styles for what it shows. Pages load 12 to 59 KB less CSS, most on EDD pages.
+* Changed: Appearance > Stackless tools has a new look in the style of the WordPress 7 admin: cards, tabs between the Stackless screens, a backups list and a summary of the Performance options.
+* Fixed: a Stackless block such as a table of contents or a plugin card counted as store content, so WooCommerce's styles (about 60 KB) loaded on ordinary posts.
 
 = 1.9.2 =
 * New: Site Identity has "Show the site title next to the logo", for a logo that is a mark or icon rather than the full name.
