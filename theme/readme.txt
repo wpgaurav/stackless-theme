@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,13 @@ Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefont
 Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
 
 == Changelog ==
+
+= 1.9.2 =
+* New: Site Identity has "Show the site title next to the logo", for a logo that is a mark or icon rather than the full name.
+* Fixed: the Logo width setting was ignored, and an SVG logo saved with only a viewBox disappeared from the header.
+* Fixed: an SVG logo drawn with currentColor showed black and vanished on a dark header. It now prints inline and takes the header's text color, in dark mode too.
+* Fixed: a menu item given the CSS class "button" showed its text in the same color as the button. It now shows as a call-to-action button, in the mobile menu too.
+* Fixed: an author photo that is not square showed as an oval in the byline, the author box and comments. Avatars are now cropped round.
 
 = 1.9.1 =
 * Changed: a Step's title is an h3 instead of an h4, so steps under a section heading no longer skip a heading level. It looks the same.
