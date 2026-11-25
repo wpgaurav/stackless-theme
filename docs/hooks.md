@@ -528,6 +528,7 @@ Section priorities in the panel:
 | 76 | Shop toolbar: EDD | `stackless_theme_store_edd` |
 | 90 (70 without a store) | Footer | `stackless_theme_footer` |
 | 100 (80 without a store) | Custom code | `stackless_theme_code` |
+| 110 | Performance | `stackless_theme_performance` (`STACKLESS_THEME_PERFORMANCE_SECTION`) |
 
 Use a priority below 10 to sort before Colors, or one between two of these to sit between them.
 
@@ -542,6 +543,37 @@ add_action('stackless_theme_customize_sections', function (WP_Customize_Manager 
 ```
 
 While `STACKLESS_PRO_VERSION` is not defined, the panel's description ends with one line linking to Stackless Theme Pro. Defining the constant removes it.
+
+## Performance
+
+Customize > Stackless Theme > Performance holds six theme mods, all off by default and all front end only:
+
+| Theme mod | Leaves out |
+|---|---|
+| `stackless_perf_emoji` | The emoji detection script and emoji styles. Feeds and email keep their image emoji. |
+| `stackless_perf_head_links` | RSD, Windows Live Writer, shortlink (head and header), REST API link (head and header) and the generator tag, in feeds too. |
+| `stackless_perf_embeds` | oEmbed discovery links, the host script and `wp-embed`. |
+| `stackless_perf_body_classes` | Body classes that name one object, plus default-template, `single-format-standard` and theme-name classes. |
+| `stackless_perf_dashicons` | Dashicons for signed-out visitors, also as another stylesheet's dependency. |
+| `stackless_perf_jquery_migrate` | `jquery-migrate` as a dependency of `jquery` on the front end. |
+
+`stackless_theme_performance('emoji')` says whether one is on; filter `stackless_theme_option_stackless_perf_{key}` to force one. The body classes that go are built from the query (`postid-42`, `page-id-7`, `category-news`, `category-6`, `author-sam`, `paged-2` and so on), never matched by pattern, so a plugin's own classes stay. Change the list with:
+
+```php
+apply_filters('stackless_theme_performance_body_classes_removed', array $classes);
+```
+
+Stackless Theme Pro's Performance module adds its options to the same section, at priorities 200 and up.
+
+## Admin screens
+
+Appearance > Stackless tools and Stackless Theme Pro's screens share one stylesheet, `stackless-theme-admin` (`assets/css/admin.css`), registered on every admin page and printed where a screen enqueues it. It reads core's `--wpds-*` design tokens (the `wp-theme` stylesheet on WordPress 7.0 and later) with fallbacks.
+
+- `stackless_theme_admin_header(string $current, string $title, string $lead = '', string $meta = '')` prints a screen's title row and the tabs between the Stackless screens.
+- `stackless_theme_admin_notice(string $type, string $message)` prints a notice in the same style: `success`, `error`, `warning` or `info`.
+- Filter the tabs with `stackless_theme_admin_tabs`: `slug => [label, url, capability]`.
+
+Markup: `.wrap.stackless-admin` (add `.is-wide` for a sidebar column), `.stackless-admin__grid` (`.is-halves` or `.has-aside`), `.stackless-card` with `__header`, `__body` and `__footer`, `.stackless-rows` > `.stackless-row` with `__title`, `__text`, `__link` and `__control`, a switch as `<input type="checkbox" role="switch" class="stackless-toggle">`, `.stackless-badge` (`.is-success`, `.is-warning`, `.is-error`), `.stackless-details` for a `<dl>`, and `.stackless-file` around a file input.
 
 ## Templates
 

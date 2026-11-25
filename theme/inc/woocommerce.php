@@ -141,8 +141,18 @@ function stackless_theme_woo_content_has_store($post = null): bool
         return false;
     }
     $content = $post->post_content;
-    if (strpos($content, '<!-- wp:woocommerce/') !== false || strpos($content, '<!-- wp:stackless') !== false || strpos($content, '[stackless') !== false) {
+    if (strpos($content, '<!-- wp:woocommerce/') !== false || strpos($content, '[stackless') !== false) {
         return true;
+    }
+    // Blocks from the Stackless plugin's store modules. The theme's own blocks share the stackless/
+    // namespace (a table of contents, a plugin card) and are not store content.
+    if (strpos($content, '<!-- wp:stackless') !== false && preg_match_all('#<!-- wp:(stackless[a-z0-9-]*)/([a-z0-9-]+)#', $content, $found, PREG_SET_ORDER)) {
+        $own = function_exists('stackless_theme_blocks') ? stackless_theme_blocks() : [];
+        foreach ($found as [, $namespace, $name]) {
+            if ($namespace !== 'stackless' || !isset($own[$name])) {
+                return true;
+            }
+        }
     }
     foreach (stackless_theme_woo_shortcodes() as $shortcode) {
         if (has_shortcode($content, $shortcode)) {

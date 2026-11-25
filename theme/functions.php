@@ -23,6 +23,7 @@ require STACKLESS_THEME_DIR . '/inc/header-sidebar.php';
 require STACKLESS_THEME_DIR . '/inc/menus.php';
 require STACKLESS_THEME_DIR . '/inc/page-blocks.php';
 require STACKLESS_THEME_DIR . '/inc/blocks/blocks.php';
+require STACKLESS_THEME_DIR . '/inc/performance.php';
 
 if (class_exists('WooCommerce')) {
     require STACKLESS_THEME_DIR . '/inc/woocommerce.php';

@@ -231,6 +231,89 @@ function stackless_theme_restore_backup_action(): void
     stackless_theme_tools_redirect(stackless_theme_restore_backup($id) ? 'restored' : 'no-backup');
 }
 
+/* ------------------------------------------------------------------ Admin look */
+
+/**
+ * The admin stylesheet for Stackless screens, shared with Stackless Theme Pro. It builds on core's
+ * design tokens (wp-theme) where WordPress has them. Registered on every admin page, so Pro can
+ * enqueue it by handle; printed only where a screen asks for it.
+ */
+add_action('admin_enqueue_scripts', 'stackless_theme_admin_style_register', 5);
+function stackless_theme_admin_style_register(): void
+{
+    $path = stackless_theme_asset('assets/css/admin.css');
+    $deps = wp_style_is('wp-theme', 'registered') ? ['wp-theme'] : [];
+    wp_register_style('stackless-theme-admin', STACKLESS_THEME_URI . '/' . $path, $deps, stackless_theme_asset_version($path));
+}
+
+add_action('admin_enqueue_scripts', 'stackless_theme_tools_assets');
+function stackless_theme_tools_assets(string $hook): void
+{
+    if ($hook === 'appearance_page_' . STACKLESS_THEME_TOOLS_PAGE) {
+        wp_enqueue_style('stackless-theme-admin');
+    }
+}
+
+/**
+ * Links between the Stackless screens, shown as tabs at the top of each. Filter
+ * stackless_theme_admin_tabs to add one: slug => [label, url, capability].
+ */
+function stackless_theme_admin_tabs(): array
+{
+    $tabs = [
+        'tools' => [__('Tools and backups', 'stackless-theme'), stackless_theme_tools_url(), 'manage_options'],
+        'customize' => [__('Customize', 'stackless-theme'), add_query_arg('autofocus[panel]', STACKLESS_THEME_PANEL, admin_url('customize.php')), 'customize'],
+        'performance' => [__('Performance', 'stackless-theme'), add_query_arg('autofocus[section]', 'stackless_theme_performance', admin_url('customize.php')), 'customize'],
+    ];
+    $tabs = (array) apply_filters('stackless_theme_admin_tabs', $tabs);
+    return array_filter($tabs, static function ($tab): bool {
+        return is_array($tab) && isset($tab[0], $tab[1]) && current_user_can((string) ($tab[2] ?? 'manage_options'));
+    });
+}
+
+/**
+ * The header of a Stackless admin screen: title, a line under it, an optional note on the right,
+ * and the tabs. Stackless Theme Pro calls it for its screens.
+ */
+function stackless_theme_admin_header(string $current, string $title, string $lead = '', string $meta = ''): void
+{
+    ?>
+    <div class="stackless-admin__header">
+        <div>
+            <h1><?php echo esc_html($title); ?></h1>
+            <?php if ($lead !== '') : ?>
+                <p class="stackless-admin__lead"><?php echo esc_html($lead); ?></p>
+            <?php endif; ?>
+        </div>
+        <?php if ($meta !== '') : ?>
+            <span class="stackless-admin__meta"><?php echo esc_html($meta); ?></span>
+        <?php endif; ?>
+    </div>
+    <?php
+    // WordPress moves notices printed by other plugins under the first h1 or .wp-header-end.
+    echo '<hr class="wp-header-end">';
+    $tabs = stackless_theme_admin_tabs();
+    if (count($tabs) > 1) {
+        echo '<nav aria-label="' . esc_attr__('Stackless screens', 'stackless-theme') . '"><ul class="stackless-admin__tabs">';
+        foreach ($tabs as $slug => $tab) {
+            printf(
+                '<li><a href="%1$s"%2$s>%3$s</a></li>',
+                esc_url((string) $tab[1]),
+                $slug === $current ? ' aria-current="page"' : '',
+                esc_html((string) $tab[0])
+            );
+        }
+        echo '</ul></nav>';
+    }
+}
+
+/** A notice inside a Stackless screen: 'success', 'error', 'warning' or 'info'. Text is escaped. */
+function stackless_theme_admin_notice(string $type, string $message): void
+{
+    $role = $type === 'error' ? 'alert' : 'status';
+    printf('<div class="stackless-notice is-%1$s" role="%2$s"><p>%3$s</p></div>', esc_attr($type), esc_attr($role), esc_html($message));
+}
+
 /* ------------------------------------------------------------------ Page */
 
 function stackless_theme_tools_notice(): void
@@ -247,8 +330,28 @@ function stackless_theme_tools_notice(): void
         'no-backup' => ['error', __('That backup no longer exists.', 'stackless-theme')],
     ];
     if (isset($messages[$notice])) {
-        printf('<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>', esc_attr($messages[$notice][0]), esc_html($messages[$notice][1]));
+        stackless_theme_admin_notice($messages[$notice][0], $messages[$notice][1]);
     }
+}
+
+/** The performance options that are on, as labels, for the summary card. */
+function stackless_theme_tools_performance_summary(): array
+{
+    $labels = [
+        'emoji' => __('Emoji script', 'stackless-theme'),
+        'head_links' => __('Extra head links', 'stackless-theme'),
+        'embeds' => __('Embed cards', 'stackless-theme'),
+        'body_classes' => __('Body classes', 'stackless-theme'),
+        'dashicons' => __('Dashicons', 'stackless-theme'),
+        'jquery_migrate' => __('jQuery Migrate', 'stackless-theme'),
+    ];
+    $on = [];
+    foreach ($labels as $key => $label) {
+        if (function_exists('stackless_theme_performance') && stackless_theme_performance($key)) {
+            $on[] = $label;
+        }
+    }
+    return [$on, count($labels)];
 }
 
 function stackless_theme_tools_render(): void
@@ -256,70 +359,112 @@ function stackless_theme_tools_render(): void
     if (!current_user_can('manage_options')) {
         return;
     }
+    $post_url = admin_url('admin-post.php');
+    $backups = array_reverse(stackless_theme_backups(), true);
+    [$perf_on, $perf_total] = stackless_theme_tools_performance_summary();
     ?>
-	<div class="wrap stackless-tools">
-		<h1><?php esc_html_e('Stackless tools', 'stackless-theme'); ?></h1>
-		<?php stackless_theme_tools_notice(); ?>
+    <div class="wrap stackless-admin">
+        <?php
+        stackless_theme_admin_header(
+            'tools',
+            __('Stackless', 'stackless-theme'),
+            __('Move the theme settings between sites, and go back to the settings you had before an import.', 'stackless-theme'),
+            /* translators: %s: theme version */
+            sprintf(__('Theme %s', 'stackless-theme'), STACKLESS_THEME_VERSION)
+        );
+        stackless_theme_tools_notice();
+        ?>
 
-			<div class="card">
-				<h2><?php esc_html_e('Export settings', 'stackless-theme'); ?></h2>
-				<p><?php esc_html_e('Download the Stackless Customizer settings (design, footer, code, store toolbars and related items) as a JSON file for another site or a backup. Menus, widgets and the logo stay with this site.', 'stackless-theme'); ?></p>
-				<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-					<input type="hidden" name="action" value="stackless_export_settings">
-					<?php wp_nonce_field('stackless_export_settings'); ?>
-					<?php submit_button(__('Download settings', 'stackless-theme'), 'secondary', 'submit', false); ?>
-				</form>
-			</div>
+        <div class="stackless-admin__grid is-halves">
+            <section class="stackless-card" aria-labelledby="stackless-export-title">
+                <div class="stackless-card__header"><h2 id="stackless-export-title"><?php esc_html_e('Export settings', 'stackless-theme'); ?></h2></div>
+                <div class="stackless-card__body">
+                    <p class="stackless-help"><?php esc_html_e('A JSON file with every Stackless Customizer setting: design, header, blog, store, footer, code and performance. Menus, widgets and the logo stay with this site.', 'stackless-theme'); ?></p>
+                </div>
+                <form class="stackless-card__footer" method="post" action="<?php echo esc_url($post_url); ?>">
+                    <input type="hidden" name="action" value="stackless_export_settings">
+                    <?php wp_nonce_field('stackless_export_settings'); ?>
+                    <span class="stackless-help"><?php esc_html_e('Nothing on this site changes.', 'stackless-theme'); ?></span>
+                    <?php submit_button(__('Download settings', 'stackless-theme'), 'secondary', 'submit', false); ?>
+                </form>
+            </section>
 
-			<div class="card">
-				<h2><?php esc_html_e('Import a file', 'stackless-theme'); ?></h2>
-				<p><?php esc_html_e('A Stackless settings export replaces the current settings. They are saved as a backup first.', 'stackless-theme'); ?></p>
-				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-					<input type="hidden" name="action" value="stackless_import_file">
-					<?php wp_nonce_field('stackless_import_file'); ?>
-					<p><input type="file" name="stackless_import" accept=".json,application/json" required></p>
-					<?php submit_button(__('Import', 'stackless-theme'), 'secondary', 'submit', false); ?>
-				</form>
-			</div>
+            <section class="stackless-card" aria-labelledby="stackless-import-title">
+                <div class="stackless-card__header"><h2 id="stackless-import-title"><?php esc_html_e('Import settings', 'stackless-theme'); ?></h2></div>
+                <form method="post" enctype="multipart/form-data" action="<?php echo esc_url($post_url); ?>">
+                    <div class="stackless-card__body">
+                        <input type="hidden" name="action" value="stackless_import_file">
+                        <?php wp_nonce_field('stackless_import_file'); ?>
+                        <label class="stackless-file" for="stackless-import-file">
+                            <span class="screen-reader-text"><?php esc_html_e('Settings file', 'stackless-theme'); ?></span>
+                            <input id="stackless-import-file" type="file" name="stackless_import" accept=".json,application/json" required aria-describedby="stackless-import-help">
+                        </label>
+                    </div>
+                    <div class="stackless-card__footer">
+                        <span class="stackless-help" id="stackless-import-help"><?php esc_html_e('Replaces the current settings. They are backed up first.', 'stackless-theme'); ?></span>
+                        <?php submit_button(__('Import', 'stackless-theme'), 'primary', 'submit', false); ?>
+                    </div>
+                </form>
+            </section>
 
-			<?php $backups = array_reverse(stackless_theme_backups(), true); ?>
-			<div class="card">
-				<h2><?php esc_html_e('Backups', 'stackless-theme'); ?></h2>
-				<?php if (!$backups) : ?>
-					<p><?php esc_html_e('Every import saves the settings, logo, menu locations, widget areas and changed page layouts first. The last three are kept here.', 'stackless-theme'); ?></p>
-				<?php else : ?>
-					<table class="widefat striped">
-						<tbody>
-						<?php foreach ($backups as $id => $backup) : ?>
-							<tr>
-								<td>
-									<strong><?php echo esc_html((string) $backup['label']); ?></strong><br>
-									<span class="description">
-										<?php
-										echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), (int) $backup['time']));
-										$posts = count((array) ($backup['posts'] ?? []));
-										if ($posts) {
-											/* translators: %d: number of posts */
-											echo ' &middot; ' . esc_html(sprintf(_n('%d post layout', '%d post layouts', $posts, 'stackless-theme'), $posts));
-										}
-										?>
-									</span>
-								</td>
-								<td style="text-align:right">
-									<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('<?php echo esc_js(__('Restore this backup? The current settings are replaced.', 'stackless-theme')); ?>');">
-										<input type="hidden" name="action" value="stackless_restore_backup">
-										<input type="hidden" name="backup" value="<?php echo esc_attr((string) $id); ?>">
-										<?php wp_nonce_field('stackless_restore_backup_' . $id); ?>
-										<?php submit_button(__('Restore', 'stackless-theme'), 'small', 'submit', false); ?>
-									</form>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-						</tbody>
-					</table>
-				<?php endif; ?>
-			</div>
-	</div>
-	<style>.stackless-tools .card{max-width:56rem}.stackless-tools .card h2{margin-top:.5em}</style>
-	<?php
+            <section class="stackless-card is-full" aria-labelledby="stackless-backups-title">
+                <div class="stackless-card__header">
+                    <h2 id="stackless-backups-title"><?php esc_html_e('Backups', 'stackless-theme'); ?></h2>
+                    <?php /* translators: 1: backups saved, 2: backups kept */ ?>
+                    <span class="stackless-badge"><?php echo esc_html(sprintf(__('%1$d of %2$d', 'stackless-theme'), count($backups), STACKLESS_THEME_BACKUPS_KEEP)); ?></span>
+                </div>
+                <?php if (!$backups) : ?>
+                    <div class="stackless-card__body">
+                        <p class="stackless-help"><?php esc_html_e('Every import saves the settings, logo, menu locations, widget areas and changed page layouts first. The last three are kept here.', 'stackless-theme'); ?></p>
+                    </div>
+                <?php else : ?>
+                    <ul class="stackless-rows">
+                        <?php foreach ($backups as $id => $backup) : ?>
+                            <li class="stackless-row">
+                                <span class="stackless-row__title"><?php echo esc_html((string) $backup['label']); ?></span>
+                                <p class="stackless-row__text">
+                                    <?php
+                                    echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), (int) $backup['time']));
+                                    $posts = count((array) ($backup['posts'] ?? []));
+                                    if ($posts) {
+                                        /* translators: %d: number of posts */
+                                        echo ' &middot; ' . esc_html(sprintf(_n('%d post layout', '%d post layouts', $posts, 'stackless-theme'), $posts));
+                                    }
+                                    ?>
+                                </p>
+                                <form class="stackless-row__control" method="post" action="<?php echo esc_url($post_url); ?>" onsubmit="return confirm('<?php echo esc_js(__('Restore this backup? The current settings are replaced.', 'stackless-theme')); ?>');">
+                                    <input type="hidden" name="action" value="stackless_restore_backup">
+                                    <input type="hidden" name="backup" value="<?php echo esc_attr((string) $id); ?>">
+                                    <?php wp_nonce_field('stackless_restore_backup_' . $id); ?>
+                                    <button type="submit" class="button" aria-label="<?php echo esc_attr(sprintf(/* translators: %s: backup label */ __('Restore: %s', 'stackless-theme'), (string) $backup['label'])); ?>"><?php esc_html_e('Restore', 'stackless-theme'); ?></button>
+                                </form>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
+            <?php if (current_user_can('customize')) : ?>
+                <section class="stackless-card is-full" aria-labelledby="stackless-performance-title">
+                    <div class="stackless-card__header">
+                        <h2 id="stackless-performance-title"><?php esc_html_e('Performance', 'stackless-theme'); ?></h2>
+                        <?php /* translators: 1: options on, 2: all options */ ?>
+                        <span class="stackless-badge<?php echo $perf_on ? ' is-success' : ''; ?>"><?php echo esc_html(sprintf(__('%1$d of %2$d on', 'stackless-theme'), count($perf_on), $perf_total)); ?></span>
+                    </div>
+                    <div class="stackless-card__body">
+                        <p class="stackless-help">
+                            <?php
+                            echo esc_html($perf_on
+                                /* translators: %s: list of options, e.g. "Emoji script, Dashicons" */
+                                ? sprintf(__('Left out of every page: %s.', 'stackless-theme'), implode(', ', $perf_on))
+                                : __('WordPress adds an emoji script, head links, embed discovery and more to every page. Choose what this site can do without.', 'stackless-theme'));
+                            ?>
+                        </p>
+                        <p><a class="button" href="<?php echo esc_url(add_query_arg(['autofocus[section]' => 'stackless_theme_performance', 'return' => rawurlencode(stackless_theme_tools_url())], admin_url('customize.php'))); ?>"><?php esc_html_e('Open Performance in the Customizer', 'stackless-theme'); ?></a></p>
+                    </div>
+                </section>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
 }
