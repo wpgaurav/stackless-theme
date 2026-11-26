@@ -78,7 +78,8 @@
 
 .wp-block-stackless-callout .stb-callout-list + .stb-callout-action { margin-top: var(--space-single); }
 
-.wp-block-stackless-callout .stb-callout-action .stb-button { width: 100%; }
+.wp-block-stackless-callout .stb-callout-action .callout-button { width: 100%; cursor: default; }
+.wp-block-stackless-content-upgrade .stb-content-upgrade-action .button { cursor: default; }
 
 /*------------------------------*\
 	$STEPS

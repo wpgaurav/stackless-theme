@@ -288,9 +288,8 @@
 					),
 					a.buttonText ?
 						el( 'div', { className: 'stb-callout-action' },
-							el( 'button', {
-								className: 'stb-button stb-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
-								disabled: true,
+							el( 'span', {
+								className: 'callout-button button button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
 								style: {
 									backgroundColor: ! buttonColorClass ? buttonColor : '',
 									color: ! buttonTextColorClass ? buttonTextColor : ''

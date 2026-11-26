@@ -320,9 +320,8 @@
 							className: 'stb-content-upgrade-action'
 						},
 						el(
-							'button', {
-								className: 'stb-button stb-button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
-								disabled: true,
+							'span', {
+								className: 'button button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
 								style: {
 									backgroundColor: ! buttonColorClass ? ( buttonColor || '#2563eb' ) : '',
 									color: ! buttonTextColorClass ? ( buttonTextColor || '#ffffff' ) : ''
