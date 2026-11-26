@@ -67,7 +67,7 @@
 				borderColor  = a.borderColor,
 				bgColor      = a.bgColor,
 				bgColorClass = a.bgColorClass,
-				iconColor    = a.iconColor ? a.iconColor : stbColors.slug.text,
+				iconColor    = a.iconColor || '',
 				textColor    = a.textColor,
 				textColorClass = a.textColorClass,
 				buttonColor  = a.buttonColor,
@@ -88,9 +88,9 @@
 			var effectiveBg = preset ? '' : ( ! bgColorClass ? bgColor : '' );
 
 			var blockProps = useBlockProps({
-				className: 'stb-callout ' + marginBottom + ' ' + padding
+				className: 'callout ' + marginBottom + ' ' + padding
 					+ ( a.shadow ? ' has-shadow' : '' )
-					+ ( ! preset && bgColorClass ? ' ' + bgColorClass : ( ! bgColor && ! preset ? ' has-accent-background-color' : '' ) )
+					+ ( ! preset && bgColorClass ? ' ' + bgColorClass : '' )
 					+ ( textColorClass ? ' ' + textColorClass : '' )
 					+ ( a.bgImage ? ' image-overlay' : '' )
 					+ ( a.icon || a.iconImage ? ' has-icon' : '' )
@@ -250,16 +250,16 @@
 						})
 					)
 				),
-				el( 'div', blockProps,
+				el( 'aside', blockProps,
 					( a.icon || a.iconImage ?
 						el( 'div', {
-							className: 'stb-callout-icon mb-single' + ( a.icon ? ' icon' : '' ) + ( a.iconImage && ! a.icon ? ' image' : '' ),
-							style: { backgroundColor: iconColor }
+							className: 'callout-icon mb-single' + ( a.icon ? ' icon' : '' ) + ( a.iconImage && ! a.icon ? ' image' : '' ),
+							style: iconColor ? { backgroundColor: iconColor } : {}
 						},
 							a.icon ? StacklessBlocks.icon( 'i', a.icon ) : ( a.iconImage ? el( 'img', { src: a.iconImage } ) : '' )
 						)
 					: '' ),
-					el( 'div', { className: 'stb-callout-title mb-single' },
+					el( 'div', { className: 'callout-title mb-single' },
 						el( RichText, {
 							tagName: 'p',
 							className: 'med-title',
@@ -268,7 +268,7 @@
 							onChange: function( val ) { props.setAttributes({ title: val }); }
 						})
 					),
-					el( 'div', { className: 'stb-callout-text mb-single' },
+					el( 'div', { className: 'callout-text mb-single' },
 						el( RichText, {
 							tagName: 'p',
 							value: a.text,
@@ -276,10 +276,10 @@
 							onChange: function( val ) { props.setAttributes({ text: val }); }
 						})
 					),
-					el( 'div', { className: 'stb-callout-list' },
+					el( 'div', { className: 'callout-list-wrap' },
 						el( RichText, {
 							tagName: 'ul',
-							className: 'stb-list',
+							className: 'callout-list mb-single',
 							multiline: 'li',
 							value: a.list,
 							placeholder: __( 'Enter list item here...', 'stackless-theme' ),
@@ -287,7 +287,7 @@
 						})
 					),
 					a.buttonText ?
-						el( 'div', { className: 'stb-callout-action' },
+						el( 'div', { className: 'callout-action' },
 							el( 'span', {
 								className: 'callout-button button button-arrow ' + ( buttonColorClass || '' ) + ' ' + ( buttonTextColorClass || '' ),
 								style: {

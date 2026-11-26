@@ -201,15 +201,19 @@
 						}
 					}),
 					StacklessBlocks.icon( 'i', 'stb-icon-' + socialMedia, 'share-notice-icon' ),
-					el( RichText, {
-						key: 'editable-button',
-						tagName: 'button',
-						className: 'share-notice-button stb-submit stb-submit-' + buttonStyle,
-						value: buttonText,
-						onChange: function( val ) {
-							props.setAttributes({ buttonText: val });
-						}
-					})
+					// The published block's own button markup, so the theme's button styles apply.
+					el( 'p', { className: 'share-notice-button' },
+						el( RichText, {
+							key: 'editable-button',
+							tagName: 'span',
+							className: 'button ' + ( buttonStyle == 'full' ? 'button-full' : ( buttonStyle == 'pill' ? 'button-pill' : 'button-outline' ) ) + ( boxStyle == 'full' ? ' white' : '' ),
+							value: attributes.buttonText || buttonText,
+							allowedFormats: [],
+							onChange: function( val ) {
+								props.setAttributes({ buttonText: val });
+							}
+						})
+					)
 				)
 			);
 		},

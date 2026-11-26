@@ -31,55 +31,11 @@
 	$CALLOUT
 \*------------------------------*/
 
-/* The preview prints stb-callout-* classes; the published block is styled
-   through its own front-end class, so these mirror it for the canvas. */
-.wp-block-stackless-callout.stb-callout {
-	background: color-mix(in srgb, var(--color-primary) 5%, var(--color-content-bg));
-	border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
-	border-radius: var(--radius-m, 0.5rem);
-	position: relative;
-}
-
-.wp-block-stackless-callout.stb-callout.has-icon { padding-top: 0; }
-
-.wp-block-stackless-callout .stb-callout-title,
-.wp-block-stackless-callout .stb-callout-action { text-align: center; }
-
-.wp-block-stackless-callout.stb-callout .stb-callout-icon {
-	align-items: center;
-	border-radius: 50%;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-	color: var(--color-text-light);
-	display: flex;
-	justify-content: center;
-	margin-inline: auto;
-}
-
-.wp-block-stackless-callout.stb-callout .stb-callout-icon.icon {
-	background-color: #1e1e1e;
-	font-size: 43px;
-	height: 80px;
-	line-height: 1;
-	margin-top: -25px;
-	width: 80px;
-}
-
-.wp-block-stackless-callout.stb-callout .stb-callout-icon.image {
-	height: 100px;
-	margin-top: -35px;
-	width: 100px;
-}
-
-.wp-block-stackless-callout.stb-callout .stb-callout-icon.image img {
-	border-radius: 50%;
-	height: 100px;
-	width: 100px;
-}
-
-.wp-block-stackless-callout .stb-callout-list + .stb-callout-action { margin-top: var(--space-single); }
-
-.wp-block-stackless-callout .stb-callout-action .callout-button { width: 100%; cursor: default; }
-.wp-block-stackless-content-upgrade .stb-content-upgrade-action .button { cursor: default; }
+/* The preview prints the published block's own callout-* markup, so callout.css styles it.
+   Only what differs while editing stays here. */
+.wp-block-stackless-callout .callout-action .callout-button { width: 100%; cursor: default; }
+.wp-block-stackless-callout .callout-list-wrap .callout-list:not(:has(li:not(:empty))) { opacity: .7; }
+.wp-block-stackless-content-upgrade .content-upgrade-action .button { cursor: default; }
 
 /*------------------------------*\
 	$STEPS

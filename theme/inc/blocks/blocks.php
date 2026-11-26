@@ -611,6 +611,10 @@ function stackless_theme_blocks_editor_data(): array
     foreach ($icons as $icon) {
         $svg[$icon['value']] = stackless_theme_blocks_icon($icon['value']);
     }
+    // Older names in converted content draw in the preview too, without joining the picker.
+    foreach (array_keys(stackless_theme_blocks_icon_aliases()) as $alias) {
+        $svg['stb-icon-' . $alias] = $svg['stb-icon-' . $alias] ?? stackless_theme_blocks_icon($alias);
+    }
     $data = [
         'colors' => $colors,
         'icons' => $icons,

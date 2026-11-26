@@ -90,7 +90,7 @@
 			}
 
 			var blockProps = useBlockProps({
-				className: 'stb-content-upgrade ' + marginBottom + ' ' + padding + ( boxLeftRight ? ' box-lr' : '' ) + ( shadow ? ' has-shadow' : '' ) + ( bgColorClass ? ' ' + bgColorClass : '' ) + ( textColorClass ? ' ' + textColorClass : '' ) + ( bgImage ? ' image-overlay' : '' ),
+				className: 'content-upgrade ' + marginBottom + ' ' + padding + ( boxLeftRight ? ' box-lr' : '' ) + ( shadow ? ' shadow' : '' ) + ( bgColorClass ? ' ' + bgColorClass : '' ) + ( textColorClass ? ' ' + textColorClass : '' ) + ( bgImage ? ' image-overlay' : '' ),
 				style: {
 					backgroundImage: ( bgImage ? 'url(' + bgImage + ')' : '' ),
 					backgroundColor: ! bgColorClass ? ( bgColor || '#1e293b' ) : '',
@@ -282,18 +282,18 @@
 					)
 				),
 				el(
-					'div', blockProps,
+					'aside', blockProps,
 					( icon ?
 						el(
 							'div', {
-								className: 'stb-content-upgrade-icon large-title mr-single'
+								className: 'content-upgrade-icon large-title mr-single'
 							},
 							StacklessBlocks.icon( 'i', icon )
 						)
 					: '' ),
 					el(
 						'div', {
-							className: 'stb-content-upgrade-text mb-single'
+							className: 'content-upgrade-text mb-single'
 						},
 						el( RichText, {
 							key: 'editable',
@@ -317,7 +317,7 @@
 					),
 					el(
 						'div', {
-							className: 'stb-content-upgrade-action'
+							className: 'content-upgrade-action'
 						},
 						el(
 							'span', {

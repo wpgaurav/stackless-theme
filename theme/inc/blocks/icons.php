@@ -167,6 +167,32 @@ function stackless_theme_blocks_icon_map(): array
 }
 
 /**
+ * Older icon names that converted content may still store, mapped to an icon the theme ships.
+ * Resolved like the map but kept out of the icon picker, so it lists each icon once.
+ *
+ * @return array<string, string>
+ */
+function stackless_theme_blocks_icon_aliases(): array
+{
+    return [
+        // Marketers Delight names with no Stackless icon of the same name.
+        'alert' => 'alert-triangle',
+        'badge-dollar' => 'currency-dollar',
+        'cartsmooth' => 'shopping-cart',
+        'edit' => 'pencil',
+        'enter' => 'login',
+        'facebook-squared' => 'brand-facebook',
+        'github-squared' => 'brand-github',
+        'linkedin-squared' => 'brand-linkedin',
+        'no' => 'x',
+        'ok-circled' => 'circle-check',
+        'pinterest-squared' => 'brand-pinterest',
+        'yes' => 'check',
+        'youtube-play' => 'brand-youtube',
+    ];
+}
+
+/**
  * The inline SVG for a stored icon value: stb-icon-bolt, bolt, or a Tabler name that the theme
  * ships. Sized 1em so it follows the font size, as the icon font did. Empty when unknown.
  */
@@ -179,7 +205,7 @@ function stackless_theme_blocks_icon(string $value): string
     }
     if (!isset($cache[$name])) {
         $map = stackless_theme_blocks_icon_map();
-        $svg = stackless_theme_icon($map[$name] ?? $name, 24);
+        $svg = stackless_theme_icon($map[$name] ?? stackless_theme_blocks_icon_aliases()[$name] ?? $name, 24);
         $cache[$name] = $svg === '' ? '' : (string) preg_replace('/width="24" height="24"/', 'width="1em" height="1em"', $svg, 1);
     }
     return $cache[$name];
