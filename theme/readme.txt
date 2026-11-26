@@ -3,7 +3,7 @@ Contributors: gauravtiwari
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,12 @@ Oswald, Copyright 2016 The Oswald Project Authors (https://github.com/googlefont
 Archivo Black, Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack).
 
 == Changelog ==
+
+= 1.9.4 =
+* Changed: breadcrumbs line up with the post title, centered over a centered title and left-aligned over a left one or beside a sidebar. Every trail, the theme's own or an SEO plugin's, uses one small chevron between items, and the current page stays quiet and short. On phones the trail ends at the section, since the title shows right below it.
+* Fixed: in the block editor, a Callout ignored its preset and layout, so an accent-bar or colored callout looked like the default card while you edited it. The preview now matches the published block.
+* Fixed: the buttons in the Callout, Content Upgrade and Share Notice previews were unstyled or greyed out, and Share Notice showed its default label instead of your button text.
+* Fixed: blocks moved over from Marketers Delight with an older icon name (such as alert, edit or youtube-play) showed no icon. Those names now show the matching icon.
 
 = 1.9.3 =
 * New: a Performance section under Customize > Stackless Theme. Six options, all off until ticked: leave out the emoji script, leave out extra head links (RSD, shortlink, REST link, version tag), stop other sites showing your posts as embed cards, a shorter body class list (classes the theme and store plugins use stay), Dashicons only for signed-in users, and leave out jQuery Migrate. None of them touch wp-admin.
