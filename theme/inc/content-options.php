@@ -223,13 +223,28 @@ add_action('after_setup_theme', static function (): void {
     add_theme_support('rank-math-breadcrumbs');
 });
 
+/**
+ * Where the breadcrumb trail lines up: 'center' over a centered title, 'left' over a left-aligned
+ * one or beside a sidebar. Pages and custom post types follow their Layout panel's header style.
+ */
+function stackless_theme_breadcrumbs_align(): string
+{
+    if (is_singular('post')) {
+        $align = stackless_theme_single_header() === 'left' || stackless_theme_single_has_sidebar() ? 'left' : 'center';
+    } else {
+        $align = stackless_theme_entry_header_style() === 'center' && !stackless_theme_single_has_sidebar() ? 'center' : 'left';
+    }
+    return (string) apply_filters('stackless_theme_breadcrumbs_align', $align) === 'left' ? 'left' : 'center';
+}
+
 /** The breadcrumb trail for the current single: the first SEO plugin's, else Home / Category / Title. */
 function stackless_theme_breadcrumbs(): string
 {
+    $wrap = '<div class="st-breadcrumbs st-breadcrumbs--' . stackless_theme_breadcrumbs_align() . '">';
     foreach (stackless_theme_breadcrumb_providers() as [, $render]) {
         $html = trim((string) $render());
         if (wp_strip_all_tags($html) !== '') {
-            return '<div class="st-breadcrumbs">' . $html . '</div>';
+            return $wrap . $html . '</div>';
         }
     }
 
@@ -249,7 +264,7 @@ function stackless_theme_breadcrumbs(): string
         $parts[] = '<a href="' . esc_url((string) get_post_type_archive_link($type->name)) . '">' . esc_html($type->labels->name) . '</a>';
     }
     $parts[] = '<span aria-current="page">' . esc_html(get_the_title()) . '</span>';
-    return '<div class="st-breadcrumbs"><nav class="st-breadcrumb" aria-label="' . esc_attr__('Breadcrumb', 'stackless-theme') . '">' . implode($sep, $parts) . '</nav></div>';
+    return $wrap . '<nav class="st-breadcrumb" aria-label="' . esc_attr__('Breadcrumb', 'stackless-theme') . '">' . implode($sep, $parts) . '</nav></div>';
 }
 
 /** Breadcrumbs above a post or custom post type single, when switched on. */

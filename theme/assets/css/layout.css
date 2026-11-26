@@ -1260,13 +1260,18 @@ a.page-numbers:hover {
 }
 
 /* ------------------------------------------------------------------ Single post options */
-/* Breadcrumbs (Single posts > Breadcrumbs): the theme's own trail or an SEO plugin's, in the reading column. */
+/* Breadcrumbs (Single posts > Breadcrumbs): the theme's own trail or an SEO plugin's, in the reading
+ * column, lined up with the title (centered over a centered title, left otherwise). */
 .entry > .st-breadcrumbs {
 	max-width: var(--st-content);
-	margin: 0 auto 1.5rem;
+	margin: 0 auto 1.25rem;
 	color: var(--st-muted);
 	font-size: var(--st-text-sm);
-	line-height: 1.5;
+	line-height: 1.6;
+}
+
+.st-breadcrumbs--center {
+	text-align: center;
 }
 
 .st-breadcrumbs :is(nav, p, ol, ul) {
@@ -1282,16 +1287,6 @@ a.page-numbers:hover {
 	list-style: none;
 }
 
-.st-breadcrumbs a {
-	color: var(--st-gray-600);
-	text-decoration: none;
-}
-
-.st-breadcrumbs a:hover {
-	color: var(--st-link, var(--st-primary));
-	text-decoration: underline;
-}
-
 .st-breadcrumb {
 	display: flex;
 	flex-wrap: wrap;
@@ -1299,8 +1294,57 @@ a.page-numbers:hover {
 	gap: .25rem .5rem;
 }
 
-.st-breadcrumbs [aria-current="page"] {
-	color: var(--st-heading);
+.st-breadcrumbs--center :is(.st-breadcrumb, ol, ul) {
+	justify-content: center;
+}
+
+.st-breadcrumbs a {
+	color: var(--st-gray-600);
+	text-decoration: none;
+	transition: color var(--st-ease);
+}
+
+.st-breadcrumbs a:hover {
+	color: var(--st-link, var(--st-primary));
+	text-decoration: underline;
+	text-underline-offset: .2em;
+}
+
+/* One separator for every trail: a small chevron in place of the plugin's "-", "/" or "»". */
+.st-breadcrumbs :is(.breadcrumb-sep, .rank-math-breadcrumb .separator, .aioseo-breadcrumb-separator) {
+	display: inline-block;
+	width: .3125rem;
+	height: .3125rem;
+	margin: 0 .55rem 0 .4rem;
+	border-top: 1.5px solid currentColor;
+	border-right: 1.5px solid currentColor;
+	color: var(--st-gray-400);
+	font-size: 0;
+	vertical-align: middle;
+	transform: translateY(-.1em) rotate(45deg);
+}
+
+.st-breadcrumb .breadcrumb-sep {
+	margin: 0 .1rem 0 0;
+}
+
+/* The current page repeats the title just below it, so it stays quiet and short. */
+.st-breadcrumbs :is([aria-current="page"], .rank-math-breadcrumb .last, .breadcrumb_last, .aioseo-breadcrumb:last-child) {
+	display: inline-block;
+	max-width: min(28ch, 100%);
+	overflow: hidden;
+	color: var(--st-muted);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: bottom;
+}
+
+/* On phones the title right below says it already: the trail ends at the section. */
+@media (max-width: 600px) {
+	.st-breadcrumbs :is([aria-current="page"], .rank-math-breadcrumb .last, .breadcrumb_last, .aioseo-breadcrumb:last-child),
+	.st-breadcrumbs :is(.breadcrumb-sep, .rank-math-breadcrumb .separator, .aioseo-breadcrumb-separator):has(+ :is([aria-current="page"], .last, .breadcrumb_last)) {
+		display: none;
+	}
 }
 
 .single-layout .entry > .st-breadcrumbs,
